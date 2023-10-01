@@ -3,27 +3,91 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>jiun8631.vercel.app/post/</loc>
+    <loc>https://jiun8631.vercel.app/post/</loc>
   </url>
   
   <url>
-    <loc>jiun8631.vercel.app/tags/</loc>
+    <loc>https://jiun8631.vercel.app/tags/</loc>
   </url>
   
   <url>
-    <loc>jiun8631.vercel.app/tags/%E6%96%87%E7%AB%A0/</loc>
+    <loc>https://jiun8631.vercel.app/tags/%E6%96%87%E7%AB%A0/</loc>
   </url>
   
   <url>
-    <loc>jiun8631.vercel.app/post/my-first-post/</loc>
+    <loc>https://jiun8631.vercel.app/tags/%E6%B8%AC%E8%A9%A6/</loc>
   </url>
   
   <url>
-    <loc>jiun8631.vercel.app/</loc>
+    <loc>https://jiun8631.vercel.app/post/my-first-post/</loc>
   </url>
   
   <url>
-    <loc>jiun8631.vercel.app/tags/%E9%96%8B%E5%A7%8B/</loc>
+    <loc>https://jiun8631.vercel.app/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/%E9%96%8B%E5%A7%8B/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/2023software/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/%E5%BD%B1%E7%89%87/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/meta-audiocraft/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/%E8%BB%9F%E4%BB%B6/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/llama2/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/ai-gpt4/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/170/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/%E9%9F%B3%E6%95%88/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/green-material/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/high-sound/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/9mogrt/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/pdf-word/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/31mogrt/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/videoproc-converter/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/computer-use/</loc>
   </url>
   
 </urlset>
