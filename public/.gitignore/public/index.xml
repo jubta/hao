@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>鈞鈞博客</title>
+    <link>jiun8631.vercel.app/</link>
+    <description>Recent content on 鈞鈞博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 29 Sep 2023 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="jiun8631.vercel.app/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>這是我的第一篇博客</title>
+      <link>jiun8631.vercel.app/post/my-first-post/</link>
+      
+      <guid>jiun8631.vercel.app/post/my-first-post/</guid>
+      <description>這是我的第一篇博客 這是我的第一篇博客
+個人網站鏈接</description>
+    </item>
+    
+  </channel>
+</rss>
