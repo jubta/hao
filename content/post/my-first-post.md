@@ -12,7 +12,7 @@ date: "2023-09-29"
 
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
 
-<center>{{< figure src=/img/hugo.png width="80%" >}}</center>
+{{< figure src=/img/hugo.png width="80%" >}}
 
 
 
