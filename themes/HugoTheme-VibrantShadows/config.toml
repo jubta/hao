@@ -2,3 +2,5 @@
   [module.hugoVersion]
     extended = true
     min = "0.75.1"
+pygmentsCodeFences = true
+custom_css = ["/css/copy-to-clipboard.css"]

@@ -2,8 +2,14 @@
 title: "31款綜藝卡通花字mogrt"
 author: "鈞鈞"
 description: "實用軟件"
-tags: ["影片", "軟件"]
+tags: ["影片", "花字"]
 date: "2022-08-23"
+image:
+  src: "/img/wMqzfJ-dh.jfif"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ## 款綜藝卡通花字mogrt

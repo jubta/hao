@@ -2,8 +2,14 @@
 title: "9款綜藝卡通花字mogrt"
 author: "鈞鈞"
 description: "實用軟件"
-tags: ["影片", "軟件"]
+tags: ["影片", "花字"]
 date: "2022-09-03"
+image:
+  src: "/img/sqPhculUe.jfif"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ## 9款綜藝卡通花字mogrt

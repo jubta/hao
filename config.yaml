@@ -37,7 +37,7 @@ params:
     description: "Sharing my daily life" # should include brand name | character length: 50 to 160 characters
     contentLicense: "鈞鈞" # cc-by-3.0, etc or 'All right reserved.' should also be same as the one in copyright above
     titleSeparator: " | " # used in website/blog title, to separate (say) page title from website/blog title | default: " | "
-    attribution: "enable" # attribute Hugo team for awesome software and Softorage for great theme | default: "enable"
+    attribution: "disable" # attribute Hugo team for awesome software and Softorage for great theme | default: "enable"
   brand:
     name: "鈞鈞博客" # brand name (Samy's blog), usually just one word that is name of the brand | required | no default
     logo_500px: "/assets/favicon/android-chrome-512x512.png" # path (preferably relative path) to brand's good resolution logo | required | no default

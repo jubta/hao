@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AI on 鈞鈞博客</title>
+    <link>https://jiun8631.vercel.app/tags/ai/</link>
+    <description>Recent content in AI on 鈞鈞博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Sun, 06 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.vercel.app/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>新世代合成器！Meta 發布新開源 AI 工具 AudioCraft，輸入文字就能創作出音樂與音效</title>
+      <link>https://jiun8631.vercel.app/post/meta-audiocraft/</link>
+      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/meta-audiocraft/</guid>
+      <description>新世代合成器！Meta 發布新開源 AI 工具 AudioCraft，輸入文字就能創作出音樂與音效 AudioCraft官網 鏈接 HuggingFace 體驗版 鏈接 自行部署 鏈接 Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI 工具，AudioCraft 可以讓使用者依據文本提示創作聲音，由 3 個 AI 模型組成，一共有： MusicGen、AudioGen 以及 EnCodec 三種。)
+點這裡 鏈接 </description>
+    </item>
+    
+    <item>
+      <title>ChatGPT最強的開源對手LLama2大語言模型</title>
+      <link>https://jiun8631.vercel.app/post/llama2/</link>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/llama2/</guid>
+      <description>ChatGPT最強的開源對手LLama2大語言模型 LLama AI官網 點此連結 部署體驗LLama-2-7B Colab (全名為「Colaboratory」)調用 :
+是 Google Research 所推出的一項產品。它是一個基於 Jupyter Notebook 的雲端開發環境，可以讓你透過瀏覽器編寫及執行 Python 程式碼，也可以進行資料分析及機器學習的工具，無須任何設定即可使用，並免費存取 GPU 等運算資源。同時連接到強大的 Google Cloud Platform 運行時，可以輕鬆地與他人共享您的工作並一起協同合作。
+%cd /content !apt-get -y install -qq aria2 !git clone -b v1.8 https://github.com/camenduru/text-generation-webui %cd /content/text-generation-webui !pip install -r requirements.txt !aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/4bit/Llama-2-7b-chat-hf/resolve/main/model-00001-of-00002.safetensors -d /content/text-generation-webui/models/Llama-2-7b-chat-hf -o model-00001-of-00002.safetensors !aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/4bit/Llama-2-7b-chat-hf/resolve/main/model-00002-of-00002.safetensors -d /content/text-generation-webui/models/Llama-2-7b-chat-hf -o model-00002-of-00002.safetensors !aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.</description>
+    </item>
+    
+    <item>
+      <title>多種Ai開掛使用!!不用會後悔GPT-4</title>
+      <link>https://jiun8631.vercel.app/post/ai-gpt4/</link>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/ai-gpt4/</guid>
+      <description>多種Ai開掛使用!!不用會後悔GPT-4 . gpt-3.5-turbo
+. gpt-3.5-turbo-poe
+. gpt-3.5-turbo-16k
+. gpt-3.5-turbo-16k-poe
+. gpt-4
+. gpt-4-0613
+. gpt-4-poe
+. gpt-4-32k
+. gpt-4-32k-poe
+. claude_instant
+. claude-instant-100k
+. claude-2-100k
+安裝Docker
+官方鏈接 docker pull ramonvc/freegpt-webui docker run -p 1338:1338 -e CHIMERA_API_KEY=3IkLYe6coWr8wBYoQjeVt2t4d4cJaCyJFKQTxohNysU ramonvc/freegpt-webui-chimera http://127.0.0.1:1338 docker stop &amp;lt;container-id&amp;gt; #使用完應用程序後，使用以下命令停止 Docker 容器： </description>
+    </item>
+    
+  </channel>
+</rss>

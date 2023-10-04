@@ -2,8 +2,14 @@
 title: "新世代合成器！Meta 發布新開源 AI 工具 AudioCraft，輸入文字就能創作出音樂與音效"
 author: "鈞鈞"
 description: "實用軟件"
-tags: ["影片", "軟件"]
+tags: ["影片", "AI"]
 date: "2023-08-06"
+image:
+  src: "/img/6c73643a-d54a-455b-af02-c5768ea6012f.jfif"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ## 新世代合成器！Meta 發布新開源 AI 工具 AudioCraft，輸入文字就能創作出音樂與音效

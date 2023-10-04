@@ -2,8 +2,14 @@
 title: "強烈推薦7款精品軟件 ! 黑科技電腦軟件冷門好用 2023"
 author: "鈞鈞"
 description: "很高興以後可以在這裡發訊息給你們!!"
-tags: ["文章", "開始", "測試" ]
+tags: ["文章", "開始" ]
 date: "2023-09-24"
+image:
+  src: "/img/hugo.png"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ## 強烈推薦7款精品軟件 ! 黑科技電腦軟件冷門好用 2023

@@ -2,8 +2,14 @@
 title: "ChatGPT最強的開源對手LLama2大語言模型"
 author: "鈞鈞"
 description: "實用軟件"
-tags: ["影片", "軟件"]
+tags: ["影片", "AI"]
 date: "2023-07-19"
+image:
+  src: "/img/52425327-90c7-46ea-ad0f-251e72a712d0.jfif"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ### ChatGPT最強的開源對手LLama2大語言模型

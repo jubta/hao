@@ -2,8 +2,14 @@
 title: "多種Ai開掛使用!!不用會後悔GPT-4"
 author: "鈞鈞"
 description: "實用軟件"
-tags: ["影片", "軟件"]
+tags: ["影片", "AI"]
 date: "2023-07-19"
+image:
+  src: "/img/4bbdae8c-f4f6-4ae0-9529-7d09d779f670.jfif"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ## 多種Ai開掛使用!!不用會後悔GPT-4
@@ -39,19 +45,26 @@ date: "2023-07-19"
 #### [官方鏈接](https://www.docker.com/)
 
 
+
 ```bash
 docker pull ramonvc/freegpt-webui
 ```
+
+---------------------------------------------------------------------------------------------------
 
 ```bash
 docker run -p 1338:1338 -e CHIMERA_API_KEY=3IkLYe6coWr8wBYoQjeVt2t4d4cJaCyJFKQTxohNysU ramonvc/freegpt-webui-chimera
 
 ```
 
+---------------------------------------------------------------------------------------------------
+
 ```bash
 http://127.0.0.1:1338
 
 ```
+
+---------------------------------------------------------------------------------------------------
 
 ```bash
 docker stop <container-id> #使用完應用程序後，使用以下命令停止 Docker 容器：

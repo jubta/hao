@@ -4,6 +4,13 @@ author: "鈞鈞"
 description: "很高興以後可以在這裡發訊息給你們!!"
 tags: ["文章", "開始", "測試" ]
 date: "2023-09-29"
+image:
+  src: "/img/hugo.png"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
+draft: true
 ---
 
 ## 這是我的第一篇博客
@@ -12,7 +19,7 @@ date: "2023-09-29"
 
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
 
-{{< figure src=/img/hugo.png width="80%" >}}
+{{< figure src=/img/hugo.png width="349px" height="196px" >}}
 
 
 
@@ -22,10 +29,10 @@ date: "2023-09-29"
 ```bash
 docker pull ramonvc/freegpt-webui
 ```
+ 
 
-`package.json`
 
-
+---------------------------------------------------------------------------------------------------
 
 ```bash
 hugo new site yourSiteName # generate a new Hugo site if you don't already have one
@@ -34,5 +41,7 @@ cd yourSiteName # move in to the Hugo website's directory
 
 
 
-
+---------------------------------------------------------------------------------------------------
 <center>{{< youtube srL5V8JhNww >}}</center>
+
+`package.json`

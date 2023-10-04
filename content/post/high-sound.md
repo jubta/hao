@@ -2,8 +2,14 @@
 title: "高質量武器音效-無償分享"
 author: "鈞鈞"
 description: "實用軟件"
-tags: ["影片", "軟件"]
+tags: ["影片", "音效"]
 date: "2022-09-05"
+image:
+  src: "/img/KcPMAALPe.jfif"
+  alt: "2023"
+  thumbnail:
+    size: "170px"
+    borders: "rounded"
 ---
 
 ## 高質量武器音效-無償分享
