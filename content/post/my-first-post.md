@@ -17,6 +17,7 @@ draft: true
 
 這是我的第一篇**博客**
 
+
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
 
 {{< figure src=/img/hugo.png width="349px" height="196px" >}}
@@ -29,7 +30,7 @@ draft: true
 ```bash
 docker pull ramonvc/freegpt-webui
 ```
- 
+
 
 
 ---------------------------------------------------------------------------------------------------
@@ -44,4 +45,31 @@ cd yourSiteName # move in to the Hugo website's directory
 ---------------------------------------------------------------------------------------------------
 <center>{{< youtube srL5V8JhNww >}}</center>
 
+### 範例/
+
 `package.json`
+
+- 
+
+*這是斜體*
+
+**這是加粗**
+
+> hello ，這是引用樣式
+
+- [ ] 
+
+Be sure to swap out `${package.json.version}` with the actual
+
+***
+
+---
+
+<u>下滑線</u>
+
+~~刪除線~~
+
+[鈞鈞博客](https://jiun8631.vercel.app/) #超連結
+
+1.   #有序列表 任意 數字+點+空格
+

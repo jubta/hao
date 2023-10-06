@@ -11,6 +11,8 @@ image:
     size: "170px"
     borders: "rounded"
 ---
+多種Ai開掛使用!!不用會後悔GPT-4
+<!--more-->
 
 ## 多種Ai開掛使用!!不用會後悔GPT-4
 {{< figure src=/img/4bbdae8c-f4f6-4ae0-9529-7d09d779f670.jfif width="80%" >}}

@@ -3,6 +3,11 @@ title: "鈞鈞博客" # title of the site; usually same as brand name | required
 copyright: "Copyright &#169; 2020 Softorage. All rights reserved." # should match 'brand -> name', and 'contentLicense' under params below; used in default rss template: https://gohugo.io/templates/rss/#configure-rss | optional
 languageCode: "zh-tw" # recommended | no default
 theme: "HugoTheme-VibrantShadows"
+metaDataFormat: "yaml"
+algolia:
+  index: "*jiun8631"
+  key: "fe02822be118985584ef18e1144a43ad"
+  appID: "QD6HY08YR2"
 # googleAnalytics: "G-123456789-0" # Respecting your preference from 'privacy', and 'params' -> 'user_experience' below, if you set this value, Google Analytics code will be included. Google Analytics included only when serving the website on 'production' environment (i.e. website built with `hugo` command and not `hugo serve`)
 # disqusShortname: "yourdiscussshortname" # Respecting your preference from 'privacy', if you set this value, Disqus comments code will be included at the end of the blog posts. Disqus comments are shown only when serving the website on 'production' environment (i.e. website built with `hugo` command and not `hugo serve`)
 
@@ -34,7 +39,7 @@ params:
     author: "JIUN" # website-wide author | required
     footerMessage: "JIUN" # text shown in footer above footer links | optional
     tagline: "分享我的日常生活" # shown in website title on homepage and also used in seo | required
-    description: "Sharing my daily life" # should include brand name | character length: 50 to 160 characters
+    description: "分享精品軟件 網站 素材 科技" # should include brand name | character length: 50 to 160 characters
     contentLicense: "鈞鈞" # cc-by-3.0, etc or 'All right reserved.' should also be same as the one in copyright above
     titleSeparator: " | " # used in website/blog title, to separate (say) page title from website/blog title | default: " | "
     attribution: "disable" # attribute Hugo team for awesome software and Softorage for great theme | default: "enable"
