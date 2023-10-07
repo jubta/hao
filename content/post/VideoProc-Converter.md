@@ -10,6 +10,8 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - 軟件
 ---
 
 ## VideoPro Converter

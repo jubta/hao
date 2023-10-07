@@ -10,6 +10,8 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - AI
 ---
 是 Google Research 所推出的一項產品。它是一個基於 Jupyter Notebook
 <!--more-->

@@ -10,6 +10,8 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - 音效
 ---
 
 ## 高質量武器音效-無償分享

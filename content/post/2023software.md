@@ -10,8 +10,11 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - 軟件
 ---
-
+強烈推薦7款精品軟件!!!解說視頻 | 第一款...
+<!--more-->
 ## 強烈推薦7款精品軟件 ! 黑科技電腦軟件冷門好用 2023
 
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
@@ -19,6 +22,7 @@ image:
 {{< figure src=/img/hugo.png width="80%" >}}
 
 
+---
 ##### 第一款 火柴（火螢醬） [鏈接](https://www.huochaipro.com/)
 
 

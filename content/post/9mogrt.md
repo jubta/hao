@@ -10,6 +10,8 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - 影片
 ---
 
 ## 9款綜藝卡通花字mogrt

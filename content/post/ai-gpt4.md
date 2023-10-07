@@ -10,8 +10,10 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - AI
 ---
-多種Ai開掛使用!!不用會後悔GPT-4
+多種Ai開掛使用!!不用會後悔GPT-4 | docker pull ramonvc/freegpt-webui...
 <!--more-->
 
 ## 多種Ai開掛使用!!不用會後悔GPT-4

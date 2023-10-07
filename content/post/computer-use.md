@@ -10,6 +10,8 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - 影片
 ---
 
 ## 電腦使用技巧

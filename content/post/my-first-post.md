@@ -11,9 +11,12 @@ image:
     size: "170px"
     borders: "rounded"
 draft: true
+categories:
+  - 影片
 ---
-
-## 這是我的第一篇博客
+這是我的第一篇博客個人網站
+<!--more-->
+## 這是我的第一篇博客 
 
 這是我的第一篇**博客**
 

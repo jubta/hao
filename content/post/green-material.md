@@ -10,6 +10,8 @@ image:
   thumbnail:
     size: "170px"
     borders: "rounded"
+categories:
+  - 素材
 ---
 
 ## 綠幕素材-高質量
