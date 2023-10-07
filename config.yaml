@@ -25,9 +25,6 @@ menu:
     - name: 標籤
       url: /tags/
       weight: 30
-    - name: 搜索
-      url: /search
-      weight: 40
 
 # Allow HTML in markdown to be rendered, for social platform list in configuration options
 markup:
@@ -42,7 +39,10 @@ markup:
 # with this, Hugo notes some stats about website, which are then used by CSS processors
 build:
   writeStats: true
-  
+
+outputs:
+  home: ["HTML", "RSS", "JSON"]
+ 
 # Here starts our customization
 params:
   social: 

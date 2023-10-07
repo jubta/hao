@@ -15,6 +15,18 @@
         <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="text-clr2">&#9776;</span>
         </a>
+
+        <input type="text" id="searchInput" placeholder="搜索...">
+        <ul id="searchResults"></ul>
+
+        <link rel="stylesheet" href="/css/style.css">
+
+        {{ if .Site.Params.fastSearch -}}
+     <li id="search-click" class="menu-item">
+           <a class="menu-item-link" href="javascript:void(0)">搜索</a>
+        </li>
+        {{- end }}
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav
             {{- if or (and site.Params.social.profiles (eq site.Params.position.social.profiles "navbar")) (eq site.Params.position.navbarMenu "left") }} mr-md-auto
