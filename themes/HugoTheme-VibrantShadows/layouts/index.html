@@ -27,12 +27,16 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
   <div style="height:3.5rem;"></div>
   <div class="container-fluid{{ if site.Params.backgImage.landingPage }} py-5{{ end }}">
     {{ if site.Params.meta.tagline }}
-      <h1 class="d-inline-block">{{ site.Params.meta.tagline }}</h1>
+      <h2 class="d-inline-block">{{ site.Params.meta.tagline }}</h2>
     {{ end }}
     {{ if site.Params.meta.description }}
       <p class="lead">{{ site.Params.meta.description }}</p>
     {{ end }}
   </div>
+  {{ $paginator := .Paginate (where .Data.Pages "Type" "post") }}
+{{ range $paginator.Pages }}
+  {{ .Render "summary" }}
+{{ end }}
 </div>
 <div class="container-fluid bg-mat py-3">
   <div class="container-fluid bg-mat py-3" >
@@ -103,9 +107,9 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
             
             
             <div class="col my-auto py-2">
-              <h2>
+              <h4>
                 <a class="text-reset" href="{{ .Permalink }}"><span class="card-title text-reset"> {{ .Title }}</span></a>
-              </h2>
+              </h4>
               
               {{- $postMetaTop := false }}
               {{- $postMetaBottom := false }}
@@ -130,14 +134,14 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
                     {{- $wordCount = print (.WordCount) " words" }}
                   {{- end }}
                   {{- if and site.Params.position.postMeta.readingTime.summary (eq site.Params.position.postMeta.readingTime.summary "top") }}
-                    {{- $readingTime = print (lang.NumFmt 0 (div .WordCount 130)) " min read" -}}
+                    {{- $readingTime = print (lang.NumFmt 0 (div .WordCount 130)) " 閱讀時間" -}}
                   {{- end }}
                   {{- if and site.Params.position.postMeta.author.summary (eq site.Params.position.postMeta.author.summary "top") }}
                     {{- $author = print "By " (default site.Params.meta.author .Params.author) }}
                   {{- end }}
                   {{- if .Lastmod }}
                     {{- if and site.Params.position.postMeta.lastUpdated.summary (eq site.Params.position.postMeta.lastUpdated.summary "top") }}
-                      {{- $lastUpdated = print "<span class=''>Last updated: " (.Lastmod.Format "January 2, 2006") }}</span>
+                      {{- $lastUpdated = print "<span class=''>最近更新: " (.Lastmod.Format "2006 | 1 / 2") }}</span>
                     {{- end }}
                   {{- end }}
                   
@@ -180,14 +184,14 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
                         {{- $wordCount = print (.WordCount) " words" }}
                       {{- end }}
                       {{- if and site.Params.position.postMeta.readingTime.summary (eq site.Params.position.postMeta.readingTime.summary "bottom") }}
-                        {{- $readingTime = print (lang.NumFmt 0 (div .WordCount 130)) " min read" -}}
+                        {{- $readingTime = print (lang.NumFmt 0 (div .WordCount 130)) " 閱讀時間" -}}
                       {{- end }}
                       {{- if and site.Params.position.postMeta.author.summary (eq site.Params.position.postMeta.author.summary "bottom") }}
                         {{- $author = print "By " (default site.Params.meta.author .Params.author) }}
                       {{- end }}
                       {{- if .Lastmod }}
                         {{- if and site.Params.position.postMeta.lastUpdated.summary (eq site.Params.position.postMeta.lastUpdated.summary "bottom") }}
-                          {{- $lastUpdated = print "<span class=''>Last updated: " (.Lastmod.Format "January 2, 2006") }}</span>
+                          {{- $lastUpdated = print "<span class=''>最近更新: " (.Lastmod.Format "2006 | 1 / 2") }}</span>
                         {{- end }}
                       {{- end }}
                       
@@ -215,7 +219,7 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
                 </div>
               {{ end }}
               
-              <a class="font-weight-bold text-reset text-decoration-none" href="{{ .Permalink }}"><nobr>Read more →</nobr></a>
+              <a class="font-weight-bold text-reset text-decoration-none" href="{{ .Permalink }}"><nobr>更多 ➢</nobr></a>
             </div>
             
           </div> <!-- row -->

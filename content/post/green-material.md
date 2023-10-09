@@ -8,7 +8,7 @@ image:
   src: "/img/vhUY3dPYf.jfif"
   alt: "2023"
   thumbnail:
-    size: "170px"
+    size: "160px"
     borders: "rounded"
 categories:
   - 素材

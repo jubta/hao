@@ -8,7 +8,7 @@ image:
   src: "/img/hugo.png"
   alt: "2023"
   thumbnail:
-    size: "170px"
+    size: "160px"
     borders: "rounded"
 draft: true
 categories:

@@ -5,7 +5,7 @@
 {{- end -}}
 >
   <div style="height:3.5rem;"></div>
-  <h1>{{ .Title }}</h1>
+  <h2>{{ .Title }}</h2>
   <p class="description">{{ .Description }}</p>
 </div>
 <div class="container-fluid bg-nav p-4">
@@ -14,7 +14,7 @@
       {{ if or (ne .Params.toc false) (ne .Params.toc "false") }}
       <div class="bg-mat p-4 rounded" style="overflow-x: auto;">
         <div class="h4 mb-3">
-        Contents
+        目錄 👇
         </div>
         {{ .TableOfContents }}
       </div>
@@ -46,14 +46,14 @@
               {{- $wordCount = print (.WordCount) " words" }}
             {{- end }}
             {{- if and site.Params.position.postMeta.readingTime.content (eq site.Params.position.postMeta.readingTime.content "top") }}
-              {{- $readingTime = print (lang.NumFmt 0 (div .WordCount 130)) " min read" -}}
+              {{- $readingTime = print (lang.NumFmt 0 (div .WordCount 130)) " 閱讀時間" -}}
             {{- end }}
             {{- if and site.Params.position.postMeta.author.content (eq site.Params.position.postMeta.author.content "top") }}
               {{- $author = print "By " (default site.Params.meta.author .Params.author) }}
             {{- end }}
             {{- if .Lastmod }}
               {{- if and site.Params.position.postMeta.lastUpdated.content (eq site.Params.position.postMeta.lastUpdated.content "top") }}
-                {{- $lastUpdated = print "<span class=''>Last updated: " (.Lastmod.Format "January 2, 2006") }}</span>
+                {{- $lastUpdated = print "<span class=''>最近更新: " (.Lastmod.Format "2006 | 1 / 2") }}</span>
               {{- end }}
             {{- end }}
             
@@ -74,7 +74,7 @@
           <div class="col-md-auto ml-3 my-auto">
             <div class="row">
               <div class="col-auto p-0 my-auto">
-              Share on:&nbsp;&nbsp;
+              分享 ➥&nbsp;&nbsp;
               </div>
               <div class="col p-0">
                 <span class="lead">

@@ -8,7 +8,7 @@ image:
   src: "/img/sqPhculUe.jfif"
   alt: "2023"
   thumbnail:
-    size: "170px"
+    size: "160px"
     borders: "rounded"
 categories:
   - 影片

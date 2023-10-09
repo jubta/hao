@@ -43,6 +43,8 @@ build:
 
 outputs:
   home: ["HTML", "RSS", "JSON"]
+
+paginate: 5
  
 # Here starts our customization
 params:

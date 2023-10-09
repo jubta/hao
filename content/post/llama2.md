@@ -8,7 +8,7 @@ image:
   src: "/img/52425327-90c7-46ea-ad0f-251e72a712d0.jfif"
   alt: "2023"
   thumbnail:
-    size: "170px"
+    size: "160px"
     borders: "rounded"
 categories:
   - AI
