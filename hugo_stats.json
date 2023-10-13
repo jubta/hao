@@ -20,6 +20,7 @@
       "iframe",
       "img",
       "input",
+      "left",
       "li",
       "link",
       "meta",
@@ -31,7 +32,6 @@
       "script",
       "small",
       "span",
-      "style",
       "title",
       "ul"
     ],
@@ -88,7 +88,6 @@
       "mb-0",
       "mb-1",
       "mb-3",
-      "meta-media",
       "ml-2",
       "ml-3",
       "ml-md-auto",
@@ -134,8 +133,7 @@
       "text-light",
       "text-muted",
       "text-nav",
-      "text-reset",
-      "video"
+      "text-reset"
     ],
     "ids": [
       "9款綜藝卡通花字mogrt",

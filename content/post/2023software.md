@@ -19,10 +19,12 @@ categories:
 
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
 
-{{< figure src=/img/hugo.png width="80%" >}}
+<left>{{< figure src=/img/hugo.png width="560" height="315" >}}</left>
 
 
 ---
+
+
 ##### 第一款 火柴（火螢醬） [鏈接](https://www.huochaipro.com/)
 
 
@@ -48,4 +50,4 @@ categories:
 ### `解說視頻 !!!!`
 
 
-{{< youtube srL5V8JhNww >}}
+{{< centeredYoutube srL5V8JhNww >}}

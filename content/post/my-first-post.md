@@ -23,7 +23,7 @@ categories:
 
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
 
-{{< figure src=/img/hugo.png width="349px" height="196px" >}}
+<center>{{< figure src=/img/hugo.png width="560" height="315" >}}</center>
 
 
 
@@ -46,7 +46,11 @@ cd yourSiteName # move in to the Hugo website's directory
 
 
 ---------------------------------------------------------------------------------------------------
-<center>{{< youtube srL5V8JhNww >}}</center>
+{{< centeredYoutube srL5V8JhNww >}}
+
+
+
+
 
 ### 範例/
 
@@ -75,4 +79,9 @@ Be sure to swap out `${package.json.version}` with the actual
 [鈞鈞博客](https://jiun8631.vercel.app/) #超連結
 
 1.   #有序列表 任意 數字+點+空格
+
+
+<div class="center-text">
+<h1>這段文字會被居中。</h1>
+</div>
 
