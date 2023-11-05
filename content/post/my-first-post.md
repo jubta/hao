@@ -23,6 +23,8 @@ categories:
 
 [個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
 
+**Windows 11 Tiny極限精簡版:** 【[點選下載](https://archive.org/details/tiny-11-core-x-64-beta-1)】
+
 <center>{{< figure src=/img/hugo.png width="560" height="315" >}}</center>
 
 
