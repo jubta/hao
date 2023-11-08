@@ -82,7 +82,7 @@ Be sure to swap out `${package.json.version}` with the actual
 
 1.   #有序列表 任意 數字+點+空格
 
-
+#1. 
 <div class="center-text">
 <h1>這段文字會被居中。</h1>
 </div>
