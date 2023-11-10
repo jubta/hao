@@ -3,11 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://jiun8631.vercel.app/tags/openai/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/post/openai%E9%87%8D%E6%96%B0%E5%AE%9A%E7%BE%A9%E8%A6%8F%E5%89%87%E8%AE%93%E6%89%80%E6%9C%89%E7%8E%A9%E5%AE%B6%E9%87%8D%E6%96%B0%E6%B4%97%E7%89%8C/</loc>
+    <loc>https://jiun8631.vercel.app/tags/ai/</loc>
   </url>
   
   <url>
@@ -16,6 +12,14 @@
   
   <url>
     <loc>https://jiun8631.vercel.app/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/windows-11/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/windows11_23h2/</loc>
   </url>
   
   <url>
@@ -31,7 +35,7 @@
   </url>
   
   <url>
-    <loc>https://jiun8631.vercel.app/post/4k%E8%A6%96%E9%A0%BB%E8%BD%89%E6%8F%9B/</loc>
+    <loc>https://jiun8631.vercel.app/post/grok/</loc>
   </url>
   
   <url>
@@ -43,7 +47,19 @@
   </url>
   
   <url>
-    <loc>https://jiun8631.vercel.app/tags/ai/</loc>
+    <loc>https://jiun8631.vercel.app/post/chrome_ui/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/openai/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/openai%E9%87%8D%E6%96%B0%E5%AE%9A%E7%BE%A9%E8%A6%8F%E5%89%87%E8%AE%93%E6%89%80%E6%9C%89%E7%8E%A9%E5%AE%B6%E9%87%8D%E6%96%B0%E6%B4%97%E7%89%8C/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/4k%E8%A6%96%E9%A0%BB%E8%BD%89%E6%8F%9B/</loc>
   </url>
   
   <url>
@@ -52,10 +68,6 @@
   
   <url>
     <loc>https://jiun8631.vercel.app/tags/office-2024/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/tags/windows-11/</loc>
   </url>
   
   <url>
