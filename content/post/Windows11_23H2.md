@@ -15,7 +15,7 @@ categories:
   - 影片
 ---
 
-4K Converter是一款專業的4K轉換軟體
+Windows 11 23H2中的新微軟電腦管家應用程式。
 <!--more-->
 
 ## **Windows 11 23H2中的新微軟電腦管家應用程式**
