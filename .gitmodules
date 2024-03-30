@@ -4,3 +4,7 @@
 [submodule "themes/HugoTheme-VibrantShadows"]
 	path = themes/HugoTheme-VibrantShadows
 	url = https://github.com/Softorage/HugoTheme-VibrantShadows.git
+[submodule "jiun8631"]
+	path = jiun8631
+	url = https://github.com/jiun8631/jiun8631.git
+	branch = main
