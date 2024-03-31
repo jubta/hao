@@ -17,7 +17,11 @@ Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI �
 <!--more-->
 
 ## 新世代合成器！Meta 發布新開源 AI 工具 AudioCraft，輸入文字就能創作出音樂與音效
-{{< figure src=/img/6c73643a-d54a-455b-af02-c5768ea6012f.jfif width="80%" >}}
+
+<a href="/img/6c73643a-d54a-455b-af02-c5768ea6012f.jfif " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/6c73643a-d54a-455b-af02-c5768ea6012f.jfif " width="80%" alt="图片描述">
+</a>
+
 
 -----------------------------------------------------------------------------------
 

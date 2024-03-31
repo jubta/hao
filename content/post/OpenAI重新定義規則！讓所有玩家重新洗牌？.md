@@ -20,8 +20,9 @@ categories:
 
 ## **OpenAI重新定義規則！讓所有玩家重新洗牌？**
 
-<left>{{< figure src=/img/640.png width="560" height="315" >}}</left>
-
+<a href="/img/640.png " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/640.png " width="80%" alt="图片描述">
+</a>
 
 ### **GPT-4 Turbo：速度與智慧的雙重飛躍**
 

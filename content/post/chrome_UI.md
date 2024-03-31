@@ -20,7 +20,9 @@ categories:
 
 ## **開啟谷歌瀏覽器，全新UI界面**
 
-<left>{{< figure src=/img/開啟谷歌瀏覽器全新UI界面.png width="560" height="315" >}}</left>
+<a href="/img/開啟谷歌瀏覽器全新UI界面.png " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/開啟谷歌瀏覽器全新UI界面.png " width="80%" alt="图片描述">
+</a>
 
 **1.瀏覽器中輸入：** chrome://flags
 

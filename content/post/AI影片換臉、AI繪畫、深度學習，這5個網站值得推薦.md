@@ -20,12 +20,19 @@ categories:
 
 ## AI影片換臉、AI繪畫、深度學習，這5個網站值得推薦！
 
-<left>{{< figure src=/img/20481161.png width="400" height="225" >}}</left>
+<!-- <left>{{< figure src=/img/20481161.png width="400" height="225" >}}</left> 
+-->
 
+----------------------------------------------------------------------
 
 <a href="/img/20481161.png" data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/20481161.png" width="400" height="225" alt="图片描述">
+    <img src="/img/20481161.png" width="80%" alt="图片描述">
 </a>
+
+
+----------------------------------------------------------------------
+
+
 
 
 **1.圖片線上免費去背網站** 【[點擊前往](https://www.photoroom.com/tools/background-remover)】

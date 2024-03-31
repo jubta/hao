@@ -20,7 +20,9 @@ Windows 11 23H2中的新微軟電腦管家應用程式。
 
 ## **Windows 11 23H2中的新微軟電腦管家應用程式**
 
-<left>{{< figure src=/img/電腦管家.png width="560" height="315" >}}</left>
+<a href="/img/電腦管家.png " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/電腦管家.png " width="80%" alt="图片描述">
+</a>
 
 **電腦管家：** 【[前往鏈接](https://pcmanager.microsoft.com/en-us)】
 

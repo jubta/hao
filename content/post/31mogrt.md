@@ -15,7 +15,8 @@ categories:
 ---
 
 ## 款綜藝卡通花字mogrt
-{{< figure src=/img/wMqzfJ-dh.jfif width="80%" >}}
-
+<a href="/img/wMqzfJ-dh.jfif" data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/wMqzfJ-dh.jfif" width="80%" alt="图片描述">
+</a>
 
 ##### 花字 [鏈接](https://shopee.tw/31%E6%AC%BE%E7%B6%9C%E8%97%9D%E5%8D%A1%E9%80%9A%E8%8A%B1%E5%AD%97mogrt-i.58487771.21328135552?sp_atk=1d2b2562-5d62-4f32-ac9f-29fbfbdba6ca&xptdk=1d2b2562-5d62-4f32-ac9f-29fbfbdba6ca)

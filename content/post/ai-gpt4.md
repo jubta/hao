@@ -18,7 +18,9 @@ categories:
 
 ## 多種Ai開掛使用!!不用會後悔GPT-4
 {{< figure src=/img/4bbdae8c-f4f6-4ae0-9529-7d09d779f670.jfif width="80%" >}}
-
+<a href="/img/4bbdae8c-f4f6-4ae0-9529-7d09d779f670.jfif " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/4bbdae8c-f4f6-4ae0-9529-7d09d779f670.jfif " width="80%" alt="图片描述">
+</a>
 
 . gpt-3.5-turbo
 

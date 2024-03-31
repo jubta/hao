@@ -16,8 +16,10 @@ categories:
 是 Google Research 所推出的一項產品。它是一個基於 Jupyter Notebook
 <!--more-->
 ### ChatGPT最強的開源對手LLama2大語言模型
-{{< figure src=/img/52425327-90c7-46ea-ad0f-251e72a712d0.jfif width="80%" >}}
 
+<a href="/img/52425327-90c7-46ea-ad0f-251e72a712d0.jfif " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/52425327-90c7-46ea-ad0f-251e72a712d0.jfif " width="80%" alt="图片描述">
+</a>
 
 #### LLama AI官網
 

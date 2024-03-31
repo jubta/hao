@@ -20,8 +20,9 @@ GROK 可透過X 平台即時獲取訊息，因此具有很強的時效性...
 
 ## **探索人工智慧與幽默的交叉點：GROK 如何改變遊戲規則**
 
-<left>{{< figure src=/img/grok.jpg width="560" height="315" >}}</left>
-
+<a href="/img/grok.jpg " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/grok.jpg " width="80%" alt="图片描述">
+</a>
 
 格勞克概覽
 公告： 埃隆-馬斯克（Elon Musk）宣布，他的公司XAI 將於2023 年11 月3 日發布新的人工智慧GROK。

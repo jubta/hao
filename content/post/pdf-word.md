@@ -15,7 +15,8 @@ categories:
 ---
 
 ## pdf與word相互轉換
-{{< figure src=/img/Y8KKY3tlx.jfif width="80%" >}}
-
+<a href="/img/Y8KKY3tlx.jfif " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/Y8KKY3tlx.jfif " width="80%" alt="图片描述">
+</a>
 
 ##### pdf與word相互轉換 [鏈接](https://mega.nz/file/zSQVEYpJ#JYRAB3eNxDzBu4_ggdGMiHLFz3MdXzeRZqKan7ucHRc)

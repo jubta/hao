@@ -15,7 +15,8 @@ categories:
 ---
 
 ## 高質量武器音效-無償分享
-{{< figure src=/img/KcPMAALPe.jfif width="80%" >}}
-
+<a href="/img/KcPMAALPe.jfif " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/KcPMAALPe.jfif " width="80%" alt="图片描述">
+</a>
 
 ##### 高質量武器音效 [鏈接](https://mega.nz/file/ePYSlK7Z#dmmQzzP_93iOEkco9Lryb_pauHIWyuTYJcIqYt4svlg)

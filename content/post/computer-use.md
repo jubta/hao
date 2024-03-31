@@ -15,8 +15,9 @@ categories:
 ---
 
 ## 電腦使用技巧
-{{< figure src=/img/wnQ-OKdeR.jpg width="80%" >}}
-
+<a href="/img/wnQ-OKdeR.jpg " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/wnQ-OKdeR.jpg " width="80%" alt="图片描述">
+</a>
 
 1. 更改使用者名稱 ▶ netplwiz
 

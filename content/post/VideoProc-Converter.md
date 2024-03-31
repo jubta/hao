@@ -15,8 +15,9 @@ categories:
 ---
 
 ## VideoPro Converter
-{{< figure src=/img/vpc.jpeg width="80%" >}}
-
+<a href="/img/vpc.jpeg " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/vpc.jpeg " width="80%" alt="图片描述">
+</a>
 
 VideoProc Converter[視頻](https://youtu.be/XT3DOLS7_Nk)
 

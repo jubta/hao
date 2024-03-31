@@ -20,8 +20,9 @@ categories:
 
 ## **如果你電腦沒安裝conda，那麼請先下載安裝**
 
-<left>{{< figure src=/img/ai.jpg width="560" height="315" >}}</left>
-
+<a href="/img/ai.jpg " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/ai.jpg " width="80%" alt="图片描述">
+</a>
 
 如果你電腦沒安裝conda，那麼請先下載安裝【[**官方連結**](https://www.anaconda.com/products/distribution)】
 

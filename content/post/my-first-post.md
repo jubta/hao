@@ -27,6 +27,8 @@ categories:
 
 <center>{{< figure src=/img/hugo.png width="560" height="315" >}}</center>
 
+<a href="/img/hugo.png " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/hugo.png/img/hugo.png
 
 
 
