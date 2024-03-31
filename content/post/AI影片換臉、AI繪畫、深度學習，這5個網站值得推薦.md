@@ -22,6 +22,12 @@ categories:
 
 <left>{{< figure src=/img/20481161.png width="560" height="315" >}}</left>
 
+<picture>
+  <source srcset="/img/20481161.png" media="(min-width: 800px)">
+  <source srcset="/img/20481161.png" media="(min-width: 500px)">
+  <img src="/img/20481161.png" alt="descriptive text">
+</picture>
+
 
 **1.圖片線上免費去背網站** 【[點擊前往](https://www.photoroom.com/tools/background-remover)】
 
