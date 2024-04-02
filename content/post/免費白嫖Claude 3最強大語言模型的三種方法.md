@@ -3,7 +3,7 @@ title: "免費白嫖Claude 3最強大語言模型的三種方法"
 author: "鈞鈞"
 description: "AI"
 tags: ["AI", "影片" ]
-date: "2023-04-03"
+date: "2024-04-03"
 image:
   src: "/img/4e78f6.jpg"
   alt: "2024"
