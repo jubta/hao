@@ -5,7 +5,7 @@ description: "sound"
 tags: ["音效", "影片" ]
 date: "2024-04-05"
 image:
-  src: "/img/6-7.png"
+  src: "/img/6-7.jpg"
   alt: "2024"
   thumbnail:
     size: "170px"
