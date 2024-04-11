@@ -3,27 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://jiun8631.vercel.app/post/1007-sound/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/post/1007-sound%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</loc>
-  </url>
-  
-  <url>
     <loc>https://jiun8631.vercel.app/tags/ai/</loc>
   </url>
   
   <url>
     <loc>https://jiun8631.vercel.app/post/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/post/suno/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/post/suno_video/</loc>
   </url>
   
   <url>
@@ -43,7 +27,27 @@
   </url>
   
   <url>
+    <loc>https://jiun8631.vercel.app/post/freegpt4/</loc>
+  </url>
+  
+  <url>
     <loc>https://jiun8631.vercel.app/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/1007-sound/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/1007-sound%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/suno/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/suno_video/</loc>
   </url>
   
   <url>
