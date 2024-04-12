@@ -1,5 +1,9 @@
 {
   "data": [{
+        "title": "每天簽到領取免費GPT4、Claude3免費API | 視頻解說",
+        "permalink": "/post/freegpt4_vidoe/",
+        "content": "只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。\u0026hellip;.\n每天簽到領取免費GPT4、Claude3免費API | 視頻解說 重大更新:\nhttps://jiun8631.vercel.app/post/freegpt4/\n"
+      },{
         "title": "每天簽到領取免費GPT4、Claude3免費API",
         "permalink": "/post/freegpt4/",
         "content": "只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。\u0026hellip;.\n每天簽到領取免費GPT4、Claude3免費API 進入網站 頭頂冒火 【點擊前往】\n1.建立令牌\nAPI 呼叫範例 要透過API 與服務進行交雲，您需要準備適當的請求，這包括設定請求頭和請求體：\n介面URL: https://burn.hair/v1/chat/completions\n請求頭:應包括 Authorization: Bearer sk-您的令牌，以便系統驗證您的請求。\n請求體範例:\n{ \u0026#34;model\u0026#34; : \u0026#34;gpt-3.5-turbo\u0026#34; , \u0026#34;messages\u0026#34; : [ { \u0026#34;role\u0026#34; : \u0026#34;user\u0026#34; , \u0026#34;content\u0026#34; : \u0026#34;重複我說的話：我是我，你是你。\u0026#34; } ] , \u0026#34; temperature\u0026#34; : 0.7 } 請根據需要替換模型名稱或調整請求體的其他參數。\nClaude 模型支持 本服務同時支援Claude 模型，您可以按照以下格式進行呼叫：\n{ \u0026#34;model\u0026#34; : \u0026#34;claude-3-opus-20240229\u0026#34; , \u0026#34;max_tokens\u0026#34; : 1024 , \u0026#34;messages\u0026#34; : [ { \u0026#34;role\u0026#34; : \u0026#34;user\u0026#34; , \u0026#34;content\u0026#34; : \u0026#34;Hello, world\u0026#34; } ] } Midjourney 支持 目前，本服務尚不支援Midjourney 模式。 模型變化解釋 如果您發現日誌中模型名稱頻繁變動，這可能是因為您使用的是NextChat 功能，它會根據需要自動選擇最合適的模型進行回應。 "
