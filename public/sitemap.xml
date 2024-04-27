@@ -3,19 +3,19 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://jiun8631.vercel.app/categories/70b/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/tags/ai/</loc>
-  </url>
-  
-  <url>
     <loc>https://jiun8631.vercel.app/post/</loc>
   </url>
   
   <url>
     <loc>https://jiun8631.vercel.app/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/categories/youtube/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/post/shine/</loc>
   </url>
   
   <url>
@@ -27,15 +27,27 @@
   </url>
   
   <url>
+    <loc>https://jiun8631.vercel.app/tags/%E7%B4%A0%E6%9D%90/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/categories/70b/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/tags/ai/</loc>
+  </url>
+  
+  <url>
     <loc>https://jiun8631.vercel.app/post/llama3/</loc>
   </url>
   
   <url>
     <loc>https://jiun8631.vercel.app/post/llama3_vidoe/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/</loc>
   </url>
   
   <url>
@@ -48,6 +60,10 @@
   
   <url>
     <loc>https://jiun8631.vercel.app/categories/%E5%BD%B1%E7%89%87/</loc>
+  </url>
+  
+  <url>
+    <loc>https://jiun8631.vercel.app/categories/%E7%B4%A0%E6%9D%90/</loc>
   </url>
   
   <url>
@@ -212,14 +228,6 @@
   
   <url>
     <loc>https://jiun8631.vercel.app/categories/%E9%9F%B3%E6%95%88/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/tags/%E7%B4%A0%E6%9D%90/</loc>
-  </url>
-  
-  <url>
-    <loc>https://jiun8631.vercel.app/categories/%E7%B4%A0%E6%9D%90/</loc>
   </url>
   
   <url>
