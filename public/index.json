@@ -1,5 +1,9 @@
 {
   "data": [{
+        "title": "AI 免費搜索神器!!跟baidu/google等搜尋說再見",
+        "permalink": "/post/search/",
+        "content": "為了快速啟動，這裡不需要修改任何配置，只需執行下面的 docker compose 即可\u0026hellip;.\nAI 免費搜索神器!!跟baidu/google等搜尋說再見 1.\n安裝 Docker 【點此連結】 2.\n克隆代碼 git clone https://github.com/yokingma/search_with_ai.git cd search_with_ai 3.\n編輯 .env 檔 為了快速啟動，這裡不需要修改任何配置，只需執行下面的 docker compose 即可。\n... # default is for docker-compose, could modify if you need. OPENAI_KEY=freegpt35 OPENAI_PROXY_URL=http://freegpt35:3040/v1 # Local llm: Ollama hostname, could modify if you need. OLLAMA_HOST=http://host.docker.internal:11434 # Searxng hostname, could modify if you need. SEARXNG_HOSTNAME=http://searxng:8080 使用 docker-compose 運行。 （無需鑰匙） docker compose up -d "
+      },{
         "title": "Youtube常用視頻素材",
         "permalink": "/post/shine/",
         "content": "150個鏡頭光效老電影VHS\u0026hellip;.\nYoutube常用視頻素材 150個鏡頭光效老電影VHS故障干擾轉場過渡動畫 35個漏光過渡、25個毛刺過渡、20個抽像光過渡 20個電視過渡、15個老電影過渡 、10個恐怖過渡 12個鏡頭光斑過渡、15個VHS老錄像帶過渡 都是MP4格式，H.264視訊編碼，無透明通道 免費素材 【點此連結】"
