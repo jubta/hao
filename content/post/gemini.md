@@ -12,7 +12,6 @@ image:
     borders: "rounded"
 draft: false
 categories:
-> 引用
 
 ---
 
