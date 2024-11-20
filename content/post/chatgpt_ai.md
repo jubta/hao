@@ -3,7 +3,7 @@ title: "ChatGPT 桌面版正式免費發佈！多應用交互模式讓AI接管�
 author: "鈞鈞"
 description: ""
 tags: ["文章", "Ai" ]
-date: "2024-11-19"
+date: "2024-11-20"
 image:
   src: "/img/IMG_5546.WEBP"
   alt: "2024"
