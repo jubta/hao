@@ -28,7 +28,7 @@ categories:
 
 ChatGPT 桌面版本現已正式免費發佈！多應用交互模式和您的工作、寫作和創作方式進行無縫集成，AI 接管電腦已經開始！
 
-## **官方免費下載:** **【[點擊前往](https://openai.com/chatgpt/desktop/)】**或直接下载 **【[安裝包](http://pan.tuio.cc/s/9pAHM)】**
+## **官方免費下載:** **【[點擊前往](https://openai.com/chatgpt/desktop/)】** 或直接下载 **【[安裝包](http://pan.tuio.cc/s/9pAHM)】**
 
 **【[簡體中文](https://apps.microsoft.com/detail/9nt1r1c2hh7j?hl=zh-cn&gl=US)】** 、 **【[繁體中文](https://apps.microsoft.com/detail/9nt1r1c2hh7j?hl=zh-TW&gl=US)】**
 
