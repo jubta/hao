@@ -5,7 +5,7 @@ description: ""
 tags: ["文章", "Grok2" ]
 date: "2024-11-24"
 image:
-  src: "/img/IMG_5600"
+  src: "/img/IMG_5600.WEBP"
   alt: "2024"
   thumbnail:
     size: "170px"
@@ -54,20 +54,20 @@ YTPatch 是 YouTube 應用程式的一個易於使用的調整，允許用戶在
 
 ---
 
-<a href="/img/IMG_5601 " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5601 " width="80%" alt="图片描述">
+<a href="/img/IMG_5601.WEBP " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/IMG_5601.WEBP " width="80%" alt="图片描述">
 </a>
 
 ---
 
-<a href="/img/IMG_5602 " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5602 " width="80%" alt="图片描述">
+<a href="/img/IMG_5602.WEBP " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/IMG_5602.WEBP " width="80%" alt="图片描述">
 </a>
 
 ---
 
-<a href="/img/IMG_5602 " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5602 " width="80%" alt="图片描述">
+<a href="/img/IMG_5602.WEBP " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/IMG_5602.WEBP " width="80%" alt="图片描述">
 </a>
 
 ---
