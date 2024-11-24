@@ -2,7 +2,7 @@
 title: "TrollStore 應用程式 : 修補 iOS 中的 AppStore 應用程式"
 author: "鈞鈞"
 description: ""
-tags: ["文章", "Grok2" ]
+tags: ["文章", "trollstore" ]
 date: "2024-11-24"
 image:
   src: "/img/IMG_5600.WEBP"
