@@ -20,8 +20,8 @@ categories:
 
 ## **TrollStore 應用程式 : 修補 iOS 中的 AppStore 應用程式**
 
-<a href="/img/IMG_5600 " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5600 " width="80%" alt="图片描述">
+<a href="/img/IMG_5600.WEBP " data-lightbox="image-1" data-title="我的图片">
+    <img src="/img/IMG_5600.WEBP " width="80%" alt="图片描述">
 </a>
 
 ---
