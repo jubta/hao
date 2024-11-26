@@ -45,37 +45,40 @@ RyTuneX 操作非常簡單，且不會佔用過多系統資源，非常適合小
 ### **系統優化**
 
 提供了一鍵性能調整、遊戲模式、禁用自動更新等操作，提升系統流暢度：
----
+
 
 <a href="/img/IMG_5620.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5620.JPG " width="80%" alt="图片描述">
 </a>
+
 ---
 
 ### **減少臃腫**
 
 Windows 系統自帶的一些組件可能我們萬年都用不上，卸載或者禁用不需要的組件，從而減輕系統負擔：
----
+
 
 <a href="/img/IMG_5621.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5621.JPG " width="80%" alt="图片描述">
 </a>
+
 ---
 
 ### **隱私功能**
 
 可以禁用諸如遙測服務、Edge 遙測等功能，有效的保護個人隱私，防止私密信息洩漏：
----
+
 
 <a href="/img/IMG_5622.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5622.JPG " width="80%" alt="图片描述">
 </a>
+
 ---
 
 ### **Windows 功能**
 
 可以定制化 Windows 系統的一些功能選項，如人脈、 CoPilot AI 助手、小組件等，使更符合個人使用習慣：
----
+
 
 <a href="/img/IMG_5623.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5623.JPG " width="80%" alt="图片描述">
