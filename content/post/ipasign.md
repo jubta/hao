@@ -31,7 +31,7 @@ categories:
 
 DNS : **[打開鏈接](https://www.mediafire.com/file/tj89hirqfb81g80/flux-anti.mobileconfig/file)**
 
-IPASign : **[打開鏈接](https://sign.ipasign.cc/)**
+IPASign : **[打開鏈接](https://ipasign.pro/)**
 
 Certificate : **[打開鏈接](https://www.mediafire.com/file/sivjzx5zhgno946/China+Mobile+Group+Shandong+Co.,+Ltd.zip/file)**
 
