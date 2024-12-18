@@ -31,7 +31,7 @@ categories:
 
 DNS : **[OPEN](https://khoindvn.io.vn/document/DNS/khoindns.mobileconfig?sign=1)**
 
-ESign install : **[OPEN](https://ipasign.pro/)**
+ESign install : **[OPEN](https://install.appcenter.ms/users/abdgodfotot-gmail.com/apps/esign-1/distribution_groups/xo)**
 
 Certificate : **[OPEN](https://www.mediafire.com/file/sivjzx5zhgno946/China+Mobile+Group+Shandong+Co.,+Ltd.zip/file)**
 
