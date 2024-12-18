@@ -15,7 +15,7 @@ categories:
 
 ---
 
-🤝Support ME 🤝🤝
+🤝Support ME 🤝
 💸 Support me : https://ko-fi.com/hao3976....
 <!--more-->
 
