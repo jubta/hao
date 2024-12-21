@@ -22,7 +22,7 @@ categories:
 ## **NEW Method to Install Scarlet on iPhone (iOS 15-18) | Install IPA Files on iPhone/iPad Without PC**
 
 ---
-{{< centeredYoutube mzsvBKPBox4 >}}
+{{< centeredYoutube jKOxTGtw5Io >}}
 
 
 ---
