@@ -65,7 +65,7 @@ params:
     name: "鈞鈞博客" # brand name (Samy's blog), usually just one word that is name of the brand | required | no default
     logo_500px: "/assets/favicon/android-chrome-512x512.png" # path (preferably relative path) to brand's good resolution logo | required | no default
     logo_32px: "/assets/favicon/favicon-32x32.png" # will be shown on navbar as is
-    color: "#7d1fa5" # color to be shown for brand name on navbar on scroll | required | no default
+    color: "#1f3ea5" # color to be shown for brand name on navbar on scroll | required | no default
     navbar: ["logo", "name"] # accepts array of values: "logo", "name" | this configuration shows brand 'log' & brand 'name' on navbar | optional | default: ["logo", "name"]
   theme: # optional
     nav: "#ffffff" # navbar's background color | optional | default: "#ffffff"
