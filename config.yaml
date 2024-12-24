@@ -54,7 +54,7 @@ params:
       instagram: "https://instagram.com/jiun_studios90456?igshid=OGQ5ZDc2ODk2ZA=="
     share: ["facebook", "twitter", "linkedin", "telegram", "whatsapp", "reddit", "email"] # accepts array of values: "facebook", "twitter", "linkedin", "whatsapp", "reddit", "email". just type the name of those you want you articles to be able to be shared on
   meta:
-    author: "JIUN" # website-wide author | required
+    author: "HAO" # website-wide author | required
     footerMessage: "HAO" # text shown in footer above footer links | optional
     tagline: "Sharing my daily life" # shown in website title on homepage and also used in seo | required
     description: "Share Boutique Software Websites Materials Technology" # should include brand name | character length: 50 to 160 characters
