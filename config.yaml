@@ -1,5 +1,5 @@
 baseURL: "https://jiun8631.vercel.app/" # url address of the website | required
-title: "HAO皓分享" # title of the site; usually same as brand name | required
+title: "皓分享" # title of the site; usually same as brand name | required
 copyright: "Copyright &#169; 2020 Softorage. All rights reserved." # should match 'brand -> name', and 'contentLicense' under params below; used in default rss template: https://gohugo.io/templates/rss/#configure-rss | optional
 languageCode: "zh-tw" # recommended | no default
 theme: "HugoTheme-VibrantShadows"
@@ -62,7 +62,7 @@ params:
     titleSeparator: " | " # used in website/blog title, to separate (say) page title from website/blog title | default: " | "
     attribution: "disable" # attribute Hugo team for awesome software and Softorage for great theme | default: "enable"
   brand:
-    name: "HAO皓分享" # brand name (Samy's blog), usually just one word that is name of the brand | required | no default
+    name: "皓分享" # brand name (Samy's blog), usually just one word that is name of the brand | required | no default
     logo_500px: "/assets/favicon/android-chrome-512x512.png" # path (preferably relative path) to brand's good resolution logo | required | no default
     logo_32px: "/assets/favicon/favicon-32x32.png" # will be shown on navbar as is
     color: "#1f3ea5" # color to be shown for brand name on navbar on scroll | required | no default
