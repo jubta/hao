@@ -33,7 +33,7 @@ categories:
 
 ### **<font style="background: skyblue"> Wireguard</font>** **[: OPEN](https://apps.apple.com/us/app/wireguard/id1441195209)**
 
-### **<font style="background: pink"> jitterbugPair File</font>** **[: OPEN](https://apps.apple.com/us/app/wireguard/id1441195209)**
+### **<font style="background: pink"> jitterbugPair File</font>** **[: OPEN](https://sidestore.io/#get-started)**
 
 🤝Support ME 🤝
 💸 **Support me : https://ko-fi.com/hao3976**
