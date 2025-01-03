@@ -38,8 +38,6 @@ Support ME
 
 **[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
 
-**[Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2 | NEW](https://youtu.be/ygGUh-kUyd0)**
-
 **[NEW Method to Install Scarlet on iPhone (iOS 15-18) | Install IPA Files on iPhone/iPad Without PC](https://youtu.be/jKOxTGtw5Io)**
 
 **[NEW! Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/CifAaIlf8J0)**
