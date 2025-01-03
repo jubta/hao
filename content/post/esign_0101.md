@@ -44,8 +44,6 @@ categories:
 
 **[NEW Method to Install Scarlet on iPhone (iOS 15-18) | Install IPA Files on iPhone/iPad Without PC](https://youtu.be/jKOxTGtw5Io)**
 
-**[NEW! Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/CifAaIlf8J0)**
-
 **[ESign Installation Fixed on iOS 15-18 | Install IPA Files on iPhone & iPad Without Jailbreak / PC](https://youtu.be/QHFRzVgpCsQ)**
 
 **[NEW Install iPA & Source on ESign iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/8zuNH1s0FcM)**
