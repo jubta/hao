@@ -34,6 +34,8 @@ Support me : https://ko-fi.com/hao3976....
 Support ME 
 **Support me : https://ko-fi.com/hao3976**
 
+ **<font style="background: pink"> Pay iPA </font>** **[  : OPEN](https://www.patreon.com/hao8?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink)**
+
 ---
 
 **[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
