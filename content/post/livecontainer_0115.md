@@ -28,7 +28,9 @@ Support me : https://ko-fi.com/hao3976....
 
 ## **Useful Links**
 
-##### **<font style="background: #f0e38d"> Flekstore install </font>** **[  : OPEN](https://github.com/khanhduytran0/LiveContainer)**
+##### **<font style="background: #f0e38d"> livecontainer install </font>** **[  : OPEN](https://github.com/khanhduytran0/LiveContainer)**
+
+##### **<font style="background: #f0e38d"> Sidestore install </font>** **[  : OPEN](https://sidestore.io/)**
 
 #livecontainer #nojailbreak
 This comprehensive guide provides instructions for installing and utilizing Livecontainer on iOS 18. Livecontainer enables you to operate an unlimited number of applications without installation, exempting you from the standard 3-app and 10-app restrictions. Remarkably, this approach does not necessitate the use of a PC or jailbreaking your device. Nevertheless, the utilization of SideStore or AltStore is required. Additionally, by setting up extra Livecontainers, you can manage multiple applications directly on your device. Both the presented method and Livecontainer itself are entirely free of charge.
