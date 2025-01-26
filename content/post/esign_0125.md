@@ -5,7 +5,7 @@ description: ""
 tags: ["文章", "Esign" ]
 date: "2025-01-25"
 image:
-  src: "/img/IMG_6678.JPG"
+  src: "/img/IMG_1111.JPG"
   alt: "2025"
   thumbnail:
     size: "170px"
