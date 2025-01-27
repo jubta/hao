@@ -57,7 +57,7 @@ params:
     author: "HAO" # website-wide author | required
     footerMessage: "HAO" # text shown in footer above footer links | optional
     tagline: "Sharing my daily life" # shown in website title on homepage and also used in seo | required
-    description: "Share Boutique Software Websites Materials Technology" # should include brand name | character length: 50 to 160 characters
+    description: "We already walked too far, down to we had forgotten why embarked" # should include brand name | character length: 50 to 160 characters
     contentLicense: "HAO" # cc-by-3.0, etc or 'All right reserved.' should also be same as the one in copyright above
     titleSeparator: " | " # used in website/blog title, to separate (say) page title from website/blog title | default: " | "
     attribution: "disable" # attribute Hugo team for awesome software and Softorage for great theme | default: "enable"
