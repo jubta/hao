@@ -28,7 +28,7 @@ Support me : https://ko-fi.com/hao3976....
 
 ## **Useful Links**
 
-##### **<font style="background: pink"> accessible Github </font>** **[  : OPEN](https://github.com/lunginspector/Accessible)**
+##### **<font style="background: pink"> whatsapp watusi github </font>** **[  : OPEN](https://github.com/FouadRaheb/Watusi-for-WhatsApp)**
 
 #iphone #watusi  #whatsapp
 Watusi is a popular tool for customizing WhatsApp on iPhone without needing a jailbreak. In this video, I'll show you how to install Watusi on iOS 18 using a new and simple method. Enjoy all the additional features without any hassle!
