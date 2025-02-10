@@ -28,7 +28,7 @@ Support me : https://ko-fi.com/hao3976....
 
 ## **Useful Links**
 
-##### **<font style="background: pink"> Accessible 4.0 install </font>** **[  : OPEN](https://gemini.google.com/)**
+##### **<font style="background: pink"> Google gemimi 2.0 new model</font>** **[  : OPEN](https://gemini.google.com/)**
 
 key word: *Generated image: (a high-class villa)*
 
