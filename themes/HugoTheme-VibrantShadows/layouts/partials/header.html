@@ -105,9 +105,8 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>{{ .Title }}</title>
+  <title>烟雾效果示例</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- 其他 head 内容 -->
   <style>
     /* 用于绘制烟雾效果的 Canvas 层 */
     #smoke-canvas {
@@ -125,14 +124,11 @@
   <!-- 烟雾效果 Canvas -->
   <canvas id="smoke-canvas"></canvas>
 
-  <!-- 页面主体内容 -->
-  {{ block "main" . }}
-  <!-- 你的页面内容 -->
-  {{ end }}
+  <!-- 这里可以加入你的实际页面内容 -->
+  <!-- 例如：<main>你的内容...</main> -->
 
-  <!-- 在页面底部添加以下脚本 -->
+  <!-- 脚本部分 -->
   <script>
-    // 获取 Canvas 元素及上下文
     const canvas = document.getElementById('smoke-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -184,19 +180,23 @@
     // 存放所有活跃粒子的数组
     const particles = [];
 
-    // 鼠标移动事件，产生烟雾粒子
-    document.addEventListener('mousemove', function(e) {
-      // 每次鼠标移动时，生成多个粒子（根据需要调整数量）
+    // 生成粒子的函数
+    function createParticles(x, y) {
+      // 每次生成多个粒子
       for (let i = 0; i < 3; i++) {
-        particles.push(new Particle(e.clientX, e.clientY));
+        particles.push(new Particle(x, y));
       }
+    }
+
+    // 监听鼠标移动事件（电脑端）
+    document.addEventListener('mousemove', function(e) {
+      createParticles(e.clientX, e.clientY);
     });
-    
+
     // 监听触摸移动事件（移动端）
     document.addEventListener('touchmove', function(e) {
-      // 防止默认滚动（如果不需要滚动效果，可以启用 preventDefault）
+      // 如果需要阻止页面滚动，请取消下面的注释，并将 passive 设为 false
       // e.preventDefault();
-      // 处理多点触控时，取第一个触点
       const touch = e.touches[0];
       createParticles(touch.clientX, touch.clientY);
     }, { passive: true });
@@ -204,10 +204,10 @@
     // 动画循环：更新并绘制粒子
     function animate() {
       requestAnimationFrame(animate);
-      // 每帧清空 Canvas
+      // 清空 Canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // 遍历所有粒子，更新位置并绘制，然后移除已消失的粒子
+      // 更新和绘制所有粒子，并移除已经消失的粒子
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.update();
@@ -221,6 +221,7 @@
   </script>
 </body>
 </html>
+
 
     </div>
   </nav>
