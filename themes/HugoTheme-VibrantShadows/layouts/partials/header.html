@@ -191,6 +191,15 @@
         particles.push(new Particle(e.clientX, e.clientY));
       }
     });
+    
+    // 监听触摸移动事件（移动端）
+    document.addEventListener('touchmove', function(e) {
+      // 防止默认滚动（如果不需要滚动效果，可以启用 preventDefault）
+      // e.preventDefault();
+      // 处理多点触控时，取第一个触点
+      const touch = e.touches[0];
+      createParticles(touch.clientX, touch.clientY);
+    }, { passive: true });
 
     // 动画循环：更新并绘制粒子
     function animate() {
