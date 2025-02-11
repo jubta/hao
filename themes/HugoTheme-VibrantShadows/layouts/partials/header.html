@@ -101,6 +101,118 @@
           {{ end }}
         </div>
       {{ end }}
+      <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ .Title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 其他 head 内容 -->
+  <style>
+    /* 用于绘制烟雾效果的 Canvas 层 */
+    #smoke-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1; /* 放到页面背景 */
+    }
+  </style>
+</head>
+<body>
+  <!-- 烟雾效果 Canvas -->
+  <canvas id="smoke-canvas"></canvas>
+
+  <!-- 页面主体内容 -->
+  {{ block "main" . }}
+  <!-- 你的页面内容 -->
+  {{ end }}
+
+  <!-- 在页面底部添加以下脚本 -->
+  <script>
+    // 获取 Canvas 元素及上下文
+    const canvas = document.getElementById('smoke-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // 调整 Canvas 尺寸以适应窗口
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // 定义烟雾粒子类
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        // 为粒子赋予随机方向（主要向上）和轻微横向随机偏移
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = - (Math.random() * 1 + 0.5);
+        // 初始不透明度为 1，之后逐渐衰减
+        this.alpha = 1;
+        // 粒子大小随机，调节此处可影响烟雾浓度
+        this.size = Math.random() * 5 + 5; // 大小在 5 ~ 10 之间
+        // 粒子生命周期（以帧计），用于控制衰减速度
+        this.life = Math.random() * 30 + 30;
+        this.age = 0;
+      }
+      
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.age++;
+        // 根据生命周期衰减透明度
+        this.alpha = Math.max(0, 1 - this.age / this.life);
+      }
+      
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        // 使用金色绘制烟雾粒子
+        ctx.fillStyle = "#ffd700"; // 金色
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // 存放所有活跃粒子的数组
+    const particles = [];
+
+    // 鼠标移动事件，产生烟雾粒子
+    document.addEventListener('mousemove', function(e) {
+      // 每次鼠标移动时，生成多个粒子（根据需要调整数量）
+      for (let i = 0; i < 3; i++) {
+        particles.push(new Particle(e.clientX, e.clientY));
+      }
+    });
+
+    // 动画循环：更新并绘制粒子
+    function animate() {
+      requestAnimationFrame(animate);
+      // 每帧清空 Canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // 遍历所有粒子，更新位置并绘制，然后移除已消失的粒子
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw(ctx);
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+    animate();
+  </script>
+</body>
+</html>
+
     </div>
   </nav>
 </header>
