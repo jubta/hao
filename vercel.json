@@ -1,9 +1,0 @@
-{
-  "routes": [
-    {
-      "src": "/post/protected/(.*)", 
-      "dest": "/api/protected/$1",
-      "check": false
-    }
-  ]
-}
