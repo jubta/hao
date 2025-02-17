@@ -125,3 +125,17 @@ I hope this translation provides a comprehensive understanding and discussion on
 </a>
 
 **[Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2 | NEW](https://youtu.be/ygGUh-kUyd0)**
+
+:::{dropdown}
+Dropdown content
+:::
+
+:::{dropdown} Dropdown title
+Dropdown content
+:::
+
+:::{dropdown} Open dropdown
+:open:
+
+Dropdown content
+:::
