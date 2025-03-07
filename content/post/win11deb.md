@@ -148,13 +148,6 @@ Scripts are automatically downloaded and run via PowerShell. %temp%/Win11Debloat
 
 5. Carefully read and follow the on-screen instructions.
 
-{{< chat position="left" name="John Doe" timestamp="2023-09-12 14:30">}}
-你好
-{{< /chat >}}
-{{< chat position="right" name="Alice" timestamp="2023-09-12 14:45" >}} 
-你好呀很高興見到你！
-{{< /chat >}}
-
 
 
 
