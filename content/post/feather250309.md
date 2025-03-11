@@ -130,7 +130,7 @@ Overall, Feather provides iOS users with a convenient way to manage and install 
 **[ USEFUL LINK](https://jiun8631.vercel.app/post/feather_1230/)**
 
 ##### **<font style="background:  "> Feather IPA :</font>** 
-**[ USEFUL LINK](https://dxsign.cc/purchase)**
+**[ USEFUL LINK](https://github.com/khcrysalis/Feather)**
 
 ##### **<font style="background:  "> ipasign:</font>** 
 **[ USEFUL LINK](https://sign.ipasign.cc/)**
