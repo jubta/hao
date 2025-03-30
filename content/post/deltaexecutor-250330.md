@@ -92,7 +92,7 @@ Support me thks 😭 : https://www.paypal.me/haotech....
 
 ---
 
-In this video, I’ll guide you through the straightforward process of downloading and installing Delta Executor V2.665 for Roblox on your Android device. Whether you're new to the process or a seasoned pro, this tutorial guarantees a safe and seamless installation experience.
+In this video, I’ll guide you through the straightforward process of downloading and installing Delta Executor V2.666 for Roblox on your ios device. Whether you're new to the process or a seasoned pro, this tutorial guarantees a safe and seamless installation experience.
 
 ##### **<font style="background:  "> Get the App for free for a limited time ❤️：</font>** 
 **[LINK](https://jiun8631.vercel.app/post/vocam-translator-ai-translate/)**
