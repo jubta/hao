@@ -1,5 +1,5 @@
 ---
-title: "DIRECT Install Delta Executor V2.666 for Roblox on iOS | Best Roblox Executor on iPhone & iPad
+title: "DIRECT Install Delta Executor V2.666 for Roblox on iOS | Best Roblox Executor on iPhone & iPad"
 author: "HAO"
 description: ""
 tags: ["文章", "Roblox" ]
