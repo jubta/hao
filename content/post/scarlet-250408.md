@@ -29,5 +29,5 @@ I hope I can be seen by more people😇
 ##### **<font style="background:  "> Fix unable verify esign etc :</font>** 
 **[ LINK ](https://jiun8631.vercel.app/post/fixverify-250318/)**
 
-##### **<font style="background: "> Delta Executor Mobile V2.665 for Roblox on Android :</font>** 
+##### **<font style="background: "> install Scarlet :</font>** 
 **[ LINK ](https://scarletinstall.bio.link/)**
