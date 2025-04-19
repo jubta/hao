@@ -1,0 +1,12 @@
+{{- $url := .Get "url" -}}
+{{- $base64 := $url | printf "itms-services://?action=download-manifest&url=%s" | base64Encode -}}
+
+<button onclick="installApp()">安裝 App</button>
+
+<script>
+  function installApp() {
+    const encoded = "{{ $base64 }}";
+    const decoded = atob(encoded);
+    window.location.href = decoded;
+  }
+</script>
