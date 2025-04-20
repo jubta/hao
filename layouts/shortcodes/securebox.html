@@ -1,0 +1,31 @@
+<div class="secure-box" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  {{ .Inner }}
+</div>
+
+<style>
+.secure-box {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+  position: relative;
+}
+
+.secure-box * {
+  user-select: none !important;
+}
+
+body {
+  -webkit-touch-callout: none; /* 禁止 iOS 長按選單 */
+}
+</style>
+
+<script>
+  // 禁止右鍵功能
+  document.addEventListener('contextmenu', function (e) {
+    if (e.target.closest('.secure-box')) {
+      e.preventDefault();
+    }
+  });
+</script>
