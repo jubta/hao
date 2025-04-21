@@ -1,12 +1,40 @@
 {{- $url := .Get "url" -}}
-{{- $base64 := $url | printf "itms-services://?action=download-manifest&url=%s" | base64Encode -}}
+{{- $encoded := .Get "encoded" -}}
 
-<button onclick="installApp()">安裝 App</button>
+{{- if $url }}
+  {{- $link := printf "itms-services://?action=download-manifest&url=%s" $url | base64Encode }}
+{{- else if $encoded }}
+  {{- $link := $encoded | base64Decode | base64Encode }}
+{{- end }}
+
+<div class="install-button-wrapper" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <button onclick="installApp()">安裝 App</button>
+</div>
 
 <script>
   function installApp() {
-    const encoded = "{{ $base64 }}";
+    const encoded = "{{ $link }}";
     const decoded = atob(encoded);
     window.location.href = decoded;
   }
+
+  // 禁止右鍵
+  document.addEventListener('contextmenu', function (e) {
+    if (e.target.closest('.install-button-wrapper')) {
+      e.preventDefault();
+    }
+  });
 </script>
+
+<style>
+.install-button-wrapper {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.install-button-wrapper * {
+  user-select: none !important;
+}
+</style>
