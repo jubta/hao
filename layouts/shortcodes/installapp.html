@@ -1,10 +1,12 @@
 {{- $url := .Get "url" -}}
 {{- $encoded := .Get "encoded" -}}
 
+{{- $link := "" -}}  {{/* 預先定義變數 */}}
+
 {{- if $url }}
-  {{- $link := printf "itms-services://?action=download-manifest&url=%s" $url | base64Encode }}
+  {{- $link = printf "itms-services://?action=download-manifest&url=%s" $url | base64Encode }}
 {{- else if $encoded }}
-  {{- $link := $encoded | base64Decode | base64Encode }}
+  {{- $link = $encoded | base64Decode | base64Encode }}
 {{- end }}
 
 <div class="install-button-wrapper" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
@@ -18,7 +20,6 @@
     window.location.href = decoded;
   }
 
-  // 禁止右鍵
   document.addEventListener('contextmenu', function (e) {
     if (e.target.closest('.install-button-wrapper')) {
       e.preventDefault();
@@ -33,7 +34,6 @@
   -ms-user-select: none;
   user-select: none;
 }
-
 .install-button-wrapper * {
   user-select: none !important;
 }
