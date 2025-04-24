@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
+<<<<<<< HEAD
     <title>AI on 鈞鈞博客</title>
     <link>https://jiun8631.vercel.app/tags/ai/</link>
     <description>Recent content in AI on 鈞鈞博客</description>
@@ -14,19 +15,62 @@
       <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/llama3/</guid>
+=======
+    <title>AI on 皓分享</title>
+    <link>https://jiun8631.pages.dev/tags/ai/</link>
+    <description>Recent content in AI on 皓分享</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 14 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.pages.dev/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Enable Apple Intelligence on Unsupported Device | Temu Apple Intelligence on iOS 16/17/18</title>
+      <link>https://jiun8631.pages.dev/post/appleintelligence-_0214/</link>
+      <pubDate>Fri, 14 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/appleintelligence-_0214/</guid>
+      <description>&lt;p&gt;Support ME
+Support me : &lt;a href=&#34;https://ko-fi.com/hao3976&#34;&gt;https://ko-fi.com/hao3976&lt;/a&gt;&amp;hellip;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>BEST Free &amp; unlimited AI Image Generators</title>
+      <link>https://jiun8631.pages.dev/post/ai_image_0212/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/ai_image_0212/</guid>
+      <description>&lt;p&gt;Support ME
+Support me : &lt;a href=&#34;https://ko-fi.com/hao3976&#34;&gt;https://ko-fi.com/hao3976&lt;/a&gt;&amp;hellip;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>輕鬆用上llama3-70b大模型</title>
+      <link>https://jiun8631.pages.dev/post/llama3/</link>
+      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/llama3/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;llama3-70b透過卓越的上下文理解、推理&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>輕鬆用上llama3-70b大模型 | 視頻解說</title>
+<<<<<<< HEAD
       <link>https://jiun8631.vercel.app/post/llama3_vidoe/</link>
       <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/llama3_vidoe/</guid>
+=======
+      <link>https://jiun8631.pages.dev/post/llama3_vidoe/</link>
+      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/llama3_vidoe/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;llama3-70b透過卓越的上下文理解、推理&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
+<<<<<<< HEAD
       <title>【免費】4K視頻素材 | 視頻解說</title>
       <link>https://jiun8631.vercel.app/post/4k_vidoe/</link>
       <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
@@ -59,19 +103,34 @@
       <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/suno/</guid>
+=======
+      <title>每天簽到領取免費GPT4、Claude3免費API | 視頻解說</title>
+      <link>https://jiun8631.pages.dev/post/freegpt4_vidoe/</link>
+      <pubDate>Fri, 12 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/freegpt4_vidoe/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Suno秒生爆款神曲，人人能成為創作者 | 視頻解說</title>
+<<<<<<< HEAD
       <link>https://jiun8631.vercel.app/post/suno_video/</link>
       <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/suno_video/</guid>
+=======
+      <link>https://jiun8631.pages.dev/post/suno_video/</link>
+      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/suno_video/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
+<<<<<<< HEAD
       <title>AI影片換臉、AI繪畫、深度學習，這5個網站值得推薦！</title>
       <link>https://jiun8631.vercel.app/post/claude-3/</link>
       <pubDate>Wed, 03 Apr 2024 00:00:00 +0000</pubDate>
@@ -113,24 +172,45 @@
       <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/meta-audiocraft/</guid>
+=======
+      <title>新世代合成器！Meta發布新開源AI工具AudioCraft輸入文字就能創作出音樂與音效</title>
+      <link>https://jiun8631.pages.dev/post/meta-audiocraft/</link>
+      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/meta-audiocraft/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI 工具，AudioCraft&amp;hellip;&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>ChatGPT最強的開源對手LLama2大語言模型</title>
+<<<<<<< HEAD
       <link>https://jiun8631.vercel.app/post/llama2/</link>
       <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/llama2/</guid>
+=======
+      <link>https://jiun8631.pages.dev/post/llama2/</link>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/llama2/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;是 Google Research 所推出的一項產品。它是一個基於 Jupyter Notebook&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>多種Ai開掛使用!!不用會後悔GPT-4</title>
+<<<<<<< HEAD
       <link>https://jiun8631.vercel.app/post/ai-gpt4/</link>
       <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>https://jiun8631.vercel.app/post/ai-gpt4/</guid>
+=======
+      <link>https://jiun8631.pages.dev/post/ai-gpt4/</link>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.pages.dev/post/ai-gpt4/</guid>
+>>>>>>> 125ab47 (Initial commit)
       <description>&lt;p&gt;多種Ai開掛使用!!不用會後悔GPT-4 | docker pull ramonvc/freegpt-webui&amp;hellip;&lt;/p&gt;</description>
     </item>
     
