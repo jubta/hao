@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AI on 鈞鈞博客</title>
+    <link>https://jiun8631.vercel.app/tags/ai/</link>
+    <description>Recent content in AI on 鈞鈞博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 10 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.vercel.app/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>探索人工智慧與幽默的交叉點：GROK如何改變遊戲規則</title>
+      <link>https://jiun8631.vercel.app/post/grok/</link>
+      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/grok/</guid>
+      <description>&lt;p&gt;GROK 可透過X 平台即時獲取訊息，因此具有很強的時效性&amp;hellip;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>AI影片換臉、AI繪畫、深度學習，這5個網站值得推薦！</title>
+      <link>https://jiun8631.vercel.app/post/ai%E5%BD%B1%E7%89%87%E6%8F%9B%E8%87%89ai%E7%B9%AA%E7%95%AB%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%995%E5%80%8B%E7%B6%B2%E7%AB%99%E5%80%BC%E5%BE%97%E6%8E%A8%E8%96%A6/</link>
+      <pubDate>Sun, 05 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/ai%E5%BD%B1%E7%89%87%E6%8F%9B%E8%87%89ai%E7%B9%AA%E7%95%AB%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%995%E5%80%8B%E7%B6%B2%E7%AB%99%E5%80%BC%E5%BE%97%E6%8E%A8%E8%96%A6/</guid>
+      <description>&lt;p&gt;這5個網站值得推薦！&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>新世代合成器！Meta發布新開源AI工具AudioCraft輸入文字就能創作出音樂與音效</title>
+      <link>https://jiun8631.vercel.app/post/meta-audiocraft/</link>
+      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/meta-audiocraft/</guid>
+      <description>&lt;p&gt;Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI 工具，AudioCraft&amp;hellip;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>ChatGPT最強的開源對手LLama2大語言模型</title>
+      <link>https://jiun8631.vercel.app/post/llama2/</link>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/llama2/</guid>
+      <description>&lt;p&gt;是 Google Research 所推出的一項產品。它是一個基於 Jupyter Notebook&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>多種Ai開掛使用!!不用會後悔GPT-4</title>
+      <link>https://jiun8631.vercel.app/post/ai-gpt4/</link>
+      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://jiun8631.vercel.app/post/ai-gpt4/</guid>
+      <description>&lt;p&gt;多種Ai開掛使用!!不用會後悔GPT-4 | docker pull ramonvc/freegpt-webui&amp;hellip;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
