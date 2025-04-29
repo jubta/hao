@@ -23,16 +23,6 @@ Support thks 😭 : https://www.paypal.me/haotech....
 
 ---
 
-### Recommend
-
-<a href="/img/IMG_5881.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5881.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
-
----
-
 Scarlet is one of the best sideloading tools to install ipa files,, I’ll also show you how to use Scarlet to install IPA files on your iOS device. No revokes, no errors, just smooth sideloading!
 
 ---
