@@ -37,5 +37,3 @@ Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI �
 -----------------------------------------------------------------------------------
 Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI 工具，AudioCraft 可以讓使用者依據文本提示創作聲音，由 3 個 AI 模型組成，一共有： MusicGen、AudioGen 以及 EnCodec 三種。)
 
-
-##### 點這裡 [鏈接](https://youtu.be/-_YUCNNkllo)

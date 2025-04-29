@@ -22,10 +22,6 @@ categories:
 ## **NEW! Install IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2**
 
 ---
-{{< centeredYoutube zHFLFZ6t8s8 >}}
-
-
----
 
 ## **Useful Links**
 
@@ -38,15 +34,3 @@ Certificate : **[打開鏈接](https://www.mediafire.com/file/sivjzx5zhgno946/Ch
 
 🤝Support ME 🤝
 💸 Support me : https://ko-fi.com/hao3976
-
----
-
-**[New Method to Install Scarlet on iPhone (ios15-18) I on iPhone/iPad Without PC or Jailbreaks](https://jiun8631.vercel.app/post/scarlet/)**
-
-**[NEW! Install ESign and IPA Files on iPhone & iPad NO Jailbreak/PC | Sideload IPA Files on iOS 15–18](https://jiun8631.vercel.app/post/esign/)**
-
-**[Esign/Feather/Gbox Install IPA Files on iPhone Without Getting Revoked and no jailbreak for FREE](https://jiun8631.vercel.app/post/esign_feather_gbox/)**
-
-**[How to Install IPA Files on iPhone Directly Without ESign GBox Feather Apps | No PC No jailbreak](https://jiun8631.vercel.app/post/shine_vidoe/)**
-
-**[ios Memory Boost & Storage Cleanup](https://jiun8631.vercel.app/post/phone_clean/)**

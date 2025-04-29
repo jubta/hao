@@ -22,24 +22,6 @@ Support me thks 😭 : https://www.paypal.me/haotech....
 ## **UPDATED!**
 
 ---
-{{< centeredYoutube 9Kv0ww-y-zs >}}
-
----
-
-### Recommend
-
-<a href="/img/IMG_5881.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5881.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
-
----
-
-#fortnite #ios #iphone 
-Want to play Fortnite Mobile on iOS outside the EU? I've got you covered! In this video, I'll walk you through the simplest, guaranteed method to download and install the latest version. Let's get started！
-
----
 
 #### **Useful Links**
 
@@ -53,8 +35,6 @@ Want to play Fortnite Mobile on iOS outside the EU? I've got you covered! In thi
 
 {{< installapp url="https://fortnite-ios.com/Install.plist" >}}
 
-##### **<font style="background:  "> Fix unable verify esign scarlet etc :</font>** 
-**[ USEFUL LINK ](https://youtu.be/9lbMHRUTz5Q)**
 
 ##### **<font style="background:  ">  DNS :</font>** 
 **[ USEFUL LINK](https://jiun8631.pages.dev/post/feather-250413/)**

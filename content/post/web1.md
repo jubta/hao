@@ -77,13 +77,3 @@ categories:
 </a>
 
 ---
-
-**[開源免費！堪稱 Windows 10/11 系統的神優化!](https://jiun8631.vercel.app/post/windows10_11/)**
-
-**[TrollStore 應用程式 : 修補 iOS 中的 AppStore 應用程式](https://jiun8631.vercel.app/post/trollstore/)**
-
-**[Grok2使用流程 玩轉Grok-2！免費25美元額度](https://jiun8631.vercel.app/post/gork2/)**
-
-**[ChatGPT 桌面版正式免費發佈！多應用交互模式讓AI接管電腦又近了一步!](https://jiun8631.vercel.app/post/chatgpt_ai/)**
-
-**[蘋果承認 iPhone 備忘錄不見的問題確實存在，並提供 4 步驟解法](https://jiun8631.vercel.app/post/memo/)**

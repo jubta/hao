@@ -23,16 +23,6 @@ Support thks 😭 : https://www.paypal.me/haotech....
 
 ---
 
-### Recommend video
-
-<a href="/img/IMG_5881.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5881.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
-
----
-
 #### **Direct Links**
 
 #### **<and font style="background: "> IF want Support Me :</font>** 

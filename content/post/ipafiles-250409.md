@@ -27,10 +27,10 @@ II hope I can be seen by more people😇
 #### **Direct Links**
 
 ##### **<font style="background:  "> Fix unable verify esign etc :</font>** 
-**[ LINK ](https://jiun8631.vercel.app/post/fixverify-250318/)**
+**[ LINK ](https://jiun8631.pages.dev/post/fixverify-250318/)**
 
 ##### **<font style="background:  skyblue"> DNS :</font>** 
-**[ LINK ]( https://jiun8631.vercel.app/post/esign-250404/)**
+**[ LINK ]( https://jiun8631.pages.dev/post/esign-250404/)**
 
 ##### **<font style="background: pink"> install any ipafiles:</font>** 
 **[ LINK ](https://wsfteam.xyz/)**

@@ -24,7 +24,7 @@ Support thks 😭 : https://www.paypal.me/haotech....
 #### **Direct Links**
 
 ##### **<font style="background:  "> Fix unable verify esign etc :</font>** 
-**[ USEFUL LINK ](https://jiun8631.vercel.app/post/fixverify-250318/)**
+**[ USEFUL LINK ](https://jiun8631.pages.dev/post/fixverify-250318/)**
 
 ##### **<font style="background: "> Direct install Delta Executor v2.666 Roblox :</font>** 
 **[ USEFUL LINK ](itms-services://?action=download-manifest&amp;url=https%3A%2F%2Fdeltaios-executor.com%2FInstall1.plist)**

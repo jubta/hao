@@ -22,9 +22,6 @@ Support me : https://ko-fi.com/hao3976....
 ## **Install Latest esign iOS on iPhone & iPad without Jailbreak & PC | Установка Esign no revoke iOS**
 
 ---
-{{< centeredYoutube ZfyzYJFGB58 >}}
-
----
 
 #### Esign iOS: The Ultimate IPA Installer for iPhone and iPad
 
@@ -74,46 +71,6 @@ Conclusion
 iOS sideloading is not just a technical and legal issue; it’s also a discussion about user rights and safety. As technology advances and markets become more open, the evolution of this model will be an interesting point of observation. The future iOS might be more open, but it will also face the challenge of maintaining its high standards and security.
 
 I hope this translation provides a comprehensive understanding and discussion on the concept and current state of iOS sideloading.
-
----
-
-<a href="/img/IMG_5881.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5881.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
-
----
-
-<a href="/img/IMG_5807.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5807.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[New Method to Install Filza on iPhone (ios15-18) I on iPhone/iPad Without PC or Jailbreaks revokes | NEW](https://youtu.be/zOXXSiAsZ_g)**
-
----
-
-<a href="/img/IMG_6370.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_6370.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW how to download scarlet no revoke install scarlet & ipa on iPhone & ios | NO PC iOS 15 to 18.2](https://youtu.be/7QLeN4mEZgo)**
-
----
-
-<a href="/img/IMG_6068.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_6068.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW Install Scarlet & iPA on iPhone & iPad | NO Jailbreak NO PC Revokes iOS 15 to iOS 18.2 Fix ESign](https://youtu.be/zF4702nXE-c)**
-
----
-
-<a href="/img/IMG_5918.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5918.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2 | NEW](https://youtu.be/ygGUh-kUyd0)**
 
 ---
 

@@ -22,19 +22,6 @@ Support thks 😭 : https://www.paypal.me/haotech....
 ## **UPDATED!**
 
 ---
-{{< centeredYoutube lHJGjCI8jr8 >}}
-
----
-
-### Recommend video
-
-<a href="/img/IMG_5881.JPG " data-lightbox="image-1" data-title="我的图片">
-    <img src="/img/IMG_5881.JPG " width="80%" alt="圖片描述">
-</a>
-
-**[NEW Install Esign & Source on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://youtu.be/6v36u9J26ZA)**
-
----
 
 Hey everyone, stick around for the full video—I’m about to show you the easiest way to get the Delta Executor fix straight onto your iPhone or iPad, no PC, Scarlet, ESign, or Feather Signer required. Trust me, this trick cuts out all the extra hassle and has been the smoothest install method I’ve tried so far. In my opinion, if you’ve been wrestling with complicated sideloaders, you’ll love how fast and foolproof this approach feels!
 
@@ -64,8 +51,6 @@ Downsides to keep in mind:
 
 Overall, if your device qualifies, this method is a super convenient and quick fix. Just be sure to double-check that your iOS version is within range before giving it a go—and follow the instructions carefully to avoid any hiccups.
 
-##### **<font style="background:  Pink"> Fix unable verify esign scarlet etc :</font>** 
-**[ USEFUL LINK ](https://youtu.be/9lbMHRUTz5Q)**
 
 ##### **<font style="background:  "> Direct install Fix :</font>** 
 

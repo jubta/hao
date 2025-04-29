@@ -22,9 +22,6 @@ Support thks 😭 : https://www.paypal.me/haotech....
 ## **UPDATED!**
 
 ---
-{{< centeredYoutube 3q1-7NeC6D0 >}}
-
----
 
 ### Recommend
 
@@ -62,8 +59,6 @@ Downsides to keep in mind:
 
 Overall, if your device qualifies, this method is a super convenient and quick fix. Just be sure to double-check that your iOS version is within range before giving it a go—and follow the instructions carefully to avoid any hiccups.
 
-##### **<font style="background:  Pink"> Fix unable verify esign scarlet etc :</font>** 
-**[ USEFUL LINK ](https://youtu.be/9lbMHRUTz5Q)**
 
 ##### **<font style="background:  "> Easy Scarlet Direct install :</font>** 
 

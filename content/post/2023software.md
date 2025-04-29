@@ -17,8 +17,6 @@ categories:
 <!--more-->
 ## 強烈推薦7款精品軟件 ! 黑科技電腦軟件冷門好用 2023
 
-[個人網站鏈接](https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD) 
-
 ---
 
 

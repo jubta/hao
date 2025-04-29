@@ -22,10 +22,6 @@ categories:
 ## **NEW Method to Install Scarlet on iPhone (iOS 15-18) | Install IPA Files on iPhone/iPad Without PC**
 
 ---
-{{< centeredYoutube jKOxTGtw5Io >}}
-
-
----
 
 ## **Useful Links**
 
@@ -36,12 +32,12 @@ SCarlet insatall : **[OPEN](https://usescarlet.com/)**
 
 ---
 
-**[NEW! Install IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://jiun8631.vercel.app/post/ipasign/)**
+**[NEW! Install IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2](https://jiun8631.pages.dev/post/ipasign/)**
 
-**[NEW! Install ESign and IPA Files on iPhone & iPad NO Jailbreak/PC | Sideload IPA Files on iOS 15–18](https://jiun8631.vercel.app/post/esign/)**
+**[NEW! Install ESign and IPA Files on iPhone & iPad NO Jailbreak/PC | Sideload IPA Files on iOS 15–18](https://jiun8631.pages.dev/post/esign/)**
 
-**[NEW! Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2]( https://jiun8631.vercel.app/post/esign_1217/)**
+**[NEW! Install Esign & IPA Files on iPhone & iPad | NO Jailbreak NO PC No Revokes iOS 15 to iOS 18.2]( https://jiun8631.pages.dev/post/esign_1217/)**
 
-**[How to Install IPA Files on iPhone Directly Without ESign GBox Feather Apps | No PC No jailbreak](https://jiun8631.vercel.app/post/shine_vidoe/)**
+**[How to Install IPA Files on iPhone Directly Without ESign GBox Feather Apps | No PC No jailbreak](https://jiun8631.pages.dev/post/shine_vidoe/)**
 
-**[ios Memory Boost & Storage Cleanup](https://jiun8631.vercel.app/post/phone_clean/)**
+**[ios Memory Boost & Storage Cleanup](https://jiun8631.pages.dev/post/phone_clean/)**
