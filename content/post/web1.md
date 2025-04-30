@@ -32,6 +32,7 @@ categories:
 
 準確來講是個軟件盒子，幫助你收集、製作各種綠色、可移動軟件“盒子”，無需安裝，可以拷到U盤中，隨時使用，開盒即用，使用起來比較方便。這個是它的主頁，摸友們可以在上面下載。
 
+To be precise, it’s a software toolbox that helps you collect and create various portable, green software “boxes.” There’s no need to install them — you can copy them to a USB drive and use them anytime, anywhere. Just open the box and use — it’s very convenient. This is its homepage, where fellow users can download it.
 
 <a href="/img/IMG_5685.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5685.JPG " width="80%" alt="图片描述">
@@ -45,6 +46,7 @@ categories:
 
 一個免費在線壓縮網站，好像主流的一些文件都能壓縮，支持圖像、視頻、音頻、文檔、代碼文件等，網站完全免費、免註冊登錄即可在線使用，還是很方便的。
 
+It’s a free online compression website that supports most mainstream file types, including images, videos, audio, documents, and code files. The site is completely free to use and requires no registration or login — everything can be done online, making it very convenient.
 
 <a href="/img/IMG_5683.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5683.JPG " width="80%" alt="图片描述">
@@ -58,6 +60,7 @@ categories:
 
 一些比較好用的工具往往都是需要付費的，但是網上有許多免費的替代方案，這個網站就是提供各種付費軟件的開源免費替代方案，有需要的摸友可以看看，不花那冤枉錢。
 
+Many useful tools often require payment, but there are plenty of free alternatives available online. This website offers open-source and free alternatives to various paid software. If you’re interested, feel free to check it out — no need to spend money unnecessarily.
 
 <a href="/img/IMG_5684.JPG " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/IMG_5684.JPG " width="80%" alt="图片描述">
