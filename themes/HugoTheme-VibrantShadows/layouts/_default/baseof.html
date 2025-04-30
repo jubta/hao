@@ -33,5 +33,12 @@
       {{ end }}
     {{ end }}
     <script src="/count.js"></script>
+    <script>
+  if (location.hostname === "jiun8631.pages.dev") {
+    const newURL = "https://haee.dpdns.org" + location.pathname + location.search + location.hash;
+    window.location.replace(newURL);
+  }
+    </script>
+    <meta name="robots" content="noindex, nofollow">
   </body>
 </html>
