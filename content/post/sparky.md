@@ -19,7 +19,9 @@ categories:
 Support thks : https://www.paypal.me/haotech....
 <!--more-->
 
+{{< side-line color="#1e90ff" >}}
 ## **Limited Time Free!**
+{{< /side-line >}}
 
 ---
 
@@ -28,15 +30,19 @@ Support thks : https://www.paypal.me/haotech....
 ---
 
 主要功能：
-	1.	訂閱管理：
+1. 訂閱管理：
 使用者可以手動輸入各種訂閱服務（如 Netflix、Spotify、iCloud、YouTube Premium 等），並設定每月費用、到期日、付款週期等。
-	2.	支出追蹤：
+
+2. 支出追蹤：
 應用會計算每月或每年的訂閱總費用，讓使用者清楚知道自己在訂閱上的花費。
-	3.	通知提醒：
+
+3. 通知提醒：
 在訂閱即將到期或扣款之前，會提前提醒使用者，避免忘記取消導致被自動續訂。
-	4.	多幣別支持：
+
+4. 多幣別支持：
 支援多種貨幣，適合有國際訂閱需求的使用者。
-	5.	簡潔易用的介面：
+
+5. 簡潔易用的介面：
 界面設計現代、直觀，便於快速輸入與瀏覽所有訂閱。
 
 ---
@@ -53,15 +59,19 @@ The app is called Subscriptions Tracker – SPARKY, and its main purpose is to h
 ⸻
 
 Key Features:
-	1.	Subscription Management:
+1. Subscription Management:
 Users can manually input various subscription services (such as Netflix, Spotify, iCloud, YouTube Premium, etc.), and set monthly fees, renewal dates, billing cycles, and more.
-	2.	Expense Tracking:
+
+2. Expense Tracking:
 The app calculates the total cost of subscriptions on a monthly or yearly basis, helping users clearly understand how much they’re spending.
-	3.	Reminder Notifications:
+
+3. Reminder Notifications:
 Users will receive advance reminders before a subscription expires or is charged, helping avoid unwanted automatic renewals.
-	4.	Multi-Currency Support:
+
+4. Multi-Currency Support:
 Supports multiple currencies, making it suitable for users with international subscriptions.
-	5.	Clean and User-Friendly Interface:
+
+5. Clean and User-Friendly Interface:
 Modern and intuitive design allows for quick entry and easy viewing of all subscriptions.
 
 ⸻
