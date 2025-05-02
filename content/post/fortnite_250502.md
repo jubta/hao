@@ -21,9 +21,9 @@ Support thks : https://www.paypal.me/haotech....
 
 ---
 
-{\{< notice notice-tip >}}
+{{< notice notice-tip >}}
 #### **Fortnite 即將重返美國 iOS 裝置平台，結束近五年的缺席，這是 Epic Games 在與 Apple 的重大法律勝利後所帶來的結果。這不僅對玩家影響深遠，也預示著行動應用產業可能出現重大轉變。**
-{\{< /notice >}}
+{{< /notice >}}
 
 ---
 
