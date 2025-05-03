@@ -1,51 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-<<<<<<< HEAD
-    <title>70b on 鈞鈞博客</title>
-    <link>https://jiun8631.vercel.app/categories/70b/</link>
-    <description>Recent content in 70b on 鈞鈞博客</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-tw</language>
-    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 26 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.vercel.app/categories/70b/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>輕鬆用上llama3-70b大模型</title>
-      <link>https://jiun8631.vercel.app/post/llama3/</link>
-      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/llama3/</guid>
-=======
     <title>70b on 皓分享</title>
-    <link>https://jiun8631.pages.dev/categories/70b/</link>
+    <link>https://haee.dpdns.org/categories/70b/</link>
     <description>Recent content in 70b on 皓分享</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 26 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.pages.dev/categories/70b/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 26 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://haee.dpdns.org/categories/70b/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>輕鬆用上llama3-70b大模型</title>
-      <link>https://jiun8631.pages.dev/post/llama3/</link>
+      <link>https://haee.dpdns.org/post/llama3/</link>
       <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.pages.dev/post/llama3/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>&lt;p&gt;llama3-70b透過卓越的上下文理解、推理&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>輕鬆用上llama3-70b大模型 | 視頻解說</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/llama3_vidoe/</link>
-      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/llama3_vidoe/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/llama3_vidoe/</link>
-      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/llama3_vidoe/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/llama3/</guid>
       <description>&lt;p&gt;llama3-70b透過卓越的上下文理解、推理&amp;hellip;.&lt;/p&gt;</description>
     </item>
     

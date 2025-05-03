@@ -1,496 +1,118 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-<<<<<<< HEAD
-    <title>影片 on 鈞鈞博客</title>
-    <link>https://jiun8631.vercel.app/tags/%E5%BD%B1%E7%89%87/</link>
-    <description>Recent content in 影片 on 鈞鈞博客</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-tw</language>
-    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Tue, 30 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.vercel.app/tags/%E5%BD%B1%E7%89%87/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>AI 免費搜索神器!!跟baidu/google等搜尋說再見</title>
-      <link>https://jiun8631.vercel.app/post/search/</link>
-      <pubDate>Tue, 30 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/search/</guid>
-=======
     <title>影片 on 皓分享</title>
-    <link>https://jiun8631.pages.dev/tags/%E5%BD%B1%E7%89%87/</link>
+    <link>https://haee.dpdns.org/tags/%E5%BD%B1%E7%89%87/</link>
     <description>Recent content in 影片 on 皓分享</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Tue, 30 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://jiun8631.pages.dev/tags/%E5%BD%B1%E7%89%87/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 30 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://haee.dpdns.org/tags/%E5%BD%B1%E7%89%87/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AI 免費搜索神器!!跟baidu/google等搜尋說再見</title>
-      <link>https://jiun8631.pages.dev/post/search/</link>
+      <link>https://haee.dpdns.org/post/search/</link>
       <pubDate>Tue, 30 Apr 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.pages.dev/post/search/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/search/</guid>
       <description>&lt;p&gt;為了快速啟動，這裡不需要修改任何配置，只需執行下面的 docker compose 即可&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Youtube常用視頻素材</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/shine/</link>
+      <link>https://haee.dpdns.org/post/shine/</link>
       <pubDate>Sat, 27 Apr 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/shine/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/shine/</link>
-      <pubDate>Sat, 27 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/shine/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>&lt;p&gt;150個鏡頭光效老電影VHS&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Youtube常用視頻素材 | 視頻解說</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/shine_vidoe/</link>
-      <pubDate>Sat, 27 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/shine_vidoe/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/shine_vidoe/</link>
-      <pubDate>Sat, 27 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/shine_vidoe/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/shine/</guid>
       <description>&lt;p&gt;150個鏡頭光效老電影VHS&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>輕鬆用上llama3-70b大模型</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/llama3/</link>
+      <link>https://haee.dpdns.org/post/llama3/</link>
       <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/llama3/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/llama3/</link>
-      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/llama3/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/llama3/</guid>
       <description>&lt;p&gt;llama3-70b透過卓越的上下文理解、推理&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>輕鬆用上llama3-70b大模型 | 視頻解說</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/llama3_vidoe/</link>
-      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/llama3_vidoe/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/llama3_vidoe/</link>
-      <pubDate>Fri, 26 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/llama3_vidoe/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>&lt;p&gt;llama3-70b透過卓越的上下文理解、推理&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-<<<<<<< HEAD
-      <title>【免費】4K視頻素材</title>
-      <link>https://jiun8631.vercel.app/post/4k/</link>
-      <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/4k/</guid>
-      <description>&lt;p&gt;一共有60組電影膠片元素閃爍疊加效果動畫&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>【免費】4K視頻素材 | 視頻解說</title>
-      <link>https://jiun8631.vercel.app/post/4k_vidoe/</link>
-      <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/4k_vidoe/</guid>
-      <description>&lt;p&gt;一共有60組電影膠片元素閃爍疊加效果動畫&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>每天簽到領取免費GPT4、Claude3免費API | 視頻解說</title>
-      <link>https://jiun8631.vercel.app/post/freegpt4_vidoe/</link>
-      <pubDate>Fri, 12 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/freegpt4_vidoe/</guid>
-      <description>&lt;p&gt;只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>每天簽到領取免費GPT4、Claude3免費API</title>
-      <link>https://jiun8631.vercel.app/post/freegpt4/</link>
-      <pubDate>Thu, 11 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/freegpt4/</guid>
-      <description>&lt;p&gt;只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>1007個日常常用轉場科幻音效，數位未來科技電子電流音效素材包</title>
-      <link>https://jiun8631.vercel.app/post/1007-sound/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/1007-sound/</guid>
-      <description>&lt;p&gt;這個包含1007個日常常用轉場科幻音效的素材集合提供了豐富多樣的聲音資源&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>1007個日常常用轉場科幻音效，數位未來科技電子電流音效素材包 | 視頻解說</title>
-      <link>https://jiun8631.vercel.app/post/1007-sound%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/1007-sound%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</guid>
-      <description>&lt;p&gt;這個包含1007個日常常用轉場科幻音效的素材集合提供了豐富多樣的聲音資源&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Suno秒生爆款神曲，人人能成為創作者</title>
-      <link>https://jiun8631.vercel.app/post/suno/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/suno/</guid>
-=======
-      <title>每天簽到領取免費GPT4、Claude3免費API | 視頻解說</title>
-      <link>https://jiun8631.pages.dev/post/freegpt4_vidoe/</link>
-      <pubDate>Fri, 12 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/freegpt4_vidoe/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>&lt;p&gt;只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Suno秒生爆款神曲，人人能成為創作者 | 視頻解說</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/suno_video/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/suno_video/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/suno_video/</link>
-      <pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/suno_video/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>&lt;p&gt;只要在框框中輸入提示，片刻之後，一段完全符合你要求的逼真。&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Windows 11 22635.3420 中啟用新的開始功能表所有應用程式部分 | 視頻解說</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/windows-11-22635.3420%E4%B8%AD%E5%95%9F%E7%94%A8%E6%96%B0%E7%9A%84%E9%96%8B%E5%A7%8B%E5%8A%9F%E8%83%BD%E8%A1%A8%E6%89%80%E6%9C%89%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E9%83%A8%E5%88%86%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</link>
-      <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/windows-11-22635.3420%E4%B8%AD%E5%95%9F%E7%94%A8%E6%96%B0%E7%9A%84%E9%96%8B%E5%A7%8B%E5%8A%9F%E8%83%BD%E8%A1%A8%E6%89%80%E6%9C%89%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E9%83%A8%E5%88%86%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/windows-11-22635.3420%E4%B8%AD%E5%95%9F%E7%94%A8%E6%96%B0%E7%9A%84%E9%96%8B%E5%A7%8B%E5%8A%9F%E8%83%BD%E8%A1%A8%E6%89%80%E6%9C%89%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E9%83%A8%E5%88%86%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</link>
-      <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/windows-11-22635.3420%E4%B8%AD%E5%95%9F%E7%94%A8%E6%96%B0%E7%9A%84%E9%96%8B%E5%A7%8B%E5%8A%9F%E8%83%BD%E8%A1%A8%E6%89%80%E6%9C%89%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E9%83%A8%E5%88%86%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>&lt;p&gt;Microsoft 正在 Beta 頻道的最新 Windows 11 Insider Preview 版本中實施新的「開始」功能表功能&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-<<<<<<< HEAD
-      <title>如何在 Windows 11 22635.3420 中啟用新的開始功能表所有應用程式部分</title>
-      <link>https://jiun8631.vercel.app/post/windows-11-22635.3420/</link>
-      <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/windows-11-22635.3420/</guid>
-      <description>&lt;p&gt;Microsoft 正在 Beta 頻道的最新 Windows 11 Insider Preview 版本中實施新的「開始」功能表功能&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>AI影片換臉、AI繪畫、深度學習，這5個網站值得推薦！</title>
-      <link>https://jiun8631.vercel.app/post/claude-3/</link>
-      <pubDate>Wed, 03 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/claude-3/</guid>
-      <description>&lt;p&gt;可以免費白嫖Claude 3 Sonnet&amp;hellip;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Windows 11 23H2中的新微軟電腦管家應用程式</title>
-      <link>https://jiun8631.vercel.app/post/windows11_23h2/</link>
-      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/windows11_23h2/</guid>
-      <description>&lt;p&gt;Windows 11 23H2中的新微軟電腦管家應用程式。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>探索人工智慧與幽默的交叉點：GROK如何改變遊戲規則</title>
-      <link>https://jiun8631.vercel.app/post/grok/</link>
-      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/grok/</guid>
-      <description>&lt;p&gt;GROK 可透過X 平台即時獲取訊息，因此具有很強的時效性&amp;hellip;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
       <title>開啟谷歌瀏覽器，全新UI界面</title>
-      <link>https://jiun8631.vercel.app/post/chrome_ui/</link>
+      <link>https://haee.dpdns.org/post/chrome_ui/</link>
       <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/chrome_ui/</guid>
-=======
-      <title>開啟谷歌瀏覽器，全新UI界面</title>
-      <link>https://jiun8631.pages.dev/post/chrome_ui/</link>
-      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/chrome_ui/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/chrome_ui/</guid>
       <description>&lt;p&gt;開啟谷歌瀏覽器全新UI界面&amp;hellip;&lt;/p&gt;</description>
     </item>
     
     <item>
-<<<<<<< HEAD
-      <title>OpenAI重新定義規則！讓所有玩家重新洗牌？</title>
-      <link>https://jiun8631.vercel.app/post/openai/</link>
-      <pubDate>Wed, 08 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/openai/</guid>
-      <description>&lt;p&gt;這就是GPT-4 Turbo&amp;hellip;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>正版神器!!4K視頻轉換</title>
-      <link>https://jiun8631.vercel.app/post/4k%E8%A6%96%E9%A0%BB%E8%BD%89%E6%8F%9B/</link>
-      <pubDate>Wed, 08 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/4k%E8%A6%96%E9%A0%BB%E8%BD%89%E6%8F%9B/</guid>
-      <description>&lt;p&gt;4K Converter是一款專業的4K轉換軟體&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>正版神器!!4K視頻轉換 | 視頻解說</title>
-      <link>https://jiun8631.vercel.app/post/4k%E8%A6%96%E9%A0%BB%E8%BD%89%E6%8F%9B%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</link>
-      <pubDate>Wed, 08 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/4k%E8%A6%96%E9%A0%BB%E8%BD%89%E6%8F%9B%E8%A6%96%E9%A0%BB%E8%A7%A3%E8%AA%AA/</guid>
-      <description>&lt;p&gt;4K Converter是一款專業的4K轉換軟體&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>AI影片換臉、AI繪畫、深度學習，這5個網站值得推薦！</title>
-      <link>https://jiun8631.vercel.app/post/ai%E5%BD%B1%E7%89%87%E6%8F%9B%E8%87%89ai%E7%B9%AA%E7%95%AB%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%995%E5%80%8B%E7%B6%B2%E7%AB%99%E5%80%BC%E5%BE%97%E6%8E%A8%E8%96%A6/</link>
-      <pubDate>Sun, 05 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/ai%E5%BD%B1%E7%89%87%E6%8F%9B%E8%87%89ai%E7%B9%AA%E7%95%AB%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E9%80%995%E5%80%8B%E7%B6%B2%E7%AB%99%E5%80%BC%E5%BE%97%E6%8E%A8%E8%96%A6/</guid>
-      <description>&lt;p&gt;這5個網站值得推薦！&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>微軟執行長強調人工智慧比個人電腦和行動裝置更重要</title>
-      <link>https://jiun8631.vercel.app/post/microsoft_ceo/</link>
-      <pubDate>Sun, 05 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/microsoft_ceo/</guid>
-      <description>&lt;p&gt;首席執行官薩蒂亞-納德拉（Satya Nadella）在&amp;quot;微軟展望&amp;quot;巡展上強調了人工智能的重要性&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>微軟執行長強調人工智慧比個人電腦和行動裝置更重要</title>
-      <link>https://jiun8631.vercel.app/post/%E5%BE%AE%E8%BB%9F%E5%9F%B7%E8%A1%8C%E9%95%B7%E5%BC%B7%E8%AA%BF%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E6%AF%94%E5%80%8B%E4%BA%BA%E9%9B%BB%E8%85%A6%E5%92%8C%E8%A1%8C%E5%8B%95%E8%A3%9D%E7%BD%AE%E6%9B%B4%E9%87%8D%E8%A6%81/</link>
-      <pubDate>Sun, 05 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/%E5%BE%AE%E8%BB%9F%E5%9F%B7%E8%A1%8C%E9%95%B7%E5%BC%B7%E8%AA%BF%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E6%AF%94%E5%80%8B%E4%BA%BA%E9%9B%BB%E8%85%A6%E5%92%8C%E8%A1%8C%E5%8B%95%E8%A3%9D%E7%BD%AE%E6%9B%B4%E9%87%8D%E8%A6%81/</guid>
-      <description>&lt;p&gt;首席執行官薩蒂亞-納德拉（Satya Nadella）在&amp;quot;微軟展望&amp;quot;巡展上強調了人工智能的重要性&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>重磅:微軟官方回覆Office 2024來了：未來一片光明</title>
-      <link>https://jiun8631.vercel.app/post/office-2024/</link>
-      <pubDate>Sun, 05 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/office-2024/</guid>
-      <description>&lt;p&gt;微軟Office 2024預覽版相關信息現已被曝光。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Windows 11 23H2 正式版ISO 免費下載</title>
-      <link>https://jiun8631.vercel.app/post/2023_11_04_2/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/2023_11_04_2/</guid>
-      <description>&lt;p&gt;它包括Windows 11 版本22H2 先前累積更新中的所有功能和修復。本文列出了IT 專家應該了解的新功能和更新功能。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Windows 11 精簡版！只保留核心功能，精簡後僅剩2G大小</title>
-      <link>https://jiun8631.vercel.app/post/2023_11_04/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/2023_11_04/</guid>
-      <description>&lt;p&gt;Tiny11 核心以更小的佔用空間提供了您喜愛的Windows 和tiny11 的一切。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
       <title>新世代合成器！Meta發布新開源AI工具AudioCraft輸入文字就能創作出音樂與音效</title>
-      <link>https://jiun8631.vercel.app/post/meta-audiocraft/</link>
+      <link>https://haee.dpdns.org/post/meta-audiocraft/</link>
       <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/meta-audiocraft/</guid>
-=======
-      <title>新世代合成器！Meta發布新開源AI工具AudioCraft輸入文字就能創作出音樂與音效</title>
-      <link>https://jiun8631.pages.dev/post/meta-audiocraft/</link>
-      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/meta-audiocraft/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/meta-audiocraft/</guid>
       <description>&lt;p&gt;Facebook 母公司 Meta 近日發布了一個名為 AudioCraft 的新開源 AI 工具，AudioCraft&amp;hellip;&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>ChatGPT最強的開源對手LLama2大語言模型</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/llama2/</link>
+      <link>https://haee.dpdns.org/post/llama2/</link>
       <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/llama2/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/llama2/</link>
-      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/llama2/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/llama2/</guid>
       <description>&lt;p&gt;是 Google Research 所推出的一項產品。它是一個基於 Jupyter Notebook&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>多種Ai開掛使用!!不用會後悔GPT-4</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/ai-gpt4/</link>
+      <link>https://haee.dpdns.org/post/ai-gpt4/</link>
       <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/ai-gpt4/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/ai-gpt4/</link>
-      <pubDate>Wed, 19 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/ai-gpt4/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/ai-gpt4/</guid>
       <description>&lt;p&gt;多種Ai開掛使用!!不用會後悔GPT-4 | docker pull ramonvc/freegpt-webui&amp;hellip;&lt;/p&gt;</description>
     </item>
     
     <item>
-<<<<<<< HEAD
-      <title>【無損音效合集】170個真實戰鬥區域戰場的爆炸聲效設計素材，高質量音效素材</title>
-      <link>https://jiun8631.vercel.app/post/170/</link>
-      <pubDate>Sat, 10 Sep 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/170/</guid>
-      <description>&lt;p&gt;包含了大量戰區的聲音，如：嗖嗖聲、碎片、大砲射擊、嗶嗶聲、倒計時、爆炸聲&amp;hellip;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
       <title>綠幕素材-高質量</title>
-      <link>https://jiun8631.vercel.app/post/green-material/</link>
+      <link>https://haee.dpdns.org/post/green-material/</link>
       <pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/green-material/</guid>
-=======
-      <title>綠幕素材-高質量</title>
-      <link>https://jiun8631.pages.dev/post/green-material/</link>
-      <pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/green-material/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/green-material/</guid>
       <description>綠幕素材-高質量 綠幕素材 鏈接 </description>
     </item>
     
     <item>
       <title>高質量武器音效-無償分享</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/high-sound/</link>
+      <link>https://haee.dpdns.org/post/high-sound/</link>
       <pubDate>Mon, 05 Sep 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/high-sound/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/high-sound/</link>
-      <pubDate>Mon, 05 Sep 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/high-sound/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/high-sound/</guid>
       <description>高質量武器音效-無償分享 高質量武器音效 鏈接 </description>
     </item>
     
     <item>
-<<<<<<< HEAD
-      <title>9款綜藝卡通花字mogrt</title>
-      <link>https://jiun8631.vercel.app/post/9mogrt/</link>
-      <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/9mogrt/</guid>
-      <description>9款綜藝卡通花字mogrt 花字 鏈接 </description>
-    </item>
-    
-    <item>
       <title>pdf與word相互轉換</title>
-      <link>https://jiun8631.vercel.app/post/pdf-word/</link>
+      <link>https://haee.dpdns.org/post/pdf-word/</link>
       <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/pdf-word/</guid>
-=======
-      <title>pdf與word相互轉換</title>
-      <link>https://jiun8631.pages.dev/post/pdf-word/</link>
-      <pubDate>Sat, 03 Sep 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/pdf-word/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/pdf-word/</guid>
       <description>pdf與word相互轉換 pdf與word相互轉換 鏈接 </description>
     </item>
     
     <item>
-<<<<<<< HEAD
-      <title>31款綜藝卡通花字mogrt</title>
-      <link>https://jiun8631.vercel.app/post/31mogrt/</link>
-      <pubDate>Tue, 23 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/31mogrt/</guid>
-      <description>款綜藝卡通花字mogrt 花字 鏈接 </description>
-    </item>
-    
-    <item>
       <title>VideoPro Converter</title>
-      <link>https://jiun8631.vercel.app/post/videoproc-converter/</link>
-      <pubDate>Sun, 21 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.vercel.app/post/videoproc-converter/</guid>
-=======
-      <title>VideoPro Converter</title>
-      <link>https://jiun8631.pages.dev/post/videoproc-converter/</link>
+      <link>https://haee.dpdns.org/post/videoproc-converter/</link>
       <pubDate>Mon, 22 Aug 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.pages.dev/post/videoproc-converter/</guid>
->>>>>>> 125ab47 (Initial commit)
-      <description>VideoPro Converter VideoProc Converter視頻
-VideoProc Converter鏈接</description>
+      <guid>https://haee.dpdns.org/post/videoproc-converter/</guid>
+      <description>VideoPro Converter VideoProc Converter鏈接</description>
     </item>
     
     <item>
       <title>電腦使用技巧</title>
-<<<<<<< HEAD
-      <link>https://jiun8631.vercel.app/post/computer-use/</link>
+      <link>https://haee.dpdns.org/post/computer-use/</link>
       <pubDate>Sun, 21 Aug 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://jiun8631.vercel.app/post/computer-use/</guid>
-=======
-      <link>https://jiun8631.pages.dev/post/computer-use/</link>
-      <pubDate>Sun, 21 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://jiun8631.pages.dev/post/computer-use/</guid>
->>>>>>> 125ab47 (Initial commit)
+      <guid>https://haee.dpdns.org/post/computer-use/</guid>
       <description>電腦使用技巧 更改使用者名稱 ▶ netplwiz
 查看電腦配置 ▶ dxdiag
 查看IP地址 ▶ ipconfig
