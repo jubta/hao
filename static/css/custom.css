@@ -12,25 +12,25 @@
 }
 
 .notice-warning {
-  background-color: #ffecec;
-  border-color: #ff5c5c;
+  background-color: hsla(0, 65%, 65%, 0.15);
+  border-color: 5px solid hsl(0, 65%, 65%);
   color: #990000;
 }
 
 .notice-info {
-  background-color: #e6f7ff;
-  border-color: #3399ff;
+  background-color: hsla(30, 80%, 70%, 0.15);
+  border-color: 5px solid hsl(30, 80%, 70%);
   color: #003366;
 }
 
 .notice-note {
-  background-color: #f6f6f6;
-  border-color: #999999;
+  background-color: hsla(200, 65%, 65%, 0.15);
+  border-color: 5px solid hsl(200, 65%, 65%);
   color: #333333;
 }
 
 .notice-tip {
-  background-color: #e9fbe5;
-  border-color: #33cc33;
+  background-color: hsla(140, 65%, 65%, 0.15);
+  border-color: 5px solid hsl(140, 65%, 65%);
   color: #225522;
 }
