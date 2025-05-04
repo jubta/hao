@@ -5,24 +5,23 @@ document.addEventListener("DOMContentLoaded", function () {
   const links = document.querySelectorAll("a[href^='http']:not([data-no-ad])");
 
   links.forEach(link => {
-    const targetUrl = link.href;
+    const href = link.getAttribute("href");
+    const hostname = location.hostname;
+    if (href.includes(hostname)) return; // 內部連結不處理
 
     link.addEventListener("click", function (e) {
-      const hostname = location.hostname;
-      if (targetUrl.includes(hostname)) return; // 內部連結不處理
-
       const adHistory = JSON.parse(localStorage.getItem("adHistory") || "{}");
-      const lastShown = adHistory[targetUrl];
+      const lastShown = adHistory[href];
 
       if (lastShown && now - lastShown < adIntervalMinutes * 60 * 1000) {
-        // 時間內已跳過，直接放行
-        return;
+        return; // 放行
       }
 
-      e.preventDefault(); // 阻止原本跳轉
-      sessionStorage.setItem("pendingRedirect", targetUrl); // 存真正網址
-      adHistory[targetUrl] = now;
+      e.preventDefault(); // 攔截
+      sessionStorage.setItem("pendingRedirect", href);
+      adHistory[href] = now;
       localStorage.setItem("adHistory", JSON.stringify(adHistory));
+
       window.location.href = "/intermediate/";
     });
   });
