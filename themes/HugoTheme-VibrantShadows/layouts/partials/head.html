@@ -83,11 +83,6 @@
   
   <!-- Canonical URL -->
   <link rel="canonical" href="{{ .Permalink }}" />
-
-  <!-- robots noindex 對 pages.dev 禁止收錄 -->
-  {{ if in .Site.BaseURL "pages.dev" }}
-    <meta name="robots" content="noindex, nofollow" />
-  {{ end }}
   
   <!-- AMP, RSS Feed, and other output formats -->
   {{- range .AlternativeOutputFormats -}}
