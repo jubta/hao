@@ -1,38 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const adLink = "https://www.profitableratecpm.com/vawh8q59?key=9b861b04bfb49da12fcc18f5e231446f";
-  const adIntervalMinutes = 2; // 幾分鐘內不再跳廣告
+  const adIntervalMinutes = 2;
   const now = Date.now();
 
   const links = document.querySelectorAll("a[href^='http']:not([data-no-ad])");
 
   links.forEach(link => {
+    const targetUrl = link.href;
+
     link.addEventListener("click", function (e) {
-      const targetUrl = link.href;
+      const hostname = location.hostname;
+      if (targetUrl.includes(hostname)) return; // 內部連結不處理
+
       const adHistory = JSON.parse(localStorage.getItem("adHistory") || "{}");
       const lastShown = adHistory[targetUrl];
 
       if (lastShown && now - lastShown < adIntervalMinutes * 60 * 1000) {
-        return; // 未超過間隔時間 → 直接放行
+        // 時間內已跳過，直接放行
+        return;
       }
 
-      // 還沒跳或超過時間 → 攔截並跳轉
-      e.preventDefault();
-      localStorage.setItem("pendingRedirect", targetUrl);
-
-      // 更新跳轉時間
+      e.preventDefault(); // 阻止原本跳轉
+      sessionStorage.setItem("pendingRedirect", targetUrl); // 存真正網址
       adHistory[targetUrl] = now;
       localStorage.setItem("adHistory", JSON.stringify(adHistory));
-
-      window.location.href = adLink;
+      window.location.href = "/intermediate/";
     });
   });
-
-  // 從廣告頁返回後 → 自動導向原始連結
-  const pending = localStorage.getItem("pendingRedirect");
-  if (pending) {
-    localStorage.removeItem("pendingRedirect");
-    setTimeout(() => {
-      window.location.href = pending;
-    }, 300); // 可調整延遲
-  }
 });

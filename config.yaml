@@ -56,8 +56,9 @@ paginate: 5
 params:
   social: 
     profiles: # social platforms you are present on. see supported ones here | highly recommended
-      youtube: "https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD"
-      instagram: "https://instagram.com/jiun_studios90456?igshid=OGQ5ZDc2ODk2ZA=="
+      youtube: "mailto:ktv8631@gmail.com"
+      instagram: "mailto:ktv8631@gmail.com"
+      email: "mailto:ktv8631@gmail.com"
     share: ["facebook", "twitter", "linkedin", "telegram", "whatsapp", "reddit", "email"] # accepts array of values: "facebook", "twitter", "linkedin", "whatsapp", "reddit", "email". just type the name of those you want you articles to be able to be shared on
   meta:
     author: "HAO" # website-wide author | required

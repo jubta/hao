@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>正在導向...</title>
+  <script>
+    const adLink = "https://www.profitableratecpm.com/vawh8q59?key=9b861b04bfb49da12fcc18f5e231446f";
+    const returnUrl = sessionStorage.getItem("pendingRedirect");
+
+    // 開啟廣告頁（新視窗）並清除 pendingRedirect
+    if (returnUrl) {
+      sessionStorage.removeItem("pendingRedirect");
+      window.open(adLink, "_blank");
+
+      setTimeout(() => {
+        window.location.href = returnUrl;
+      }, 3000); // 3秒後導回原站
+    } else {
+      document.body.innerHTML = "<p>錯誤：找不到目標網址。</p>";
+    }
+  </script>
+</head>
+<body>
+  <p>正在跳轉廣告，請稍候...</p>
+</body>
+</html>
