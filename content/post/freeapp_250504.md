@@ -36,7 +36,7 @@ Support thks : https://www.paypal.me/haotech....
 2. Scan and analyze your skin condition and provide skin care advice.
 
 {{< side-line color="#4bff1e" >}}
-##### **<and font style="background: "> App : </font>** **[click](hhttps://apps.apple.com/app/id6742809128)**
+##### **<and font style="background: "> App : </font>** **[click](https://apps.apple.com/app/id6742809128)**
 {{< /side-line >}}
 
 3. Financial management tool to visualize income and expenses with Sankey charts.
