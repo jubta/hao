@@ -47,7 +47,7 @@
 
 
 
-<meta property="article:published_time" content="2025-05-02 00:00:00 &#43;0000 UTC" />
+<meta property="article:published_time" content="2025-06-01 00:00:00 &#43;0000 UTC" />
 
 
   
@@ -68,9 +68,11 @@
       
       "sameAs" : [
         
-          "https://instagram.com/jiun_studios90456?igshid=OGQ5ZDc2ODk2ZA==",  
+          "mailto:ktv8631@gmail.com",  
         
-          "https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD"
+          "mailto:ktv8631@gmail.com",  
+        
+          "mailto:ktv8631@gmail.com"
         
       ]
       
@@ -94,9 +96,6 @@
   
   
   <link rel="canonical" href="https://haee.dpdns.org/" />
-
-  
-  
   
   <link rel="alternate" type="application/rss+xml" href="https://haee.dpdns.org/index.xml" title="皓分享" /><link rel="alternate" type="application/json" href="https://haee.dpdns.org/index.json" title="皓分享" /><link rel="sitemap" type="application/xml" href="https://haee.dpdns.org/sitemap.xml" title="皓分享" /><link rel="alternate" type="text/plain" href="https://haee.dpdns.org/robots.txt" title="皓分享" /><link rel=apple-touch-icon sizes=180x180 href=https://haee.dpdns.org//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://haee.dpdns.org//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://haee.dpdns.org//assets/favicon/favicon-16x16.png><link rel=manifest href=https://haee.dpdns.org//assets/favicon/site.webmanifest><link rel=mask-icon href=https://haee.dpdns.org//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://haee.dpdns.org//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://haee.dpdns.org//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
   
@@ -233,7 +232,7 @@
         ctx.save();
         ctx.globalAlpha = this.alpha;
         
-        ctx.fillStyle = "#ffd700"; 
+        ctx.fillStyle = "rgba(117, 184, 204, 0.15)"; 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -283,178 +282,6 @@
     }
     animate();
   </script>
-</body>
-</html>
-
-
-    </div>
-  </nav>
-</header>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
-    <div class="container-fluid">
-      
-      <a class="navbar-brand rounded px-3" href="https://haee.dpdns.org/"><span class="text-nav"><span class="brand"><img src="/assets/favicon/favicon-32x32.png" alt="皓分享 logo" height="32"></img>&nbsp;&nbsp;&nbsp;皓分享</span></span></a>
-      
-      
-        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="text-clr2">&#9776;</span>
-        </a>
-
-        <input type="text" id="searchInput" placeholder="搜索...">
-        <ul id="searchResults"></ul>
-
-        <link rel="stylesheet" href="/css/style.css">
-
-        
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-md-auto">
-             
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/">首頁</a>
-                </li>
-              
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/categories">分類</a>
-                </li>
-              
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/tags/">標籤</a>
-                </li>
-              
-            
-          </ul>
-          
-            
-          
-        </div>
-      
-      <!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>烟雾效果示例</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-     
-    #smoke-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;  
-    }
-  </style>
-</head>
-<body>
-  
-  <canvas id="smoke-canvas"></canvas>
-
-  
-  
-
-  
-  <script>
-    const canvas = document.getElementById('smoke-canvas');
-    const ctx = canvas.getContext('2d');
-
-    
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    
-    class Particle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        
-        this.vx = (Math.random() - 0.5) * 1;
-        this.vy = - (Math.random() * 1 + 0.5);
-        
-        this.alpha = 1;
-        
-        this.size = Math.random() * 5 + 5; 
-        
-        this.life = Math.random() * 30 + 30;
-        this.age = 0;
-      }
-      
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.age++;
-        
-        this.alpha = Math.max(0, 1 - this.age / this.life);
-      }
-      
-      draw(ctx) {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        
-        ctx.fillStyle = "hsla(30, 80%, 70%, 0.15)"; 
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    
-    const particles = [];
-
-    
-    function createParticles(x, y) {
-      
-      for (let i = 0; i < 3; i++) {
-        particles.push(new Particle(x, y));
-      }
-    }
-
-    
-    document.addEventListener('mousemove', function(e) {
-      createParticles(e.clientX, e.clientY);
-    });
-
-    
-    document.addEventListener('touchmove', function(e) {
-      
-      
-      const touch = e.touches[0];
-      createParticles(touch.clientX, touch.clientY);
-    }, { passive: true });
-
-    
-    function animate() {
-      requestAnimationFrame(animate);
-      
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.update();
-        p.draw(ctx);
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
-        }
-      }
-    }
-    animate();
-  </script>
-     
 </body>
 </html>
 
@@ -485,6 +312,1150 @@
     
     
     
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9472.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/ultimatum_250601/"><span class="card-title text-reset"> 🚀 Recommend Ultimatum: Chromium browser enhancement for Android!Supports extensions, anti-tracking, and Web3 all at once!</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 2 閱讀時間 &#183; <span class=''>最近更新: 2025 | 6 / 1</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/ultimatum/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ULTIMATUM</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/ultimatum_250601/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9483.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/codex_250601/"><span class="card-title text-reset"> 🚀 Install Codex Executor Mobile v2.673 on iOS (NO PC, NO Signer!) | 100% Working ✅</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 6 / 1</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/codex/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#CODEX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/codex_250601/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9453.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/roblox_250531/"><span class="card-title text-reset"> How to Get Delta Executor v2.673 on iPhone/iPad WITHOUT ESign or PC | Easy Tutorial</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 31</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/roblox_250531/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9431.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/roblox_250530/"><span class="card-title text-reset"> Delta Executor iOS Update: Fix Upgrade Error &amp; Install Latest v2.673 via E-Sign</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 30</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/roblox_250530/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9421.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/esign-250530/"><span class="card-title text-reset"> 2025 Latest no jailbreak and computer solution! The simplest method for installing IPA files on iPhone/iPad</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 30</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/esign/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ESIGN</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support me thks 支持我感謝 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/esign-250530/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9340.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/ksign_250524/"><span class="card-title text-reset"> 更新！如何安裝最新側載應用Ksign在ios，新證書安裝！無限安裝App，不使用AppStore和越獄｜不撤銷</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By Mang &#183; 0 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 24</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/%E5%BD%B1%E7%89%87/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#影片</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>感謝支持&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/ksign_250524/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9320.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/videomaterial_250524/"><span class="card-title text-reset"> 【無版權視頻素材】 YouTube常用素材，歐洲城市4K空鏡視頻素材！</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By Mang &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 24</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/%E5%BD%B1%E7%89%87/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#影片</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/videomaterial_250524/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9315.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/delta_apk_250523/"><span class="card-title text-reset"> Download Delta Executor v2.671 Latest 2025 – Compatible with Android Roblox</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 2 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 23</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/delta_apk_250523/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9310.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/videomaterial_250523/"><span class="card-title text-reset"> 【無版權視頻素材】 寧靜高光城市夜景航拍空鏡視頻素材！</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By Mang &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 23</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/%E5%BD%B1%E7%89%87/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#影片</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/videomaterial_250523/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9256.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/bear_250521/"><span class="card-title text-reset"> 寫得漂亮又安全！我為什麼愛上熊掌記 Bear 筆記 App | Written beautifully and safely! Why I Fell in Love with Bear&#39;s Palm Bear Notes App</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 3 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 21</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/appstore/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#APPSTORE</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/bear_250521/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9263.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/fortnite_250521/"><span class="card-title text-reset"> 🔥 Fortnite 重磅回歸 iOS！睽違 5 年正式登陸 App Store！ | Fortnite Returns to iOS! After 5 years, we officially launched on the App Store!</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 5 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 21</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/appstore/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#APPSTORE</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/fortnite_250521/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9229.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/youtube_250519/"><span class="card-title text-reset"> 免費、強大、免登入！用了這個Youtube下載網站我已經回不去了｜Free, powerful, no login required! Using this YouTube download website, I can&#39;t go back now</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 3 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 19</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/youtube/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#YOUTUBE</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/youtube_250519/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9188.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/pearcleaner/"><span class="card-title text-reset"> macOS上的免費開源應用程式清理工具</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 4 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 15</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/cleaning-tool/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#CLEANING TOOL</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/pearcleaner/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9170.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/codex_250514/"><span class="card-title text-reset"> DIRECT Install Codex Executor Mobile NEW Update for Roblox on iOS |Best Roblox Executor iPhone/iPad</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 14</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/codex_250514/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9146.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/textimage/"><span class="card-title text-reset"> App Recommendation｜AI Art Creator is on the shelves for FREE!</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 4 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 13</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/ai-art-creator/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#AI ART CREATOR</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/textimage/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9121.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/cursor_250512/"><span class="card-title text-reset"> Dev Boost: An AI Tool Just Went Free for a Whole Year (Limited Offer)</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 3 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 12</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/cursor/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#CURSOR</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/cursor_250512/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9073.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/roblox_250509/"><span class="card-title text-reset"> Delta Executor Mobile v2.670 iOS Update for Roblox on iOS | Best Roblox Executor on iPhone &amp; iPad</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 1 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 9</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/roblox_250509/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9064.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/roblox_250508/"><span class="card-title text-reset"> Delta Executor Mobile v2.670 iOS Update for Roblox on iOS | Best Roblox Executor on iPhone &amp; iPad</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 3 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 8</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/roblox_250508/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9056.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/delta_apk_250507/"><span class="card-title text-reset"> Unlock Full Roblox Power on Android with Delta Executor v2.670 – No More Crashes!</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 2 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 7</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/roblox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#ROBLOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks 😭 : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/delta_apk_250507/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9043.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/arstrike_250506/"><span class="card-title text-reset"> AR Strike: Turn Your Home into a Battlefield!Fight Anywhere, Anytime – The Ultimate AR FPS Experience!</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 3 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 6</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/appstore/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#APP STORE</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/arstrike_250506/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9014.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/gbox_250504/"><span class="card-title text-reset"> Install Any App on iPhone Without the App Store – GBox Makes It Possible!</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 2 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 4</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/gbox/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#GBOX</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/gbox_250504/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
+    
+      <div class="card mb-3">
+        <div class="card-body">
+          
+          <div class="row">
+          
+            <div class="col-md-auto my-auto">
+              <img class="rounded-lg" src="/img/img9021.WEBP" height="170px" alt="2025"></img>
+            </div> 
+            
+            
+            <div class="col my-auto py-2">
+              <h4>
+                <a class="text-reset" href="https://haee.dpdns.org/post/freeapp_250504/"><span class="card-title text-reset"> 12 Boutique Apps available for a limited time</span></a>
+              </h4>
+                <div class="card-subtitle font-weight-bold small post-meta"></span>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                  
+                    
+                      
+                    
+                  
+                    
+                      
+                    
+                  By HAO &#183; 3 閱讀時間 &#183; <span class=''>最近更新: 2025 | 5 / 4</div>
+              
+                
+                
+              
+                <div class="pb-1 mt-1"><a href="/tags/%E6%96%87%E7%AB%A0/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#文章</span></a><a href="/tags/freeapp/"><span class="badge badge-pill bg-clr2 text-nav mr-2 mb-1 py-2">#FREE APP</span></a></div>
+              
+               
+              
+              <div class="card-text"><p>Support thks : <a href="https://www.paypal.me/haotech">https://www.paypal.me/haotech</a>&hellip;.</p></div>
+              
+              
+              
+              <a class="font-weight-bold text-reset text-decoration-none" href="https://haee.dpdns.org/post/freeapp_250504/"><nobr>更多 ➢</nobr></a>
+            </div>
+            
+          </div> 
+            
+        </div>
+        
+      </div>
     
       <div class="card mb-3">
         <div class="card-body">
@@ -7177,11 +8148,13 @@ Support me : <a href="https://ko-fi.com/hao3976">https://ko-fi.com/hao3976</a>&h
     <div class="py-2 lead">
       
         
-          <a class="ml-2" href="https://instagram.com/jiun_studios90456?igshid=OGQ5ZDc2ODk2ZA=="><span class="fab fa-instagram" aria-label="Join us on Instagram"></span></a>
+      
+        
+          <a class="ml-2" href="mailto:ktv8631@gmail.com"><span class="fab fa-instagram" aria-label="Join us on Instagram"></span></a>
         
       
         
-          <a class="ml-2" href="https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD"><span class="fab fa-youtube" aria-label="Join us on Youtube"></span></a>
+          <a class="ml-2" href="mailto:ktv8631@gmail.com"><span class="fab fa-youtube" aria-label="Join us on Youtube"></span></a>
         
       
     </div>
@@ -7226,7 +8199,7 @@ Support me : <a href="https://ko-fi.com/hao3976">https://ko-fi.com/hao3976</a>&h
         
       
     
-    <script src="/js/adlink.js"></script>
+    <script type="text/javascript" src="//pl26563676.profitableratecpm.com/fc/26/e2/fc26e2d613e536d7a81001a08a4972f8.js"></script>
     <script src="/count.js"></script>
     <script>
   if (location.hostname === "jiun8631.pages.dev") {

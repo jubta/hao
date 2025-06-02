@@ -119,6 +119,7 @@
       
       <div class="py-3 my-2">
       {{ .Content }}
+      {{ partial "comments.html" . }}
       </div>
       
       {{ if or (and site.Params.social.share (eq site.Params.position.social.share "bottom")) (and site.Params.position.postMeta $postMetaBottom) (and (site.Params.position.postMeta.tags.content) (eq site.Params.position.postMeta.tags.content "bottom")) }}

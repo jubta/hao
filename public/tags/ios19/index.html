@@ -70,9 +70,6 @@
   
   
   <link rel="canonical" href="https://haee.dpdns.org/tags/ios19/" />
-
-  
-  
   
   <link rel="alternate" type="application/rss+xml" href="https://haee.dpdns.org/tags/ios19/index.xml" title="皓分享" /><link rel=apple-touch-icon sizes=180x180 href=https://haee.dpdns.org//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://haee.dpdns.org//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://haee.dpdns.org//assets/favicon/favicon-16x16.png><link rel=manifest href=https://haee.dpdns.org//assets/favicon/site.webmanifest><link rel=mask-icon href=https://haee.dpdns.org//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://haee.dpdns.org//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://haee.dpdns.org//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
   
@@ -209,7 +206,7 @@
         ctx.save();
         ctx.globalAlpha = this.alpha;
         
-        ctx.fillStyle = "#ffd700"; 
+        ctx.fillStyle = "rgba(117, 184, 204, 0.15)"; 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -259,178 +256,6 @@
     }
     animate();
   </script>
-</body>
-</html>
-
-
-    </div>
-  </nav>
-</header>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
-    <div class="container-fluid">
-      
-      <a class="navbar-brand rounded px-3" href="https://haee.dpdns.org/"><span class="text-nav"><span class="brand"><img src="/assets/favicon/favicon-32x32.png" alt="皓分享 logo" height="32"></img>&nbsp;&nbsp;&nbsp;皓分享</span></span></a>
-      
-      
-        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="text-clr2">&#9776;</span>
-        </a>
-
-        <input type="text" id="searchInput" placeholder="搜索...">
-        <ul id="searchResults"></ul>
-
-        <link rel="stylesheet" href="/css/style.css">
-
-        
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-md-auto">
-             
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/">首頁</a>
-                </li>
-              
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/categories">分類</a>
-                </li>
-              
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/tags/">標籤</a>
-                </li>
-              
-            
-          </ul>
-          
-            
-          
-        </div>
-      
-      <!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>烟雾效果示例</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-     
-    #smoke-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;  
-    }
-  </style>
-</head>
-<body>
-  
-  <canvas id="smoke-canvas"></canvas>
-
-  
-  
-
-  
-  <script>
-    const canvas = document.getElementById('smoke-canvas');
-    const ctx = canvas.getContext('2d');
-
-    
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    
-    class Particle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        
-        this.vx = (Math.random() - 0.5) * 1;
-        this.vy = - (Math.random() * 1 + 0.5);
-        
-        this.alpha = 1;
-        
-        this.size = Math.random() * 5 + 5; 
-        
-        this.life = Math.random() * 30 + 30;
-        this.age = 0;
-      }
-      
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.age++;
-        
-        this.alpha = Math.max(0, 1 - this.age / this.life);
-      }
-      
-      draw(ctx) {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        
-        ctx.fillStyle = "hsla(30, 80%, 70%, 0.15)"; 
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    
-    const particles = [];
-
-    
-    function createParticles(x, y) {
-      
-      for (let i = 0; i < 3; i++) {
-        particles.push(new Particle(x, y));
-      }
-    }
-
-    
-    document.addEventListener('mousemove', function(e) {
-      createParticles(e.clientX, e.clientY);
-    });
-
-    
-    document.addEventListener('touchmove', function(e) {
-      
-      
-      const touch = e.touches[0];
-      createParticles(touch.clientX, touch.clientY);
-    }, { passive: true });
-
-    
-    function animate() {
-      requestAnimationFrame(animate);
-      
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.update();
-        p.draw(ctx);
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
-        }
-      }
-    }
-    animate();
-  </script>
-     
 </body>
 </html>
 
@@ -466,11 +291,13 @@
     <div class="py-2 lead">
       
         
-          <a class="ml-2" href="https://instagram.com/jiun_studios90456?igshid=OGQ5ZDc2ODk2ZA=="><span class="fab fa-instagram" aria-label="Join us on Instagram"></span></a>
+      
+        
+          <a class="ml-2" href="mailto:ktv8631@gmail.com"><span class="fab fa-instagram" aria-label="Join us on Instagram"></span></a>
         
       
         
-          <a class="ml-2" href="https://youtube.com/@Jiun?si=oCfrcIO6C9d5AdbD"><span class="fab fa-youtube" aria-label="Join us on Youtube"></span></a>
+          <a class="ml-2" href="mailto:ktv8631@gmail.com"><span class="fab fa-youtube" aria-label="Join us on Youtube"></span></a>
         
       
     </div>
@@ -515,7 +342,7 @@
         
       
     
-    <script src="/js/adlink.js"></script>
+    <script type="text/javascript" src="//pl26563676.profitableratecpm.com/fc/26/e2/fc26e2d613e536d7a81001a08a4972f8.js"></script>
     <script src="/count.js"></script>
     <script>
   if (location.hostname === "jiun8631.pages.dev") {
