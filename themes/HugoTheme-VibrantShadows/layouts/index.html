@@ -51,7 +51,9 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
     {{- end }}
     
     <!-- ranges through each of the content files associated with a particular term and renders the summary.html content view -->
-    {{ range (where site.RegularPages "Type" "in" site.Params.mainSections).ByDate.Reverse }}
+    {{ $sorted := (where site.RegularPages "Type" "in" site.Params.mainSections) | sort "Weight" }}
+    {{ $paginator := .Paginate $sorted }}
+    {{ range $paginator.Pages }}
       <div class="card mb-3">
         <div class="card-body">
           
