@@ -20,24 +20,15 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
 */}}
 
 <div class="jumbotron jumbotron-fluid text-center d-flex flex-column mb-0 text-light hero-gradient"
-{{- if site.Params.backgImage.landingPage }}
- style="background: url('{{ site.Params.backgImage.landingPage | safeURL }}') 50% 95% / cover no-repeat fixed; box-shadow: inset 2000px 0 0 0 rgba(0, 0, 0, 0.65);"
-{{- end -}}
->
-  <div style="height:3.5rem;"></div>
-  <div class="container-fluid{{ if site.Params.backgImage.landingPage }} py-5{{ end }}">
-    {{ if site.Params.meta.tagline }}
-      <h2 class="d-inline-block">{{ site.Params.meta.tagline }}</h2>
-    {{ end }}
-    {{ if site.Params.meta.description }}
-      <p class="lead">{{ site.Params.meta.description }}</p>
-    {{ end }}
+{{- if .Site.Params.backgImage.landingPage }}
+ style="background: url('{{ .Site.Params.backgImage.landingPage | safeURL }}') center center / cover no-repeat fixed; min-height: 60vh;"
+{{- end }}>
+  <div class="container py-5">
+    <h1>SHARE MY DAILY LIFE</h1>
+    <p class="lead">{{ .Site.Params.meta.description }}</p>
   </div>
-  {{ $paginator := .Paginate (where .Data.Pages "Type" "post") }}
-{{ range $paginator.Pages }}
-  {{ .Render "summary" }}
-{{ end }}
 </div>
+
 <div class="container-fluid bg-mat py-3">
   <div class="container-fluid bg-mat py-3" >
     <!-- Need to define any variable outside the range loop. -->

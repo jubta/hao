@@ -16,17 +16,24 @@ taxonomies:
   tag: "tags"
   category: "categories"
 
+
+
 menu:
   main:
-    - name: 首頁
-      url: /
-      weight: 10
-    - name: 分類
-      url: /categories
-      weight: 20
-    - name: 標籤
-      url: /tags/
-      weight: 30
+    - identifier: "菜單" # different for all menu entries, useful especially when menu name coincides
+      name: "首頁" # shown on website/blog
+      url: "/" # user is taken to this url when user clicks on menu item
+      weight: 10 # used to sort menu items by weight
+    - identifier: "分類"
+      name: "分類"
+      url: "/categories"
+      parent: "菜單"
+      weight: 1
+    - identifier: "標籤"
+      name: "標籤"
+      url: "/tags/"
+      parent: "菜單"
+      weight: 1
 
 # Allow HTML in markdown to be rendered, for social platform list in configuration options
 markup:
@@ -51,6 +58,17 @@ outputs:
     - ROBOTS
 
 paginate: 5
+
+enableRobotsTXT: true
+
+privacy:
+  disqus:
+    disable: false # | default: false
+  googleAnalytics:
+    anonymizeIP: true # 'true' makes it so the users' IP addresses are anonymized within Google Analytics | default: false
+    disable: false # | default: false
+    respectDoNotTrack: false # 'true' makes the GA templates respect the “Do Not Track” HTTP header | default: false
+    useSessionStorage: false # 'true' disables the use of Cookies and use Session Storage to Store the GA Client ID | default: false
  
 # Here starts our customization
 params:
@@ -60,10 +78,15 @@ params:
       instagram: "mailto:ktv8631@gmail.com"
       email: "mailto:ktv8631@gmail.com"
     share: ["facebook", "twitter", "linkedin", "telegram", "whatsapp", "reddit", "email"] # accepts array of values: "facebook", "twitter", "linkedin", "whatsapp", "reddit", "email". just type the name of those you want you articles to be able to be shared on
+
+  backgImage:
+    landingPage: "/img/neven-krcmarek-V4EOZj7g1gw-unsplash.jpg"
+  post: "enable"
+
   meta:
     author: "HAO" # website-wide author | required
     footerMessage: "HAO" # text shown in footer above footer links | optional
-    tagline: "Sharing my daily life" # shown in website title on homepage and also used in seo | required
+    tagline: "SHARING ＭＹ DAILY LIFE" # shown in website title on homepage and also used in seo | required
     description: "We already walked too far, down to we had forgotten why embarked" # should include brand name | character length: 50 to 160 characters
     contentLicense: "HAO" # cc-by-3.0, etc or 'All right reserved.' should also be same as the one in copyright above
     titleSeparator: " | " # used in website/blog title, to separate (say) page title from website/blog title | default: " | "
@@ -75,11 +98,29 @@ params:
     color: "#1f3ea5" # color to be shown for brand name on navbar on scroll | required | no default
     navbar: ["logo", "name"] # accepts array of values: "logo", "name" | this configuration shows brand 'log' & brand 'name' on navbar | optional | default: ["logo", "name"]
   theme: # optional
-    nav: "#ffffff" # navbar's background color | optional | default: "#ffffff"
-    antinav: "#000000" # a color in good contrast to nav | optional | default: "#000000"
-    mat: "#f9f9f9" # background color forcards (not of cards) | optional | default: "#f9f9f9"
-    clr1: "#1f3ea5" # color-1 of gradient | optional | default: "#7d1fa5"
-    clr2: "#1f3ea5" # color-2 of gradient | optional | default: "#6d19fc"
+    light:
+      nav: "#ffffff" # navbar's background color | optional | default: "#ffffff"
+      antinav: "#000000" # a color in good contrast to nav | optional | default: "#000000"
+      mat: "#f9f9f9" # background color forcards (not of cards) | optional | default: "#f9f9f9"
+      clr1: "#1f3ea5" # color-1 of gradient | optional | default: "#7d1fa5"
+      clr2: "#1f3ea5" # color-2 of gradient | optional | default: "#6d19fc"
+    dark: # default
+      default: true
+      nav: "#212121"
+      antinav: "#cccccc"
+      mat: "#121212"
+      clr1: "#1f3ea5"
+      clr2: "#1f3ea5"
+    gradientDirection:
+      background: "ltr"
+      text: "ltr"
+      button: "ltr"
+    toggle:
+      switch: true
+      allowFOIT: false
+      caption:
+        light: ["icon", "fa-sun"]
+        dark: ["icon", "fa-moon"]
     borders: "rounded" # accepts value: rounded/square | what kind of borders do you like for elements, like buttons | default: "rounded"
   position: # optional
     social:
