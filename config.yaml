@@ -98,29 +98,11 @@ params:
     color: "#1f3ea5" # color to be shown for brand name on navbar on scroll | required | no default
     navbar: ["logo", "name"] # accepts array of values: "logo", "name" | this configuration shows brand 'log' & brand 'name' on navbar | optional | default: ["logo", "name"]
   theme: # optional
-    light:
-      nav: "#ffffff" # navbar's background color | optional | default: "#ffffff"
-      antinav: "#000000" # a color in good contrast to nav | optional | default: "#000000"
-      mat: "#f9f9f9" # background color forcards (not of cards) | optional | default: "#f9f9f9"
-      clr1: "#1f3ea5" # color-1 of gradient | optional | default: "#7d1fa5"
-      clr2: "#1f3ea5" # color-2 of gradient | optional | default: "#6d19fc"
-    dark: # default
-      default: true
-      nav: "#212121"
-      antinav: "#cccccc"
-      mat: "#121212"
-      clr1: "#1f3ea5"
-      clr2: "#1f3ea5"
-    gradientDirection:
-      background: "ltr"
-      text: "ltr"
-      button: "ltr"
-    toggle:
-      switch: true
-      allowFOIT: false
-      caption:
-        light: ["icon", "fa-sun"]
-        dark: ["icon", "fa-moon"]
+    nav: "#ffffff" # navbar's background color | optional | default: "#ffffff"
+    antinav: "#000000" # a color in good contrast to nav | optional | default: "#000000"
+    mat: "#f9f9f9" # background color forcards (not of cards) | optional | default: "#f9f9f9"
+    clr1: "#1f3ea5" # color-1 of gradient | optional | default: "#7d1fa5"
+    clr2: "#1f3ea5" # color-2 of gradient | optional | default: "#6d19fc"
     borders: "rounded" # accepts value: rounded/square | what kind of borders do you like for elements, like buttons | default: "rounded"
   position: # optional
     social:
