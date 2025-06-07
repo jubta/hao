@@ -19,9 +19,9 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
 {{- end -}}
 */}}
 
-<div class="jumbotron jumbotron-fluid text-center d-flex flex-column mb-0 text-light hero-gradient"
+<div class="jumbotron jumbotron-fluid text-center d-flex flex-column mb-0 text-light"
 {{- if .Site.Params.backgImage.landingPage }}
- style="background: url('{{ .Site.Params.backgImage.landingPage | safeURL }}') center center / cover no-repeat fixed; min-height: 60vh;"
+ style="background: url('{{ .Site.Params.backgImage.landingPage | safeURL }}') center center / cover no-repeat; min-height: 60vh;"
 {{- end }}>
   <div class="container py-5">
     <h1>SHARE MY DAILY LIFE</h1>
