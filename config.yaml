@@ -80,7 +80,7 @@ params:
     share: ["facebook", "twitter", "linkedin", "telegram", "whatsapp", "reddit", "email"] # accepts array of values: "facebook", "twitter", "linkedin", "whatsapp", "reddit", "email". just type the name of those you want you articles to be able to be shared on
 
   backgImage:
-    landingPage: "/img/neven-krcmarek-V4EOZj7g1gw-unsplash.jpg"
+    landingPage: "/img/img9564.WEBP"
   post: "enable"
 
   meta:
