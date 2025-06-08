@@ -1,30 +1,39 @@
 {{- $url := .Get "url" -}}
 {{- $encoded := .Get "encoded" -}}
 
-{{- $link := "" -}}  {{/* 預先定義變數 */}}
+{{- /* 計算下載鏈接，base64 編碼 */ -}}
+{{- $link := "" -}}
+{{- if $url -}}
+  {{- $link = printf "itms-services://?action=download-manifest&url=%s" $url | base64Encode -}}
+{{- else if $encoded -}}
+  {{- $link = $encoded | base64Decode | base64Encode -}}
+{{- end -}}
 
-{{- if $url }}
-  {{- $link = printf "itms-services://?action=download-manifest&url=%s" $url | base64Encode }}
-{{- else if $encoded }}
-  {{- $link = $encoded | base64Decode | base64Encode }}
-{{- end }}
+{{- /* 生成唯一 ID，避免多按鈕衝突 */ -}}
+{{- $id := now.UnixNano -}}
 
-<div class="install-button-wrapper" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
-  <button onclick="installApp()">安裝 App</button>
+<div class="install-button-wrapper" id="install-btn-wrapper-{{ $id }}" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <button id="install-btn-{{ $id }}">安裝 App</button>
 </div>
 
 <script>
-  function installApp() {
-    const encoded = "{{ $link }}";
-    const decoded = atob(encoded);
-    window.location.href = decoded;
+document.addEventListener("DOMContentLoaded", function() {
+  const btn = document.getElementById("install-btn-{{ $id }}");
+  if (btn) {
+    btn.addEventListener("click", function() {
+      const encoded = "{{ $link }}";
+      const decoded = atob(encoded);
+      window.location.href = decoded;
+    });
   }
+});
 
-  document.addEventListener('contextmenu', function (e) {
-    if (e.target.closest('.install-button-wrapper')) {
-      e.preventDefault();
-    }
-  });
+// 禁止右鍵與選取行為
+document.addEventListener('contextmenu', function(e) {
+  if (e.target.closest('#install-btn-wrapper-{{ $id }}')) {
+    e.preventDefault();
+  }
+});
 </script>
 
 <style>
