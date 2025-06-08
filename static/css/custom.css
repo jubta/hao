@@ -78,3 +78,27 @@
 .install-button-wrapper {
   /* 若需要微調按鈕間距，可加上 padding/margin */
 }
+
+/* 強制 app-card 在所有螢幕上都水平不換行 */
+.app-card {
+  flex-wrap: nowrap !important;
+  flex-direction: row !important;
+}
+
+/* 手機螢幕水平顯示時，縮小 icon 與文字的尺寸 */
+.app-card .app-icon {
+  width: 48px !important;
+  height: 48px !important;
+  margin-right: 12px !important;
+}
+
+/* 必要時調整文字大小，避免被截斷 */
+.app-card .app-details {
+  font-size: 14px !important;
+  line-height: 1.3 !important;
+}
+
+/* 保持按鈕也不被拉寬換行 */
+.app-card .install-button-wrapper {
+  white-space: nowrap;
+}
