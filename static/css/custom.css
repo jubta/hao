@@ -36,7 +36,8 @@
 }
 
 
-//可下載的按鈕卡片樣式
+/* custom.css 中加入： */
+
 .app-card {
   display: flex;
   justify-content: space-between;
@@ -65,6 +66,15 @@
   color: #222;
 }
 
+/* 讓下載按鈕靠右：將 .app-download 設為 flex 容器 */
 .app-download {
-  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+/* 短碼本身產生的 .install-button-wrapper 保持默認樣式或補足： */
+.install-button-wrapper {
+  /* 若需要微調按鈕間距，可加上 padding/margin */
 }
