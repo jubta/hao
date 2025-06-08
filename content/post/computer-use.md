@@ -26,20 +26,3 @@ categories:
 3. 查看IP地址 ▶ ipconfig
 
 4. 重啟資源管理器 ▶ taskkill /f /im explorer.exe & start explorer.exe (!記得改.bat檔)
-
-<br>
-
-<div class="app-card">
-  <div class="app-info">
-    <img class="app-icon" src="/img/IMG_9581.WEBP" alt="ESign Icon">
-    <div class="app-details">
-      <strong>ESign ✅</strong><br>
-      National Science Library cert
-    </div>
-  </div>
-  <div class="app-download">
-    {{< installapp encoded="aHR0cHM6Ly9hcGkua2hvaW5kdm4uZXUub3JnL3FxbEZYWQ==" >}}
-  </div>
-</div>
-
-<br>
