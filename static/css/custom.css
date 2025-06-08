@@ -34,3 +34,37 @@
   border-color: 5px solid hsl(140, 65%, 65%);
   color: #225522;
 }
+
+
+//可下載的按鈕卡片樣式
+.app-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f6ff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+}
+
+.app-info {
+  display: flex;
+  align-items: center;
+}
+
+.app-icon {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  border-radius: 10px;
+}
+
+.app-details {
+  font-size: 14px;
+  color: #222;
+}
+
+.app-download {
+  margin-left: auto;
+}
