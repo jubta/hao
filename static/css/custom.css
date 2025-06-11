@@ -36,7 +36,7 @@
 }
 
 
-/* custom.css 中加入： */
+/* custom.css ESign卡片式下載按鈕加入： */
 
 .app-card {
   display: flex;
@@ -101,4 +101,13 @@
 /* 保持按鈕也不被拉寬換行 */
 .app-card .install-button-wrapper {
   white-space: nowrap;
+}
+
+/* custom.css 圖片整合居中 + 邊距樣式 image-center： */
+.image-center {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.image-center img {
+  display: inline-block;
 }
