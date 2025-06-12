@@ -53,7 +53,7 @@ Bazaart 是一款易于使用的iOS 应用程序，可作为强大的设计工�
 **[LINK](https://haee.dpdns.org/post/esign250608/)**
 
 ##### **<font style="background:  "> Bazaart premium 10.7 :</font>** 
-**[🔴](https://www.mediafire.com/file/4rnkjdshcc2p24k/Bazaart+Premium+10.7.0.ipa/file)**
+**[🔴](https://www.mediafire.com/file/4rnkjdshcc2p24k/Bazaart_Premium_10.7.0.ipa/file)**
 
 If you think my article is good, stay stuned! it's awesome, have a great day!
 
