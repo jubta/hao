@@ -82,15 +82,7 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
                   rounded-lg
                 {{- end -}}
                 
-                " src="{{ .Params.image.src }}" height="
-                
-                {{- if .Params.image.thumbnail.size }}
-                  {{- .Params.image.thumbnail.size -}}
-                {{- else if $thumbnailSize }}
-                  {{- $thumbnailSize -}}
-                {{- else -}}
-                  200px
-                {{- end -}}
+                " src="{{ .Params.image.src }}"
                 
                 "{{ if .Params.image.alt }} alt="{{ .Params.image.alt }}"{{ end }}></img>
               {{- end }}
