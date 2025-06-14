@@ -50,7 +50,9 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
           
             <div class="col-md-auto my-auto">
               {{ if .Params.image.src -}}
-                <img class="w-full h-auto max-w-[400px] mx-auto
+                <img
+                  style="max-width: 100%; height: auto; display: block; margin: auto;"
+                  class="
                 
                 {{- if .Params.image.thumbnail.borders }}
                   {{- $thumbnailBorders = .Params.image.thumbnail.borders }}
