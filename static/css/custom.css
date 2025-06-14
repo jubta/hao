@@ -111,3 +111,14 @@
 .image-center img {
   display: inline-block;
 }
+
+//縮略圖響應式圖片
+/* 对首页所有文章卡片的缩略图生效 */
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 以下两行可选，按设计需求开启 */
+  object-fit: cover;
+  max-height: 180px;
+}
