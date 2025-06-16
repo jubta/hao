@@ -1,8 +1,8 @@
 ---
-title: "Make Scanned PDFs Searchable for Free! | OCRmyPDF Full Guide (Multilingual OCR + PDF/A Support)【2025 Best OCR Tool】"
+title: "🚀 How to Download & Activate IDM 2025 for Free! | Fastest Download Manager for Windows (Full Tutorial)"
 author: "HAO"
 description: ""
-tags: ["Github", "IDM" ]
+tags: ["IDM crack guide", "IDM" ]
 keywords:
   - IDM tutorial
   - Download Internet Download Manager
