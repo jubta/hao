@@ -14,6 +14,7 @@
   height: 36px;
   background: #1e1e1e; /* 與 pre 背景一致或略深 */
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 2;            /* ⬅ 讓工具列浮在最上 */
 }
 
 /* --- 三顆圓點 --- */
@@ -29,14 +30,15 @@
   box-shadow:
     16px 0 0 0 #ffbd2e,
     32px 0 0 0 #27c93f;
+  z-index: 3;            /* ⬅ 圓點一定在最上 */
 }
 
 /* --- 程式碼區塊（預留上方空間） --- */
 .highlight pre {
   margin: 0;
   padding: 56px 24px 24px; /* 上方保留給工具列 */
-  background-color: #1e1e1e;
-  color: #c9d1d9;
+  background: #1e1e1e !important;   /* ⬅ 覆蓋 inline 色 */
+  color: #c9d1d9 !important;        /* ⬅ 覆蓋 inline 色 */
   overflow-x: auto;
   font-size: 14px;
   line-height: 1.5;
