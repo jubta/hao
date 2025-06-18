@@ -18,6 +18,7 @@
     {{- $js_popperjs := resources.Get "js/popper.min.js" }}
     {{ $js_main := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
     
+    {{- $js := slice $js_jquery $js_popperjs $js_twbs | resources.Concat "/assets/js/main.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
     
     {{ $mainjs := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
