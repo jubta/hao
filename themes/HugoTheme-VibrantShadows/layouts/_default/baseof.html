@@ -16,9 +16,12 @@
     {{ $js_twbs := slice (resources.Get "js/bootstrap/util.js") (resources.Get "js/bootstrap/collapse.js") (resources.Get "js/bootstrap/dropdown.js") (resources.Get "js/bootstrap/index.js") | resources.Concat "js/bootstrap.slim.js" }}
     {{- $js_jquery := resources.Get "js/jquery.slim.js" }}
     {{- $js_popperjs := resources.Get "js/popper.min.js" }}
-    {{- $js := slice $js_jquery $js_popperjs $js_twbs | resources.Concat "/assets/js/main.js" | minify | fingerprint }}
+    {{ $js_main := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
     
     <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
+    
+    {{ $mainjs := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
+<script src="{{ $mainjs.RelPermalink }}" integrity="{{ $mainjs.Data.Integrity }}" crossorigin="anonymous"></script>
     
     {{- $js_custom := resources.Get "js/custom.js" | resources.ExecuteAsTemplate "/assets/js/custom.js" . | minify | fingerprint }}
     <script src="{{ $js_custom.RelPermalink }}" integrity="{{ $js_custom.Data.Integrity }}" crossorigin="anonymous"></script>

@@ -60,7 +60,13 @@
   <div class="py-2 copyright">
     <small>Copyright &#169; {{ now.Format "2006" }} {{ default site.Title site.Params.meta.author }} {{- if site.Params.meta.contentLicense }} <b>&#183;</b> Content license: {{ site.Params.meta.contentLicense }} {{- end }} {{- if ne site.Params.meta.attribution "disable" }} <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="https://github.com/Softorage/HugoTheme-VibrantShadows">Vibrant Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span>{{ end }}</small>
   </div>
+  
+  <!-- JS 負責的是捲動進度條 -->
+  <script src="/js/progress-bar.js"></script>
+  
+  <!-- JS 負責的是複製程式碼按鈕 -->
   <script src="/js/copy-to-clipboard.js"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/fuse.js"></script>
   <script src="/js/search.js"></script>
   <script data-goatcounter="https://jiuns.goatcounter.com/count" 
