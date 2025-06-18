@@ -21,3 +21,61 @@
 .highlight-copy-btn:hover {
     background-color: #666;
 }
+
+
+/* -------- Mac-style code block -------- */
+.highlight {
+  position: relative;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;                         /* 圓角裁切 */
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);   /* 下方陰影 */
+}
+
+/* 深色背景與內距 */
+.highlight pre {
+  background: #262a33;   /* 顏色可依喜好調整 */
+  color: #c9d1d9;
+  padding: 56px 32px 32px; /* ↑56px 給上方「視窗列」留空間 */
+  border-radius: 0;         /* 交由外層控制圓角 */
+}
+
+/* --- 視窗上方工具列 --- */
+.highlight::before {
+  content: "";
+  display: block;
+  height: 36px;
+  background: #262a33;      /* 與 pre 同色，可改淡色做分隔 */
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+
+/* 三顆圓點 */
+.highlight::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f56;          /* 紅 */
+  box-shadow:
+    16px 0 0 0 #ffbd2e,         /* 黃 */
+    32px 0 0 0 #27c93f;         /* 綠 */
+}
+
+/* --- Copy 按鈕 --- */
+.highlight-copy-btn {
+  top: 8px;        /* 往上移放到工具列 */
+  right: 12px;
+  padding: 0 6px;
+  font-size: .75rem;
+  background: #444;
+  opacity: 0;              /* 預設隱藏，滑入才顯示 */
+  transition: opacity .2s;
+}
+
+.highlight:hover .highlight-copy-btn,
+.highlight-copy-btn:focus {
+  opacity: 1;
+}
