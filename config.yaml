@@ -19,18 +19,20 @@ taxonomies:
 
 menu:
   main:
-    - identifier: "home"
-      name: "首頁"
-      url: "/"
-      weight: 10
-    - identifier: "categories"
+    - identifier: "菜單" # different for all menu entries, useful especially when menu name coincides
+      name: "首頁" # shown on website/blog
+      url: "/" # user is taken to this url when user clicks on menu item
+      weight: 10 # used to sort menu items by weight
+    - identifier: "分類"
       name: "分類"
       url: "/categories"
-      weight: 20
-    - identifier: "tags"
+      parent: "菜單"
+      weight: 1
+    - identifier: "標籤"
       name: "標籤"
       url: "/tags/"
-      weight: 30
+      parent: "菜單"
+      weight: 1
 
 # Allow HTML in markdown to be rendered, for social platform list in configuration options
 markup:
