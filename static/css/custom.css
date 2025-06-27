@@ -1,3 +1,4 @@
+//文章文字底層顏色樣式
 .notice {
   padding: 1rem;
   margin: 1rem 0;
@@ -34,6 +35,7 @@
   border-color: 5px solid hsl(140, 65%, 65%);
   color: #225522;
 }
+
 
 
 /* custom.css ESign卡片式下載按鈕加入： */
@@ -112,6 +114,8 @@
   display: inline-block;
 }
 
+
+
 //縮略圖響應式圖片
 /* 对首页所有文章卡片的缩略图生效 */
 .card img {
@@ -121,4 +125,49 @@
   /* 以下两行可选，按设计需求开启 */
   object-fit: cover;
   max-height: 180px;
+}
+
+
+
+//首頁三個點下拉全屏幕右側滑出樣式
+/* 遮罩層 */
+#offcanvas-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+  z-index: 999;
+}
+/* 菜單本體 */
+#offcanvas-menu {
+  position: fixed;
+  top: 0; right: 0;
+  width: 80%; max-width: 300px;
+  height: 100%;
+  background: #fff;
+  transform: translateX(100%);
+  transition: transform .3s ease;
+  z-index: 1000;
+  padding: 1rem;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+}
+/* 開啟後狀態 */
+#offcanvas-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+#offcanvas-menu.open {
+  transform: translateX(0);
+}
+
+/* toggle 按鈕位置，可依主題微調 */
+#menu-toggle {
+  position: fixed;
+  top: 1rem; right: 1rem;
+  z-index: 1001;
+  background: transparent;
+  border: none;
 }
