@@ -136,6 +136,9 @@
   
   <link rel="stylesheet" href="/css/custom.css">
   
+  
+  <link rel="stylesheet" href="/css/copy-to-clipboard.css">
+  
 </head>
 <body><header>
   <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
@@ -161,19 +164,7 @@
             
               
                 <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/">首頁</a>
-                </li>
-              
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/categories">分類</a>
-                </li>
-              
-            
-              
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="/tags/">標籤</a>
+                  <a class="btn bg-nav text-clr1" href="">菜單</a>
                 </li>
               
             
@@ -567,24 +558,28 @@
 </ul>
 <p>Overall, if your device qualifies, this method is a super convenient and quick fix. Just be sure to double-check that your iOS version is within range before giving it a go—and follow the instructions carefully to avoid any hiccups.</p>
 <h5 id="font-stylebackground--fortnite-direct-install-font"><strong><font style="background: "> Fortnite Direct Install👇 :</font></strong></h5>
-
-
-<div class="install-button-wrapper" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
-  <button onclick="installApp()">安裝 App</button>
+<div class="install-button-wrapper" id="install-btn-wrapper-1751005293780487600" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <button id="install-btn-1751005293780487600">安裝 App</button>
 </div>
 
 <script>
-  function installApp() {
-    const encoded = "aXRtcy1zZXJ2aWNlczovLz9hY3Rpb249ZG93bmxvYWQtbWFuaWZlc3QmdXJsPWh0dHBzOi8vZm9ydG5pdGUtaW9zLmNvbS9JbnN0YWxsLnBsaXN0";
-    const decoded = atob(encoded);
-    window.location.href = decoded;
+document.addEventListener("DOMContentLoaded", function() {
+  const btn = document.getElementById("install-btn-1751005293780487600");
+  if (btn) {
+    btn.addEventListener("click", function() {
+      const encoded = "aXRtcy1zZXJ2aWNlczovLz9hY3Rpb249ZG93bmxvYWQtbWFuaWZlc3QmdXJsPWh0dHBzOi8vZm9ydG5pdGUtaW9zLmNvbS9JbnN0YWxsLnBsaXN0";
+      const decoded = atob(encoded);
+      window.location.href = decoded;
+    });
   }
+});
 
-  document.addEventListener('contextmenu', function (e) {
-    if (e.target.closest('.install-button-wrapper')) {
-      e.preventDefault();
-    }
-  });
+
+document.addEventListener('contextmenu', function(e) {
+  if (e.target.closest('#install-btn-wrapper-1751005293780487600')) {
+    e.preventDefault();
+  }
+});
 </script>
 
 <style>
@@ -598,7 +593,6 @@
   user-select: none !important;
 }
 </style>
-
 <p>If you think my blog is good, give me a sopport, it&rsquo;s cool, have a nice day!🤗</p>
       <div id="giscus" class="giscus"></div>
 <script
@@ -675,7 +669,13 @@
     </div><div class="py-2 copyright">
     <small>Copyright &#169; 2025 HAO <b>&#183;</b> Content license: HAO</small>
   </div>
+  
+  
+  <script src="/js/progress-bar.js"></script>
+  
+  
   <script src="/js/copy-to-clipboard.js"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/fuse.js"></script>
   <script src="/js/search.js"></script>
   <script data-goatcounter="https://jiuns.goatcounter.com/count" 
@@ -686,6 +686,9 @@
     
     
     <script src="/assets/js/main.min.120834f0a19066ab6c0a29cb55e5e8c036c508420db839df2114436017500be3.js" integrity="sha256-Egg08KGQZqtsCinLVeXowDbFCEINuDnfIRRDYBdQC&#43;M=" crossorigin="anonymous"></script>
+    
+    
+<script src="/js/main.min.e8920058fd92849a1a9611478e079dd18d86167e5f0b0d7aaa5e69943aaa95f6.js" integrity="sha256-6JIAWP2ShJoalhFHjged0Y2GFn5fCw16ql5plDqqlfY=" crossorigin="anonymous"></script>
     <script src="/assets/js/custom.min.21d1b65b48adbed41de7ac42ee68e7f9e464985356770f7e0b877b89044eb469.js" integrity="sha256-IdG2W0itvtQd56xC7mjn&#43;eRkmFNWdw9&#43;C4d7iQROtGk=" crossorigin="anonymous"></script>
     
     <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">

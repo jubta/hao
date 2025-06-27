@@ -51,41 +51,10 @@ We don't know how to have access to a specific page's taxonomies yet. Having tha
             <div class="col-md-auto my-auto">
               {{ if .Params.image.src -}}
                 <img
-                  style="max-width: 100%; height: auto; display: block; margin: auto;"
-                  class="
-                
-                {{- if .Params.image.thumbnail.borders }}
-                  {{- $thumbnailBorders = .Params.image.thumbnail.borders }}
-                {{- else if $thumbnailBorders }}
-                  {{/*
-                    If site.Params.userExperience.postImages.thumbnail.borders is specified, we wish to use that value.
-                    Go Templates treat the following values as false:
-
-                      false (boolean)
-                      0 (integer)
-                      any zero-length array, slice, map, or string
-                    
-                    As per the if conditional just after declaring $thumbnailBorders, if site.Params.userExperience.postImages.thumbnail.borders is specified, then $thumbnailBorders is not false.
-                    In which case, we don't want the if conditional to continue.
-                    
-                    Also, rather than using site.Params.userExperience.postImages.thumbnail.borders in every range iteration, using it once outside the range loop to give $thumbnailBorders its value, and then using that variable in the range loop, helps reduce build times. 
-                   */}}
-                {{- else }}
-                  {{- $thumbnailBorders = "rounded-lg" }}
-                {{- end }}
-                
-                {{- if eq $thumbnailBorders "square" -}}
-                  rounded-0
-                {{- else if eq $thumbnailBorders "circle" -}}
-                 rounded-circle
-                {{- else if eq $thumbnailBorders "pill" -}}
-                 rounded-pill
-                {{- else -}}
-                  rounded-lg
-                {{- end -}}
-                
-                " src="{{ .Params.image.src }}"
-                {{- with .Params.image.alt }} alt="{{ . }}"{{ end }}>
+                  class="img-fluid d-block mx-auto {{ if eq $thumbnailBorders `square` }}rounded-0{{ else if eq $thumbnailBorders `circle` }}rounded-circle{{ else if eq $thumbnailBorders `pill` }}rounded-pill{{ else }}rounded-lg{{ end }}"
+                  style="max-height: 180px; object-fit: cover;"
+                  src="{{ .Params.image.src }}"
+                  {{ with .Params.image.alt }}alt="{{ . }}"{{ end }} />
               {{ end }}
             </div> <!-- image col-md -->
             

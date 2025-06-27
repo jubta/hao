@@ -127,3 +127,16 @@
   max-height: 180px;
 }
 
+.card img {
+  display: block;
+  max-height: 180px;
+  width: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .card img {
+    max-height: 180px;
+  }
+}
+
