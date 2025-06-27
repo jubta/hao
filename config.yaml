@@ -19,20 +19,20 @@ taxonomies:
 
 menu:
   main:
-    - identifier: "menu"     # 你可以隨便取一個英文識別字
-      name: "菜單"           # 這個會在三點圖示按鈕旁邊（實際上我們藏掉文字只留按鈕）
-      url: ""                # 不需要連到任何頁面
+    - identifier: "菜單" # different for all menu entries, useful especially when menu name coincides
+      name: "首頁" # shown on website/blog
+      url: "/" # user is taken to this url when user clicks on menu item
+      weight: 10 # used to sort menu items by weight
+    - identifier: "分類"
+      name: "分類"
+      url: "/categories"
+      parent: "菜單"
       weight: 1
-      children:
-        - identifier: "home"
-          name: "首頁"
-          url: "/"
-        - identifier: "categories"
-          name: "分類"
-          url: "/categories"
-        - identifier: "tags"
-          name: "標籤"
-          url: "/tags/"
+    - identifier: "標籤"
+      name: "標籤"
+      url: "/tags/"
+      parent: "菜單"
+      weight: 1
 
 # Allow HTML in markdown to be rendered, for social platform list in configuration options
 markup:
