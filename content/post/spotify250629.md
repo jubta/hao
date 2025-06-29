@@ -21,16 +21,6 @@ Support:https://www.paypal.me/haotech....
 
 <br>
 
-{{< notice notice-warning >}}
-Spotify iOS app
-{{< /notice >}}
-
-Bazaarart is an easy-to-use iOS application that serves as a powerful design studio, photo, and video editor, helping users create various visual contents, from social media posts to product photography, without requiring professional design experience.
-
-It offers a range of powerful editing tools, including background and object removal, AI art generation, and the ability to convert blurry photos into high-definition. Although the application is free, users can unlock additional features through advanced subscriptions and gain unlimited access to templates, graphics, and advanced tools. Provided for everyone is the advanced version.
-
----
-
 {{< notice notice-note >}}
 Spotify ios應用
 {{< /notice >}}
