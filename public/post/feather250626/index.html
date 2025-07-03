@@ -163,8 +163,17 @@
              
             
               
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="">菜單</a>
+                <li class="nav-item dropdown mx-1 my-2">
+                  <a class="nav-link dropdown-toggle btn bg-nav text-clr1" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>首頁</span></a>
+                  <div class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item font-weight-bold " href="/">首頁</a>
+                    <div class="dropdown-divider"></div>
+                    
+                      <a class="dropdown-item " href="/categories">分類</a>
+                    
+                      <a class="dropdown-item " href="/tags/">標籤</a>
+                    
+                  </div>
                 </li>
               
             
@@ -445,13 +454,13 @@
     </div>
   </div>
   <div class="app-download">
-    <div class="install-button-wrapper" id="install-btn-wrapper-1751005293774584100" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
-      <button id="install-btn-1751005293774584100">安裝 App</button>
+    <div class="install-button-wrapper" id="install-btn-wrapper-1751537800773110000" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+      <button id="install-btn-1751537800773110000">安裝 App</button>
     </div>
     
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const btn = document.getElementById("install-btn-1751005293774584100");
+      const btn = document.getElementById("install-btn-1751537800773110000");
       if (btn) {
         btn.addEventListener("click", function() {
           const encoded = "aXRtcy1zZXJ2aWNlczovLz9hY3Rpb249ZG93bmxvYWQtbWFuaWZlc3QmdXJsPWh0dHBzOi8vc2lnbi5hcHBsZXAxMi5jb20vR2V0UGxpc3QvNjg1ZDhjZTgtMDU1Yy1lOTAxLTAwM2YtMDI0NDVhYTAwZWNj";
@@ -463,7 +472,7 @@
     
     
     document.addEventListener('contextmenu', function(e) {
-      if (e.target.closest('#install-btn-wrapper-1751005293774584100')) {
+      if (e.target.closest('#install-btn-wrapper-1751537800773110000')) {
         e.preventDefault();
       }
     });

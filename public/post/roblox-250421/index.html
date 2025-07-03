@@ -163,8 +163,17 @@
              
             
               
-                <li class="nav-item mx-1 my-2">
-                  <a class="btn bg-nav text-clr1" href="">菜單</a>
+                <li class="nav-item dropdown mx-1 my-2">
+                  <a class="nav-link dropdown-toggle btn bg-nav text-clr1" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>首頁</span></a>
+                  <div class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item font-weight-bold " href="/">首頁</a>
+                    <div class="dropdown-divider"></div>
+                    
+                      <a class="dropdown-item " href="/categories">分類</a>
+                    
+                      <a class="dropdown-item " href="/tags/">標籤</a>
+                    
+                  </div>
                 </li>
               
             
@@ -409,13 +418,13 @@
 <h5 id="font-stylebackground---new-delta-executor-direct-install-font"><strong><font style="background:  "> New Delta Executor Direct install :</font></strong></h5>
 <div class="secure-box" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
   
-<div class="install-button-wrapper" id="install-btn-wrapper-1751005293800994700" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
-  <button id="install-btn-1751005293800994700">安裝 App</button>
+<div class="install-button-wrapper" id="install-btn-wrapper-1751537800828291600" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <button id="install-btn-1751537800828291600">安裝 App</button>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  const btn = document.getElementById("install-btn-1751005293800994700");
+  const btn = document.getElementById("install-btn-1751537800828291600");
   if (btn) {
     btn.addEventListener("click", function() {
       const encoded = "aHR0cHM6Ly9pcGFzaWduLnByby9zLzE3NDUxNTM3NzIxNzZfNXllMGl4";
@@ -427,7 +436,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 document.addEventListener('contextmenu', function(e) {
-  if (e.target.closest('#install-btn-wrapper-1751005293800994700')) {
+  if (e.target.closest('#install-btn-wrapper-1751537800828291600')) {
     e.preventDefault();
   }
 });
