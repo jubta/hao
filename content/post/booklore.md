@@ -109,6 +109,8 @@ This allows you to use your existing authentication system (e.g., OAuth, SAML) t
 
 remote auth environment variables can be configured:
 
+<div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+
 | Variable Name                | Description                             | Default Value                                                       |
 |------------------------------|-----------------------------------------|---------------------------------------------------------------------|
 | REMOTE_AUTH_ENABLED          | Enable remote authentication            | `false`                                                             |
@@ -118,6 +120,8 @@ remote auth environment variables can be configured:
 | REMOTE_AUTH_HEADER_EMAIL     | HTTP header containing user's email     | `Remote-Email`                                                      |
 | REMOTE_AUTH_HEADER_GROUPS    | HTTP header containing user's groups    | `Remote-Groups`                                                     |
 | REMOTE_AUTH_ADMIN_GROUP      | Group name that grants admin privileges | -
+
+</div>
 
 ---
 

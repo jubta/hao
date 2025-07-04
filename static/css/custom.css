@@ -140,13 +140,3 @@
   }
 }
 
-
-//表格不超出屏幕
-/* 让文章中的所有表格在小屏下可以横向滚动 */
-article table {
-  display: block;               /* 把表格当块级元素 */
-  width: 100%;                  /* 最小填满父容器 */
-  overflow-x: auto;             /* 超出时出现横向滚动条 */
-  -webkit-overflow-scrolling: touch; /* iOS 下更流畅 */
-  white-space: nowrap;          /* 保持表格内容不折行 */
-}
