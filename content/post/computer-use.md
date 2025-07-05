@@ -14,6 +14,12 @@ categories:
   - 影片
 ---
 
+**你一定要使用的電腦使用技巧:**
+
+<!--more-->
+
+{{% hugo-encryptor "123321" %}}
+
 ## 電腦使用技巧
 <a href="/img/wnQ-OKdeR.jpg " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/wnQ-OKdeR.jpg " width="80%" alt="图片描述">
@@ -26,3 +32,5 @@ categories:
 3. 查看IP地址 ▶ ipconfig
 
 4. 重啟資源管理器 ▶ taskkill /f /im explorer.exe & start explorer.exe (!記得改.bat檔)
+
+{{% /hugo-encryptor %}}

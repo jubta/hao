@@ -325,11 +325,7 @@
         <div class="h4 mb-3">
         目錄 👇
         </div>
-        <nav id="TableOfContents">
-  <ol>
-    <li><a href="#電腦使用技巧">電腦使用技巧</a></li>
-  </ol>
-</nav>
+        <nav id="TableOfContents"></nav>
       </div>
       
     </div>
@@ -399,7 +395,36 @@
       
       
       <div class="py-3 my-2">
-      <h2 id="電腦使用技巧">電腦使用技巧</h2>
+      <p><strong>你一定要使用的電腦使用技巧:</strong></p>
+
+
+
+
+<div class="hugo-encryptor-container">
+  <div class="hugo-encryptor-prompt">
+    
+      <p>文章的部分内容被密码保护：</p>
+    
+  </div>
+  <div class="hugo-encryptor-form">
+    <input
+      class="hugo-encryptor-input"
+      placeholder='请输入密码'
+    />
+    <input
+      class="hugo-encryptor-button"
+      type="button"
+      value='点击验证'
+      onclick="_click_handler(this)"
+    />
+  </div>
+  <div
+    class="hugo-encryptor-cipher-text"
+    data-password="123321"
+    style="display: none;"
+  >
+    <span style="display: none;">--- DON'T MODIFY THIS LINE ---</span>
+    <h2 id="電腦使用技巧">電腦使用技巧</h2>
 <a href="/img/wnQ-OKdeR.jpg " data-lightbox="image-1" data-title="我的图片">
     <img src="/img/wnQ-OKdeR.jpg " width="80%" alt="图片描述">
 </a>
@@ -418,6 +443,8 @@
 </li>
 </ol>
 
+  </div>
+</div>
       <div id="giscus" class="giscus"></div>
 <script
   src="https://giscus.app/client.js"

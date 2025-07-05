@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Thu, 03 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 04 Jul 2025 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://haee.dpdns.org/index.xml" rel="self" type="application/rss+xml" />
     
@@ -26,6 +26,22 @@
       
       <guid>https://haee.dpdns.org/post/sidestore_250604/</guid>
       <description>&lt;p&gt;Support thks 😭 : &lt;a href=&#34;https://www.paypal.me/haotech&#34;&gt;https://www.paypal.me/haotech&lt;/a&gt;&amp;hellip;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Explore BookLore: Your Self-Hosted Digital Library Solution</title>
+      <link>https://haee.dpdns.org/post/booklore/</link>
+      
+      <guid>https://haee.dpdns.org/post/booklore/</guid>
+      <description>&lt;p&gt;Support thks : &lt;a href=&#34;https://www.paypal.me/haotech&#34;&gt;https://www.paypal.me/haotech&lt;/a&gt;&amp;hellip;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Fix *Unable to Install* Error When Sideloading IPA on iPhone (DNS &#43; Feather Guide)</title>
+      <link>https://haee.dpdns.org/post/fixunable/</link>
+      
+      <guid>https://haee.dpdns.org/post/fixunable/</guid>
+      <description>&lt;p&gt;Support thks : &lt;a href=&#34;https://www.paypal.me/haotech&#34;&gt;https://www.paypal.me/haotech&lt;/a&gt;&amp;hellip;.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -1648,10 +1664,7 @@ Support me : &lt;a href=&#34;https://ko-fi.com/hao3976&#34;&gt;https://ko-fi.com
       <link>https://haee.dpdns.org/post/computer-use/</link>
       
       <guid>https://haee.dpdns.org/post/computer-use/</guid>
-      <description>電腦使用技巧 更改使用者名稱 ▶ netplwiz
-查看電腦配置 ▶ dxdiag
-查看IP地址 ▶ ipconfig
-重啟資源管理器 ▶ taskkill /f /im explorer.exe &amp;amp; start explorer.exe (!記得改.bat檔)</description>
+      <description>&lt;p&gt;&lt;strong&gt;你一定要使用的電腦使用技巧:&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>
