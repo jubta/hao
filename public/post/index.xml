@@ -1858,7 +1858,10 @@ Support me : &lt;a href=&#34;https://ko-fi.com/hao3976&#34;&gt;https://ko-fi.com
       <pubDate>Sun, 21 Aug 2022 00:00:00 +0000</pubDate>
       
       <guid>https://haee.dpdns.org/post/computer-use/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;你一定要使用的電腦使用技巧&lt;/strong&gt;&lt;/p&gt;</description>
+      <description>電腦使用技巧 更改使用者名稱 ▶ netplwiz
+查看電腦配置 ▶ dxdiag
+查看IP地址 ▶ ipconfig
+重啟資源管理器 ▶ taskkill /f /im explorer.exe &amp;amp; start explorer.exe (!記得改.bat檔)</description>
     </item>
     
   </channel>

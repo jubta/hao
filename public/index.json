@@ -790,6 +790,6 @@
       },{
         "title": "電腦使用技巧",
         "permalink": "/post/computer-use/",
-        "content": "你一定要使用的電腦使用技巧\n文章的部分内容被密码保护：\n点击验证\r--- DON'T MODIFY THIS LINE ---\r--- DON'T MODIFY THIS LINE ---\r## 電腦使用技巧\r1. 更改使用者名稱 ▶ netplwiz\r2. 查看電腦配置 ▶ dxdiag\r3. 查看IP地址 ▶ ipconfig\r4. 重啟資源管理器 ▶ taskkill /f /im explorer.exe \u0026 start explorer.exe (!記得改.bat檔)\r"
+        "content": "電腦使用技巧 更改使用者名稱 ▶ netplwiz\n查看電腦配置 ▶ dxdiag\n查看IP地址 ▶ ipconfig\n重啟資源管理器 ▶ taskkill /f /im explorer.exe \u0026amp; start explorer.exe (!記得改.bat檔)\n"
       }]
 }
