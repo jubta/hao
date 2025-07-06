@@ -122,25 +122,34 @@
 {{/* 檢查 front matter 中是否有 password 參數 */}}
 {{ if .Params.password }}
 
-    {{/* 如果有密碼，就顯示加密相關的 HTML 和腳本 */}}
+        {{/* --- 這一段是 HTML 內容，保持不變 --- */}}
     <div id="encryption-container" class="encryption-container py-3 my-2">
         <h3>這篇文章已被加密</h3>
         <p>請輸入密碼來閱讀：</p>
-        <input type="password" id="password-input" placeholder="請在此輸入密碼">
+        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password">
         <button id="decrypt-button">解密</button>
         <p id="error-message" class="error-message"></p>
     </div>
 
-    {{/* 將加密後的內容和密碼的雜湊值隱藏在頁面中 */}}
-    <div id="encrypted-content" style="display: none;"></div>
+    {{/* 我們不再需要一個空的 div 來放加密內容，因為加密和解密都在 JS 變數中完成 */}}
 
-    {{/* 引入 CryptoJS 函式庫，用於加解密 */}}
+    {{/* 引入 CryptoJS 函式庫 */}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
-        <script>
-        // --- 設定區 ---
-        // 我們將加密後的內容直接生成在模板裡，避免 JS 端再加密一次，減少出錯環節。
-        const encryptedContent = {{ .Content | Crypto.Encrypt .Params.password }};
+    {{/* --- 這是需要替換的全新 JavaScript 邏輯 --- */}}
+    <script>
+        // --- 1. 準備內容 ---
+        // 獲取原始文章內容和評論區HTML，並將它們轉換為JSON字串，這是最穩定的方式
+        const originalContent = {{ .Content | jsonify }};
+        const commentsHtml = {{ partial "comments.html" . | jsonify }};
+        // 獲取密碼
+        const correctPassword = {{ .Params.password | jsonify }};
+
+        // --- 2. 在客戶端進行加密 ---
+        // 將原始內容和評論合併在一起後加密，這樣解密出來的就是完整的內容
+        const encryptedData = CryptoJS.AES.encrypt(originalContent + commentsHtml, correctPassword).toString();
+        
+        // --- 3. 獲取頁面元素 ---
         const container = document.getElementById('encryption-container');
         const decryptButton = document.getElementById('decrypt-button');
         const passwordInput = document.getElementById('password-input');
@@ -154,61 +163,44 @@
             }
 
             try {
-                // 直接嘗試用輸入的密碼解密。
-                // 如果密碼錯誤，CryptoJS 會返回一個 word-array，其 .sigBytes <= 0
-                // 或者在某些情況下解密出的字串是空的。
-                const decryptedBytes = CryptoJS.AES.decrypt(encryptedContent, enteredPassword);
+                // --- 4. 關鍵的解密與驗證 ---
+                // 使用使用者輸入的密碼嘗試解密我們在 JS 中加密的數據
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, enteredPassword);
                 const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
-                // 關鍵判斷：只要解密出來的不是空字串，就視為密碼正確！
+                // 只要解密後能得到非空字串，就視為成功
                 if (decryptedText) {
                     const contentDiv = document.createElement('div');
-                    contentDiv.className = 'py-3 my-2 post-content'; // 沿用樣式
+                    contentDiv.className = 'py-3 my-2 post-content';
                     contentDiv.innerHTML = decryptedText;
-
-                    // 解密成功後，把評論區也加進來
-                    const commentsHtml = {{ partial "comments.html" . | jsonify }};
-                    if (commentsHtml) {
-                        const commentsDiv = document.createElement('div');
-                        commentsDiv.innerHTML = commentsHtml;
-                        contentDiv.appendChild(commentsDiv);
-                    }
-
+                    
                     // 替換掉密碼框
                     container.parentNode.replaceChild(contentDiv, container);
                 } else {
-                    // 如果 decryptedText 是空的，說明密碼錯誤。
-                    throw new Error('Wrong password');
+                    // 解密失敗，拋出錯誤
+                    throw new Error('Decryption failed, likely wrong password.');
                 }
             } catch (e) {
-                // 捕獲所有可能的錯誤，統一提示密碼錯誤。
+                // 捕獲所有錯誤
                 errorMessage.textContent = '密碼錯誤，請重試。';
-                passwordInput.value = ''; // 清空輸入框
-                passwordInput.focus(); // 讓使用者可以馬上重新輸入
+                passwordInput.value = '';
+                passwordInput.focus();
             }
         };
         
         decryptButton.addEventListener('click', decryptAndShow);
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // 防止頁面刷新
+                e.preventDefault();
                 decryptAndShow();
             }
         });
-        
-        // 頁面加載後，讓密碼輸入框自動獲得焦點
-        document.addEventListener('DOMContentLoaded', (event) => {
+
+        // 頁面加載後自動聚焦
+        document.addEventListener('DOMContentLoaded', () => {
             passwordInput.focus();
         });
     </script>
-
-{{ else }}
-
-    {{/* 如果沒有密碼，就跟平常一樣，直接顯示文章內容和評論 */}}
-    <div class="py-3 my-2">
-        {{ .Content }}
-        {{ partial "comments.html" . }}
-    </div>
 
 {{ end }}
 

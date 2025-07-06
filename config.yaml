@@ -16,12 +16,6 @@ taxonomies:
   tag: "tags"
   category: "categories"
 
-# 文章加密鎖引入
-security:
-  funcs:
-    Crypto:
-    - Crypto.Encrypt
-
 menu:
   main:
     - identifier: "菜單" # different for all menu entries, useful especially when menu name coincides
