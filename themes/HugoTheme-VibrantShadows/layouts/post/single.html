@@ -137,20 +137,11 @@
     {{/* 引入 CryptoJS 函式庫，用於加解密 */}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
-    <script>
-        // 從 Hugo 模板中獲取文章內容和密碼
-        // 我們要把評論區也包含進來一起加密，所以需要用 capture
-        {{ $content_with_comments := printf "%s%s" .Content (partial "comments.html" .) | jsonify }}
-        const originalContent = {{ $content_with_comments }};
-        const correctPassword = {{ .Params.password | jsonify }};
-
-        // 使用密碼加密內容 (AES)
-        const encryptedContent = CryptoJS.AES.encrypt(originalContent, correctPassword).toString();
-        
-        // 將加密後的內容放入隱藏的 div
-        document.getElementById('encrypted-content').innerText = encryptedContent;
-
-        // --- 解密邏輯 ---
+        <script>
+        // --- 設定區 ---
+        // 我們將加密後的內容直接生成在模板裡，避免 JS 端再加密一次，減少出錯環節。
+        const encryptedContent = {{ .Content | Crypto.Encrypt .Params.password }};
+        const container = document.getElementById('encryption-container');
         const decryptButton = document.getElementById('decrypt-button');
         const passwordInput = document.getElementById('password-input');
         const errorMessage = document.getElementById('error-message');
@@ -163,34 +154,52 @@
             }
 
             try {
-                const contentToDecrypt = document.getElementById('encrypted-content').innerText;
-                const decryptedBytes = CryptoJS.AES.decrypt(contentToDecrypt, enteredPassword);
+                // 直接嘗試用輸入的密碼解密。
+                // 如果密碼錯誤，CryptoJS 會返回一個 word-array，其 .sigBytes <= 0
+                // 或者在某些情況下解密出的字串是空的。
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedContent, enteredPassword);
                 const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
+                // 關鍵判斷：只要解密出來的不是空字串，就視為密碼正確！
                 if (decryptedText) {
-                    const container = document.getElementById('encryption-container');
                     const contentDiv = document.createElement('div');
-                    // 沿用原來 div 的 class，保持樣式一致
-                    contentDiv.className = 'py-3 my-2'; 
+                    contentDiv.className = 'py-3 my-2 post-content'; // 沿用樣式
                     contentDiv.innerHTML = decryptedText;
+
+                    // 解密成功後，把評論區也加進來
+                    const commentsHtml = {{ partial "comments.html" . | jsonify }};
+                    if (commentsHtml) {
+                        const commentsDiv = document.createElement('div');
+                        commentsDiv.innerHTML = commentsHtml;
+                        contentDiv.appendChild(commentsDiv);
+                    }
+
+                    // 替換掉密碼框
                     container.parentNode.replaceChild(contentDiv, container);
                 } else {
+                    // 如果 decryptedText 是空的，說明密碼錯誤。
                     throw new Error('Wrong password');
                 }
             } catch (e) {
+                // 捕獲所有可能的錯誤，統一提示密碼錯誤。
                 errorMessage.textContent = '密碼錯誤，請重試。';
-                passwordInput.value = '';
+                passwordInput.value = ''; // 清空輸入框
+                passwordInput.focus(); // 讓使用者可以馬上重新輸入
             }
         };
         
         decryptButton.addEventListener('click', decryptAndShow);
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // 防止表單提交導致頁面刷新
+                e.preventDefault(); // 防止頁面刷新
                 decryptAndShow();
             }
         });
-
+        
+        // 頁面加載後，讓密碼輸入框自動獲得焦點
+        document.addEventListener('DOMContentLoaded', (event) => {
+            passwordInput.focus();
+        });
     </script>
 
 {{ else }}

@@ -12,10 +12,15 @@ algolia:
 # googleAnalytics: "G-123456789-0" # Respecting your preference from 'privacy', and 'params' -> 'user_experience' below, if you set this value, Google Analytics code will be included. Google Analytics included only when serving the website on 'production' environment (i.e. website built with `hugo` command and not `hugo serve`)
 # disqusShortname: "yourdiscussshortname" # Respecting your preference from 'privacy', if you set this value, Disqus comments code will be included at the end of the blog posts. Disqus comments are shown only when serving the website on 'production' environment (i.e. website built with `hugo` command and not `hugo serve`)
 
+// 文章加密鎖引入
 taxonomies:
   tag: "tags"
   category: "categories"
-
+  
+security:
+  funcs:
+    Crypto:
+    - Crypto.Encrypt
 
 menu:
   main:
