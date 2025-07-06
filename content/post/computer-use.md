@@ -4,6 +4,8 @@ author: "鈞鈞"
 description: "實用軟件"
 tags: ["影片", "軟件"]
 date: "2022-08-21"
+encrypt: true  # 告訴模板這篇文章要加密
+password: "my-secret-password-123" # 設定這篇文章的專屬密碼
 image:
   src: "/img/wnQ-OKdeR.jpg"
   alt: "2023"
@@ -13,6 +15,8 @@ image:
 categories:
   - 影片
 ---
+
+這是加密文章需要支持解鎖！
 
 ## 電腦使用技巧
 <a href="/img/wnQ-OKdeR.jpg " data-lightbox="image-1" data-title="我的图片">

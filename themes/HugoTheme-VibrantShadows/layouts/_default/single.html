@@ -7,6 +7,88 @@
   {{- end }}
 </div>
 <div class="container bg-nav py-3">
-  {{ .Content }}
+  {{/* 檢查 front matter 中是否有 password 參數 */}}
+{{ if .Params.password }}
+
+    {{/* 如果有密碼，就顯示加密相關的 HTML 和腳本 */}}
+    <div id="encryption-container" class="encryption-container">
+        <h3>這篇文章已被加密</h3>
+        <p>請輸入密碼來閱讀：</p>
+        <input type="password" id="password-input" placeholder="請在此輸入密碼">
+        <button id="decrypt-button">解密</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    {{/* 將加密後的內容和密碼的雜湊值隱藏在頁面中 */}}
+    <div id="encrypted-content" style="display: none;"></div>
+
+    {{/* 引入 CryptoJS 函式庫，用於加解密 */}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+    <script>
+        // 從 Hugo 模板中獲取文章內容和密碼
+        const originalContent = {{ .Content | jsonify }};
+        const correctPassword = {{ .Params.password | jsonify }};
+
+        // 使用密碼加密內容 (AES)
+        const encryptedContent = CryptoJS.AES.encrypt(originalContent, correctPassword).toString();
+        
+        // 將加密後的內容放入隱藏的 div，而不是直接暴露原始內容
+        document.getElementById('encrypted-content').innerText = encryptedContent;
+
+        // --- 解密邏輯 ---
+        const decryptButton = document.getElementById('decrypt-button');
+        const passwordInput = document.getElementById('password-input');
+        const errorMessage = document.getElementById('error-message');
+
+        const decryptAndShow = () => {
+            const enteredPassword = passwordInput.value;
+            if (!enteredPassword) {
+                errorMessage.textContent = '密碼不能為空！';
+                return;
+            }
+
+            try {
+                // 獲取加密的內容
+                const contentToDecrypt = document.getElementById('encrypted-content').innerText;
+                // 嘗試用輸入的密碼解密
+                const decryptedBytes = CryptoJS.AES.decrypt(contentToDecrypt, enteredPassword);
+                const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+                // 如果解密出來的內容是空的，代表密碼錯誤
+                if (decryptedText) {
+                    const container = document.getElementById('encryption-container');
+                    // 建立一個新 div 來渲染解密後的 HTML 內容
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'post-content'; // 你可以套用你原本文章的樣式
+                    contentDiv.innerHTML = decryptedText;
+                    // 替換掉密碼框
+                    container.parentNode.replaceChild(contentDiv, container);
+                } else {
+                    throw new Error('Wrong password');
+                }
+            } catch (e) {
+                errorMessage.textContent = '密碼錯誤，請重試。';
+                passwordInput.value = ''; // 清空輸入框
+            }
+        };
+        
+        decryptButton.addEventListener('click', decryptAndShow);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                decryptAndShow();
+            }
+        });
+
+    </script>
+
+{{ else }}
+
+    {{/* 如果沒有密碼，就跟平常一樣，直接顯示文章內容 */}}
+    <article class="post-content">
+        {{ .Content }}
+    </article>
+
+{{ end }}
 </div>
 {{ end }}

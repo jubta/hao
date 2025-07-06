@@ -140,3 +140,37 @@
   }
 }
 
+
+//美化密碼框樣式
+.encryption-container {
+    border: 1px solid #ccc;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+.encryption-container input[type="password"] {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.encryption-container button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.encryption-container button:hover {
+    background-color: #0056b3;
+}
+.error-message {
+    color: red;
+    margin-top: 10px;
+    min-height: 1.2em;
+}
+
