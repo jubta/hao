@@ -5,7 +5,7 @@ description: "實用軟件"
 tags: ["影片", "軟件"]
 date: "2022-08-21"
 encrypt: true  # 告訴模板這篇文章要加密
-password: "123456"
+password: 'abc123'
 image:
   src: "/img/wnQ-OKdeR.jpg"
   alt: "2023"

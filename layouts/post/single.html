@@ -119,20 +119,27 @@
       
       {{/* --- 開始替換 --- */}}
 
-{{/* --- 開始：最終穩健方案 --- */}}
+{{/* --- 開始：終極決戰 - 極簡診斷方案 --- */}}
 
 {{ if .Params.password }}
 
-    {{/* 1. 密碼輸入框 (給使用者看) */}}
+    {{/* 1. HTML 部分 */}}
     <div id="encryption-container" class="encryption-container py-3 my-2">
         <h3>這篇文章已被加密</h3>
         <p>請輸入密碼來閱讀：</p>
-        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password">
-        <button id="decrypt-button">解密</button>
+        <input type="text" id="password-input" placeholder="請在此輸入密碼"> {{/* 注意：我把 type="password" 改成了 type="text"，這樣你才能看清自己輸入了什麼！*/}}
+        <button id="decrypt-button">驗證密碼</button>
         <p id="error-message" class="error-message"></p>
+        
+        <div id="debug-area" style="margin-top: 20px; padding: 10px; border: 2px solid red; text-align: left; font-family: monospace; background-color: #fff0f0;">
+            <h4 style="margin:0;">終極診斷資訊:</h4>
+            <p id="debug-hugo-pass" style="word-wrap:break-word;"><b>來自.md檔案:</b> (尚未點擊)</p>
+            <p id="debug-user-input" style="word-wrap:break-word;"><b>來自輸入框:</b> (尚未點擊)</p>
+            <p id="debug-comparison" style="font-weight: bold;"><b>比對結果:</b> (尚未點擊)</p>
+        </div>
     </div>
 
-    {{/* 2. 真正要顯示的內容 (預設隱藏) */}}
+    {{/* 2. 隱藏的內容 */}}
     <div id="real-content-wrapper" style="display: none;">
         <div class="py-3 my-2 post-content">
             {{ .Content }}
@@ -140,52 +147,42 @@
         </div>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    {{/* 3. 極簡的 JavaScript，沒有任何加密庫 */}}
     <script>
-        // --- 核心驗證邏輯 ---
-        
         // a. 從 Hugo 獲取正確密碼
         const correctPassword = {{ .Params.password | jsonify }};
-
-        // b. 我們只加密一個簡單、固定的通行證字串
-        const passToken = "UNLOCKED";
-        const encryptedToken = CryptoJS.AES.encrypt(passToken, correctPassword).toString();
         
-        // c. 獲取頁面元素
+        // b. 獲取頁面元素
         const container = document.getElementById('encryption-container');
         const decryptButton = document.getElementById('decrypt-button');
         const passwordInput = document.getElementById('password-input');
         const errorMessage = document.getElementById('error-message');
         const realContent = document.getElementById('real-content-wrapper');
 
+        // c. 獲取診斷元素
+        const debugHugoPass = document.getElementById('debug-hugo-pass');
+        const debugUserInput = document.getElementById('debug-user-input');
+        const debugComparison = document.getElementById('debug-comparison');
+
         const verifyAndShow = () => {
             const enteredPassword = passwordInput.value;
-            if (!enteredPassword) {
-                errorMessage.textContent = '密碼不能為空！';
-                return;
-            }
+            
+            // d. 顯示診斷資訊
+            debugHugoPass.innerHTML = `<b>來自.md檔案:</b> [${correctPassword}] (長度: ${correctPassword.length})`;
+            debugUserInput.innerHTML = `<b>來自輸入框:</b> [${enteredPassword}] (長度: ${enteredPassword.length})`;
 
-            try {
-                // d. 嘗試用輸入的密碼解密通行證
-                const decryptedBytes = CryptoJS.AES.decrypt(encryptedToken, enteredPassword);
-                const decryptedToken = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            // e. 核心：直接比較字串
+            if (enteredPassword === correctPassword) {
+                debugComparison.innerHTML = `<b>比對結果:</b> <span style="color:green;">完全相符 (✅)</span>`;
+                errorMessage.textContent = '';
                 
-                // e. 關鍵比對：解密出來的是不是我們預設的通行證？
-                if (decryptedToken === passToken) {
-                    // 密碼正確！
-                    // 移除密碼框
-                    container.remove();
-                    // 顯示真正的内容
-                    realContent.style.display = 'block';
-                } else {
-                    // 解密失敗或解出的內容不對
-                    throw new Error('Token mismatch');
-                }
-            } catch (e) {
-                // 捕獲所有錯誤
-                errorMessage.textContent = '密碼錯誤，請重試。';
-                passwordInput.value = '';
-                passwordInput.focus();
+                // 成功，顯示內容
+                container.remove();
+                realContent.style.display = 'block';
+
+            } else {
+                debugComparison.innerHTML = `<b>比對結果:</b> <span style="color:red;">不相符 (❌)</span>`;
+                errorMessage.textContent = '密碼錯誤，請仔細核對上方診斷資訊中的兩個字串！';
             }
         };
         
@@ -196,15 +193,11 @@
                 verifyAndShow();
             }
         });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            passwordInput.focus();
-        });
     </script>
 
 {{ else }}
 
-    {{/* 如果沒有密碼，就跟平常一樣，直接顯示文章內容 */}}
+    {{/* 如果沒有密碼，就跟平常一樣 */}}
     <div class="py-3 my-2">
         {{ .Content }}
         {{ partial "comments.html" . }}
