@@ -117,10 +117,93 @@
       </div>
       {{ end }}
       
-      <div class="py-3 my-2">
-      {{ .Content }}
-      {{ partial "comments.html" . }}
-      </div>
+      {{/* --- 開始替換 --- */}}
+
+{{/* 檢查 front matter 中是否有 password 參數 */}}
+{{ if .Params.password }}
+
+    {{/* 如果有密碼，就顯示加密相關的 HTML 和腳本 */}}
+    <div id="encryption-container" class="encryption-container py-3 my-2">
+        <h3>這篇文章已被加密</h3>
+        <p>請輸入密碼來閱讀：</p>
+        <input type="password" id="password-input" placeholder="請在此輸入密碼">
+        <button id="decrypt-button">解密</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    {{/* 將加密後的內容和密碼的雜湊值隱藏在頁面中 */}}
+    <div id="encrypted-content" style="display: none;"></div>
+
+    {{/* 引入 CryptoJS 函式庫，用於加解密 */}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+    <script>
+        // 從 Hugo 模板中獲取文章內容和密碼
+        // 我們要把評論區也包含進來一起加密，所以需要用 capture
+        {{ $content_with_comments := printf "%s%s" .Content (partial "comments.html" .) | jsonify }}
+        const originalContent = {{ $content_with_comments }};
+        const correctPassword = {{ .Params.password | jsonify }};
+
+        // 使用密碼加密內容 (AES)
+        const encryptedContent = CryptoJS.AES.encrypt(originalContent, correctPassword).toString();
+        
+        // 將加密後的內容放入隱藏的 div
+        document.getElementById('encrypted-content').innerText = encryptedContent;
+
+        // --- 解密邏輯 ---
+        const decryptButton = document.getElementById('decrypt-button');
+        const passwordInput = document.getElementById('password-input');
+        const errorMessage = document.getElementById('error-message');
+
+        const decryptAndShow = () => {
+            const enteredPassword = passwordInput.value;
+            if (!enteredPassword) {
+                errorMessage.textContent = '密碼不能為空！';
+                return;
+            }
+
+            try {
+                const contentToDecrypt = document.getElementById('encrypted-content').innerText;
+                const decryptedBytes = CryptoJS.AES.decrypt(contentToDecrypt, enteredPassword);
+                const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+                if (decryptedText) {
+                    const container = document.getElementById('encryption-container');
+                    const contentDiv = document.createElement('div');
+                    // 沿用原來 div 的 class，保持樣式一致
+                    contentDiv.className = 'py-3 my-2'; 
+                    contentDiv.innerHTML = decryptedText;
+                    container.parentNode.replaceChild(contentDiv, container);
+                } else {
+                    throw new Error('Wrong password');
+                }
+            } catch (e) {
+                errorMessage.textContent = '密碼錯誤，請重試。';
+                passwordInput.value = '';
+            }
+        };
+        
+        decryptButton.addEventListener('click', decryptAndShow);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // 防止表單提交導致頁面刷新
+                decryptAndShow();
+            }
+        });
+
+    </script>
+
+{{ else }}
+
+    {{/* 如果沒有密碼，就跟平常一樣，直接顯示文章內容和評論 */}}
+    <div class="py-3 my-2">
+        {{ .Content }}
+        {{ partial "comments.html" . }}
+    </div>
+
+{{ end }}
+
+{{/* --- 結束替換 --- */}}
       
       {{ if or (and site.Params.social.share (eq site.Params.position.social.share "bottom")) (and site.Params.position.postMeta $postMetaBottom) (and (site.Params.position.postMeta.tags.content) (eq site.Params.position.postMeta.tags.content "bottom")) }}
         <div class="pt-4 mt-2 border-top">
