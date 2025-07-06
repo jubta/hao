@@ -18,17 +18,9 @@ taxonomies:
 
 # 文章加密鎖引入
 security:
-  exec:
-    allow: ['^go$', '^npx$', '^postcss$'] # 這是 Hugo 建議的預設值，保留比較好
-    osEnv: ['.*']
   funcs:
-    # 我們將 Crypto 的設定放到 imports 裡面
-  imports:
-    - module: ".*" # <-- 這裡使用正則表達式，代表 "匹配所有模組"
-      security:
-        funcs:
-          Crypto:
-          - Crypto.Encrypt
+    Crypto:
+    - Crypto.Encrypt
 
 menu:
   main:
