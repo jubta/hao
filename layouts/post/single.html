@@ -120,24 +120,23 @@
       {{/* --- 開始：後端驗證方案的模板 --- */}}
 
 {{ if .Params.secure }}
-
-    {{/* 如果文章被標記為 'secure'，我們只生成一個帶有標記的佔位符 */}}
-    {{/* 這個 div 的內容將會被 Cloudflare Worker 在雲端替換掉 */}}
+    {{/* 如果文章被標記為 'secure'，我們生成一個帶有密碼輸入框的佔位符 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-        <div class="encryption-container py-3 my-2" style="text-align: center;">
-            <h3>🔒 正在載入安全內容...</h3>
-            <p>如果長時間沒有反應，請確保您的瀏覽器已啟用 JavaScript。</p>
+        <div class="encryption-container py-3 my-2" style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
+            <h3>🔒 這篇文章受到密碼保護</h3>
+            <p>請輸入密碼以查看內容。</p>
+            <form id="password-form" style="margin-top: 15px;">
+                <input type="password" id="password-input" placeholder="請輸入密碼" required style="padding: 8px; width: 60%; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                <button type="submit" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">解鎖</button>
+            </form>
+            <p id="error-message" style="color: red; margin-top: 10px;"></p>
         </div>
     </div>
-    
 {{ else }}
-
     {{/* 如果是公開文章，就跟平常一樣顯示所有內容 */}}
     <div class="py-3 my-2">
         {{ .Content }}
-        {{ partial "comments.html" . }}
     </div>
-
 {{ end }}
 
 {{/* --- 結束 --- */}}
