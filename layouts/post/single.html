@@ -117,10 +117,11 @@
       </div>
       {{ end }}
       
-      {{/* --- 開始：後端驗證方案的模板 --- */}}
+      {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-    {{/* 如果文章被標記為 'secure'，我們生成一個帶有密碼輸入框的佔位符 */}}
+    {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
+    {{/* 由 'secure: true' 觸發 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
         <div class="encryption-container py-3 my-2" style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
             <h3>🔒 這篇文章受到密碼保護</h3>
@@ -128,18 +129,70 @@
             <form id="password-form" style="margin-top: 15px;">
                 <input type="password" id="password-input" placeholder="請輸入密碼" required style="padding: 8px; width: 60%; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
                 <button type="submit" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">解鎖</button>
+                
+                {{/* --- Turnstile 保護罩 --- */}}
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAABkOKSbtXgq5kRUl" data-callback="onTurnstileSuccess" style="margin-top: 15px;"></div>
+                {{/* 將 YOUR_SITE_KEY 換成你自己的網站金鑰 */}}
+
             </form>
             <p id="error-message" style="color: red; margin-top: 10px;"></p>
         </div>
     </div>
+    
+{{ else if .Params.password }}
+    {{/* --- 選項二：前端加密 (方便快捷) --- */}}
+    {{/* 由 'password: "abc"' 觸發 */}}
+    <div id="encryption-container" class="encryption-container py-3 my-2">
+        <h3>🔑 這篇文章已被加密</h3>
+        <p>請輸入密碼來閱讀：</p>
+        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password">
+        <button id="decrypt-button">解密</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    <div id="real-content-wrapper" style="display: none;">
+        <div class="py-3 my-2 post-content">
+            {{ .Content }}
+        </div>
+    </div>
+    
+    <script>
+        const correctPassword = "{{ .Params.password }}";
+        const container = document.getElementById('encryption-container');
+        const decryptButton = document.getElementById('decrypt-button');
+        const passwordInput = document.getElementById('password-input');
+        const errorMessage = document.getElementById('error-message');
+        const realContent = document.getElementById('real-content-wrapper');
+
+        const verifyAndShow = () => {
+            if (passwordInput.value === correctPassword) {
+                container.style.display = 'none';
+                realContent.style.display = 'block';
+            } else {
+                errorMessage.textContent = '密碼錯誤，請重試。';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        };
+        
+        decryptButton.addEventListener('click', verifyAndShow);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                verifyAndShow();
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => { passwordInput.focus(); });
+    </script>
+
 {{ else }}
-    {{/* 如果是公開文章，就跟平常一樣顯示所有內容 */}}
+    {{/* --- 選項三：公開文章 (無加密) --- */}}
     <div class="py-3 my-2">
         {{ .Content }}
     </div>
 {{ end }}
 
-{{/* --- 結束 --- */}}
+{{/* --- 結束：混合式加密系統 --- */}}
       
       {{ if or (and site.Params.social.share (eq site.Params.position.social.share "bottom")) (and site.Params.position.postMeta $postMetaBottom) (and (site.Params.position.postMeta.tags.content) (eq site.Params.position.postMeta.tags.content "bottom")) }}
         <div class="pt-4 mt-2 border-top">

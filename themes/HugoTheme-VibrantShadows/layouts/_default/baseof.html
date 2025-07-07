@@ -46,43 +46,59 @@
       }
     </script>
 
-    {{/* --- 開始：加密文章後端通訊腳本 --- */}}
+    {{/* --- 開始：混合式加密系統的全局腳本 --- */}}
+    
+    {{/* 1. Turnstile 官方腳本，它會自動尋找 cf-turnstile 元素並渲染 */}}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    {{/* 2. 後端通訊腳本 (現在會發送 Turnstile token) */}}
     <script>
-    // 只在有安全內容佔位符的頁面執行
+    // 只有在後端加密頁面 (secure: true) 才會執行
     if (document.getElementById('secure-content-placeholder')) {
         const form = document.getElementById('password-form');
         const placeholder = document.getElementById('secure-content-placeholder');
         const errorMessage = document.getElementById('error-message');
         
         form.addEventListener('submit', async (event) => {
-            event.preventDefault(); // 防止表單直接提交
+            event.preventDefault();
             
+            // 從表單中獲取 Turnstile token
+            const turnstileToken = form.querySelector('[name=cf-turnstile-response]').value;
+
+            if (!turnstileToken) {
+                errorMessage.textContent = '請先完成人機驗證。';
+                return;
+            }
+
             const password = document.getElementById('password-input').value;
             const path = placeholder.getAttribute('data-path');
             errorMessage.textContent = '正在驗證...';
             
             try {
-                // 這個 URL 指向我們在 Cloudflare Pages 中設定的後端 Function
-                const response = await fetch('/verify', { // 使用相對路徑 /verify
+                const response = await fetch('/verify', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ path, password }),
+                    // 將 token 一起發送到後端
+                    body: JSON.stringify({ path, password, turnstileToken }),
                 });
                 
                 if (response.ok) {
                     const htmlContent = await response.text();
-                    placeholder.innerHTML = htmlContent; // 用解鎖後的內容替換密碼框
+                    placeholder.innerHTML = htmlContent;
                 } else {
                     const errorData = await response.json();
                     errorMessage.textContent = errorData.error || '密碼錯誤或發生未知問題。';
+                    // 重置 Turnstile 以便使用者重試
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             } catch (error) {
                 errorMessage.textContent = '無法連接到驗證服務，請檢查網路。';
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             }
         });
     }
     </script>
-    {{/* --- 結束：加密文章後端通訊腳本 --- */}}
+    {{/* --- 結束：混合式加密系統的全局腳本 --- */}}
 
   </body>
 </html>

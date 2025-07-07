@@ -1,56 +1,56 @@
-// functions/verify.js
+// functions/verify.js - 帶有 Turnstile 保護的增強版
 
-// 後端 Function 的主處理邏輯
+// Turnstile 驗證函數
+async function verifyTurnstile(token, secretKey, remoteIp) {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            secret: secretKey,
+            response: token,
+            remoteip: remoteIp,
+        }),
+    });
+    const data = await response.json();
+    return data.success;
+}
+
 export async function onRequestPost(context) {
     try {
-        // 從請求中解析出前端傳來的 path 和 password
         const { request, env } = context;
-        const { path, password } = await request.json();
+        const { path, password, turnstileToken } = await request.json();
+        const clientIp = request.headers.get('CF-Connecting-IP'); // 獲取使用者 IP
 
-        // 檢查資料是否齊全
+        // 1. 進行 Turnstile 驗證
+        if (!turnstileToken) {
+            return new Response(JSON.stringify({ error: '缺少驗證，請刷新頁面重試。' }), { status: 400 });
+        }
+        const isHuman = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET_KEY, clientIp);
+        if (!isHuman) {
+            return new Response(JSON.stringify({ error: '機器人驗證失敗。' }), { status: 403 });
+        }
+
+        // --- Turnstile 驗證通過後，才執行原來的密碼驗證邏輯 ---
         if (!path || !password) {
-            return new Response(JSON.stringify({ error: '請求缺少路徑或密碼。' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' },
-            });
+            return new Response(JSON.stringify({ error: '請求缺少路徑或密碼。' }), { status: 400 });
         }
         
-        // 組合出在 KV 中儲存密碼和內容的 Key
         const passwordKey = `password:${path}`;
         const contentKey = `content:${path}`;
-
-        // 從綁定的 KV (env.SECURE_CONTENT) 中獲取儲存的密碼
         const storedPassword = await env.SECURE_CONTENT.get(passwordKey);
 
-        // 驗證密碼
         if (!storedPassword || storedPassword !== password) {
-            return new Response(JSON.stringify({ error: '密碼不正確。' }), {
-                status: 401, // 401 Unauthorized
-                headers: { 'Content-Type': 'application/json' },
-            });
+            return new Response(JSON.stringify({ error: '密碼不正確。' }), { status: 401 });
         }
 
-        // 密碼正確，從 KV 中獲取文章內容
         const storedContent = await env.SECURE_CONTENT.get(contentKey);
-
         if (!storedContent) {
-            return new Response(JSON.stringify({ error: '找到了密碼但找不到對應的文章內容。' }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' },
-            });
+            return new Response(JSON.stringify({ error: '找不到對應的文章內容。' }), { status: 404 });
         }
 
-        // 一切成功，將 HTML 內容回傳給前端
-        return new Response(storedContent, {
-            status: 200,
-            headers: { 'Content-Type': 'text/html' },
-        });
+        return new Response(storedContent, { status: 200, headers: { 'Content-Type': 'text/html' } });
 
     } catch (error) {
-        // 處理任何意外錯誤
-        return new Response(JSON.stringify({ error: '伺服器內部錯誤。' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(JSON.stringify({ error: '伺服器內部錯誤。' }), { status: 500 });
     }
 }
