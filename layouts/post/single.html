@@ -117,73 +117,22 @@
       </div>
       {{ end }}
       
-      {{/* --- 開始替換 --- */}}
+      {{/* --- 開始：後端驗證方案的模板 --- */}}
 
-{{/* --- 開始：最終修正版 --- */}}
+{{ if .Params.secure }}
 
-{{ if .Params.password }}
-
-    <div id="encryption-container" class="encryption-container py-3 my-2">
-        <h3>這篇文章已被加密</h3>
-        <p>請輸入密碼來閱讀：</p>
-        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password">
-        <button id="decrypt-button">解密</button>
-        <p id="error-message" class="error-message"></p>
-    </div>
-
-    <div id="real-content-wrapper" style="display: none;">
-        <div class="py-3 my-2 post-content">
-            {{ .Content }}
-            {{ partial "comments.html" . }}
+    {{/* 如果文章被標記為 'secure'，我們只生成一個帶有標記的佔位符 */}}
+    {{/* 這個 div 的內容將會被 Cloudflare Worker 在雲端替換掉 */}}
+    <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+        <div class="encryption-container py-3 my-2" style="text-align: center;">
+            <h3>🔒 正在載入安全內容...</h3>
+            <p>如果長時間沒有反應，請確保您的瀏覽器已啟用 JavaScript。</p>
         </div>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-    <script>
-        // --- 核心驗證邏輯 (已修正) ---
-        
-        // a. 從 Hugo 獲取正確密碼，並手動加上引號，不再使用 jsonify
-        const correctPassword = "{{ .Params.password }}";
-        const passToken = "UNLOCKED";
-        
-        // b. 獲取頁面元素
-        const container = document.getElementById('encryption-container');
-        const decryptButton = document.getElementById('decrypt-button');
-        const passwordInput = document.getElementById('password-input');
-        const errorMessage = document.getElementById('error-message');
-        const realContent = document.getElementById('real-content-wrapper');
-
-        const verifyAndShow = () => {
-            const enteredPassword = passwordInput.value;
-            
-            // c. 我們現在直接比較，不再需要加密解密通行證了，因為我們已經確認是字串問題
-            if (enteredPassword === correctPassword) {
-                // 密碼正確！
-                container.remove();
-                realContent.style.display = 'block';
-            } else {
-                // 密碼錯誤
-                errorMessage.textContent = '密碼錯誤，請重試。';
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        };
-        
-        decryptButton.addEventListener('click', verifyAndShow);
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                verifyAndShow();
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            passwordInput.focus();
-        });
-    </script>
-
 {{ else }}
 
+    {{/* 如果是公開文章，就跟平常一樣顯示所有內容 */}}
     <div class="py-3 my-2">
         {{ .Content }}
         {{ partial "comments.html" . }}
@@ -191,7 +140,7 @@
 
 {{ end }}
 
-{{/* --- 結束：最終穩健方案 --- */}}
+{{/* --- 結束 --- */}}
       
       {{ if or (and site.Params.social.share (eq site.Params.position.social.share "bottom")) (and site.Params.position.postMeta $postMetaBottom) (and (site.Params.position.postMeta.tags.content) (eq site.Params.position.postMeta.tags.content "bottom")) }}
         <div class="pt-4 mt-2 border-top">

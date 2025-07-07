@@ -22,7 +22,7 @@
     <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous"></script>
     
     {{ $mainjs := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
-<script src="{{ $mainjs.RelPermalink }}" integrity="{{ $mainjs.Data.Integrity }}" crossorigin="anonymous"></script>
+    <script src="{{ $mainjs.RelPermalink }}" integrity="{{ $mainjs.Data.Integrity }}" crossorigin="anonymous"></script>
     
     {{- $js_custom := resources.Get "js/custom.js" | resources.ExecuteAsTemplate "/assets/js/custom.js" . | minify | fingerprint }}
     <script src="{{ $js_custom.RelPermalink }}" integrity="{{ $js_custom.Data.Integrity }}" crossorigin="anonymous"></script>
@@ -40,10 +40,49 @@
     <script type="text/javascript" src="//pl26563676.profitableratecpm.com/fc/26/e2/fc26e2d613e536d7a81001a08a4972f8.js"></script>
     <script src="/count.js"></script>
     <script>
-  if (location.hostname === "jiun8631.pages.dev") {
-    const newURL = "https://haee.dpdns.org" + location.pathname + location.search + location.hash;
-    window.location.replace(newURL);
-  }
+      if (location.hostname === "jiun8631.pages.dev") {
+        const newURL = "https://haee.dpdns.org" + location.pathname + location.search + location.hash;
+        window.location.replace(newURL);
+      }
     </script>
+
+    {{/* --- 開始：加密文章後端通訊腳本 --- */}}
+    <script>
+    // 只在有安全內容佔位符的頁面執行
+    if (document.getElementById('secure-content-placeholder')) {
+        const form = document.getElementById('password-form');
+        const placeholder = document.getElementById('secure-content-placeholder');
+        const errorMessage = document.getElementById('error-message');
+        
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // 防止表單直接提交
+            
+            const password = document.getElementById('password-input').value;
+            const path = placeholder.getAttribute('data-path');
+            errorMessage.textContent = '正在驗證...';
+            
+            try {
+                // 這個 URL 指向我們在 Cloudflare Pages 中設定的後端 Function
+                const response = await fetch('/verify', { // 使用相對路徑 /verify
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path, password }),
+                });
+                
+                if (response.ok) {
+                    const htmlContent = await response.text();
+                    placeholder.innerHTML = htmlContent; // 用解鎖後的內容替換密碼框
+                } else {
+                    const errorData = await response.json();
+                    errorMessage.textContent = errorData.error || '密碼錯誤或發生未知問題。';
+                }
+            } catch (error) {
+                errorMessage.textContent = '無法連接到驗證服務，請檢查網路。';
+            }
+        });
+    }
+    </script>
+    {{/* --- 結束：加密文章後端通訊腳本 --- */}}
+
   </body>
 </html>
