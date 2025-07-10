@@ -117,22 +117,27 @@
       </div>
       {{ end }}
       
-      {{/* --- 究極混合系統 (最終修正版，保證結尾完整) --- */}}
+      {{/* ================================================================== */}}
+{{/*                  黃金標準版加密系統 - 請複製這裡                   */}}
+{{/* ================================================================== */}}
+
+{{/* --- 步驟一：先定義好文章內容的容器，並根據是否加密來決定是否預先隱藏 --- */}}
+<div id="main-content-area" class="py-3 my-2" {{ if or .Params.price .Params.secure .Params.password }}style="display: none;"{{ end }}>
+    {{ .Content }}
+</div>
+
+{{/* --- 步驟二：根據不同條件，顯示對應的「解鎖牆」 --- */}}
 
 {{ if .Params.price }}
-    {{/* --- 選項一：PayPal 付費解鎖 --- */}}
-    
+    {{/* --- 選項一：PayPal 付費解鎖牆 --- */}}
     <div id="payment-unlock-container" class="encryption-container py-3 my-2">
         <h3>💎 解鎖高級內容</h3>
         <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
         <div id="paypal-button-container" style="margin-top: 20px;"></div>
     </div>
-    <div id="real-content-wrapper" style="display: none;">
-        {{ .Content }}
-    </div>
-
-    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}¤cy={{ .Params.currency | default "USD" }}"></script>
     
+    {{/* PayPal 的 JS 腳本，現在和它的 HTML 在一起，不會再出錯 */}}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}¤cy={{ .Params.currency | default "USD" }}"></script>
     <script>
         paypal.Buttons({
             createOrder: function(data, actions) {
@@ -154,10 +159,14 @@
                 })
                 .then(res => res.ok ? res.text() : Promise.reject('Capture failed'))
                 .then(htmlContent => {
+                    // 成功後，隱藏付費牆
                     document.getElementById('payment-unlock-container').style.display = 'none';
-                    const contentWrapper = document.getElementById('real-content-wrapper');
-                    contentWrapper.innerHTML = htmlContent;
-                    contentWrapper.style.display = 'block';
+                    // 獲取主內容區塊
+                    const mainContent = document.getElementById('main-content-area');
+                    // 為了確保內容最新，我們用後端返回的 HTML 替換它
+                    mainContent.innerHTML = htmlContent;
+                    // 讓主內容區塊顯示出來
+                    mainContent.style.display = 'block';
                 }).catch(err => {
                     alert('解鎖失敗，請聯繫管理員並提供您的訂單號：' + data.orderID);
                 });
@@ -170,9 +179,9 @@
     </script>
 
 {{ else if .Params.secure }}
-    {{/* --- 選項二：後端密碼鎖 --- */}}
-    <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-        <div class="encryption-container py-3 my-2" style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
+    {{/* --- 選項二：後端密碼鎖牆 --- */}}
+    <div id="secure-content-placeholder" class="encryption-container py-3 my-2" data-path="{{ .RelPermalink }}">
+        <div style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
             <h3>🔒 這篇文章受到密碼保護</h3>
             <p>請輸入密碼以查看內容。</p>
             <form id="password-form" style="margin-top: 15px;">
@@ -183,40 +192,41 @@
             <p id="error-message" style="color: red; margin-top: 10px;"></p>
         </div>
     </div>
-    
+    {{/* 請確保這個密碼鎖的 JS 放在全局的 baseof.html 裡 */}}
+
 {{ else if .Params.password }}
-    {{/* --- 選項三：前端密碼鎖 --- */}}
+    {{/* --- 選項三：前端密碼鎖牆 --- */}}
     <div id="encryption-container" class="encryption-container py-3 my-2">
         <h3>🔑 這篇文章已被加密</h3>
         <p>請輸入密碼來閱讀：</p>
-        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password">
-        <button id="decrypt-button">解密</button>
-        <p id="error-message" class="error-message"></p>
-    </div>
-    <div id="real-content-wrapper" style="display: none;">
-        <div class="py-3 my-2 post-content">
-            {{ .Content }}
-        </div>
+        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password" style="padding: 8px; width: 60%; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <button id="decrypt-button" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">解密</button>
+        <p id="error-message" class="error-message" style="color: red; margin-top: 10px;"></p>
     </div>
     <script>
-        const correctPassword = "{{ .Params.password }}";
-        const container = document.getElementById('encryption-container');
         const decryptButton = document.getElementById('decrypt-button');
         const passwordInput = document.getElementById('password-input');
         const errorMessage = document.getElementById('error-message');
-        const realContent = document.getElementById('real-content-wrapper');
-        const verifyAndShow = () => { if (passwordInput.value === correctPassword) { container.style.display = 'none'; realContent.style.display = 'block'; } else { errorMessage.textContent = '密碼錯誤，請重試。'; passwordInput.value = ''; passwordInput.focus(); } };
+        
+        const verifyAndShow = () => {
+            if (passwordInput.value === "{{ .Params.password }}") {
+                document.getElementById('encryption-container').style.display = 'none';
+                document.getElementById('main-content-area').style.display = 'block';
+            } else {
+                errorMessage.textContent = '密碼錯誤，請重試。';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        };
+        
         decryptButton.addEventListener('click', verifyAndShow);
         passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); verifyAndShow(); } });
-        document.addEventListener('DOMContentLoaded', () => { passwordInput.focus(); });
     </script>
+{{ end }}
 
-{{ else }}
-    {{/* --- 選項四：公開文章 --- */}}
-    <div class="py-3 my-2">
-        {{ .Content }}
-    </div>
-{{ end }} {{/* <--- 這個就是那個至關重要的、被遺忘的結尾！ */}}
+{{/* ================================================================== */}}
+{{/*                  黃金標準版加密系統 - 複製到這裡結束                  */}}
+{{/* ================================================================== */}}
       
       {{ if or (and site.Params.social.share (eq site.Params.position.social.share "bottom")) (and site.Params.position.postMeta $postMetaBottom) (and (site.Params.position.postMeta.tags.content) (eq site.Params.position.postMeta.tags.content "bottom")) }}
         <div class="pt-4 mt-2 border-top">
