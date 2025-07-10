@@ -117,10 +117,25 @@
       </div>
       {{ end }}
       
-      {{/* --- 開始：混合式加密系統 --- */}}
+      {{/* --- 開始：究極混合系統PayPal + 密碼混合式加密系統 --- */}}
+      
+{{ if .Params.price }}
+    {{/* --- 選項一：PayPal 付費解鎖 --- */}}
+    {{/* 在 front matter 中設定 price: '1.00' 和 currency: 'USD' */}}
+    <div id="payment-unlock-container" class="encryption-container py-3 my-2" style="...">
+        <h3>💎 解鎖高級內容</h3>
+        <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
+        
+        {{/* PayPal 官方按鈕將會被渲染到這裡 */}}
+        <div id="paypal-button-container" style="margin-top: 20px;"></div>
 
-{{ if .Params.secure }}
-    {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
+    </div>
+    <div id="real-content-wrapper" style="display: none;">
+        {{ .Content }}
+    </div>
+
+{{ else if .Params.secure }}
+    {{/* --- 選項二：後端加密 (最高安全等級) --- */}}
     {{/* 由 'secure: true' 觸發 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
         <div class="encryption-container py-3 my-2" style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
@@ -140,7 +155,7 @@
     </div>
     
 {{ else if .Params.password }}
-    {{/* --- 選項二：前端加密 (方便快捷) --- */}}
+    {{/* --- 選項三：前端加密 (方便快捷) --- */}}
     {{/* 由 'password: "abc"' 觸發 */}}
     <div id="encryption-container" class="encryption-container py-3 my-2">
         <h3>🔑 這篇文章已被加密</h3>
@@ -186,7 +201,7 @@
     </script>
 
 {{ else }}
-    {{/* --- 選項三：公開文章 (無加密) --- */}}
+    {{/* --- 選項四：公開文章 (無加密) --- */}}
     <div class="py-3 my-2">
         {{ .Content }}
     </div>
