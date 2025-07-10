@@ -137,7 +137,7 @@
     </div>
     
     {{/* PayPal 的 JS 腳本，現在和它的 HTML 在一起，不會再出錯 */}}
-    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}¤cy={{ .Params.currency | default "USD" }}"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}&cy={{ .Params.currency | default "USD" }}"></script>
     <script>
         paypal.Buttons({
             createOrder: function(data, actions) {
