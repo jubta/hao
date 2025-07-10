@@ -49,66 +49,6 @@
     {{/* --- 開始：混合式加密系統的全局腳本 --- */}}
     
     {{ if .Params.price }}
-    {{/* --- PayPal 按鈕的專用腳本 --- */}}
-    
-    {{/* 1. 引入 PayPal SDK，記得把 client-id 換成你自己的 */}}
-    <script src="https://www.paypal.com/sdk/js?client-id=AQnxDJuxIzl-YLlj29hOZS3n7LRGonMsiDXOZ_wCT_Xx62b1Uy7iaNSWe5w7_B0uOWKGTeDOYo4aTnj8&cy={{ .Params.currency | default "USD" }}"></script>
-    {{/* **重要**：請將 YOUR_SANDBOX_CLIENT_ID 換成你的 Sandbox Client ID */}}
-
-    <script>
-        // 確保 PayPal 按鈕已準備好
-        paypal.Buttons({
-            // 創建訂單的邏輯
-            createOrder: function(data, actions) {
-                // 我們不直接在這裡創建，而是呼叫後端 Function 來創建，這樣更安全
-                return fetch('/create-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        articlePath: '{{ .RelPermalink }}',
-                        price: '{{ .Params.price }}',
-                        currency: '{{ .Params.currency | default "USD" }}'
-                    })
-                }).then(function(res) {
-                    return res.json();
-                }).then(function(orderData) {
-                    return orderData.id; // 回傳訂單 ID 給 PayPal SDK
-                });
-            },
-
-            // 付款被核准後的邏輯
-            onApprove: function(data, actions) {
-                // `data.orderID` 是這次交易的 ID
-                // 付款成功！我們可以立即嘗試用這個 orderID 去後端兌換永久訪問權
-                return fetch('/capture-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        orderID: data.orderID,
-                        articlePath: '{{ .RelPermalink }}'
-                    })
-                })
-                .then(res => res.ok ? res.text() : Promise.reject('Capture failed'))
-                .then(htmlContent => {
-                    // 成功後，直接用解鎖後的內容替換整個付費提示
-                    document.getElementById('payment-unlock-container').style.display = 'none';
-                    const contentWrapper = document.getElementById('real-content-wrapper');
-                    contentWrapper.innerHTML = htmlContent;
-                    contentWrapper.style.display = 'block';
-                    alert('付款成功，文章已解鎖！');
-                }).catch(err => {
-                    alert('解鎖失敗，請聯繫管理員並提供您的訂單號：' + data.orderID);
-                });
-            },
-            
-            // 處理錯誤
-            onError: function(err) {
-                console.error('PayPal按鈕出錯:', err);
-                alert('支付過程中發生錯誤，請稍後重試。');
-            }
-        }).render('#paypal-button-container');
-    </script>
-    {{ end }}
     
     {{/* 1. Turnstile 官方腳本，它會自動尋找 cf-turnstile 元素並渲染 */}}
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>

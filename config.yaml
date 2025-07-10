@@ -70,6 +70,7 @@ privacy:
  
 # Here starts our customization
 params:
+  paypalClientID: "AQnxDJuxIzl-YLlj29hOZS3n7LRGonMsiDXOZ_wCT_Xx62b1Uy7iaNSWe5w7_B0uOWKGTeDOYo4aTnj8" # 把你的 Sandbox Client ID 貼在這裡
   social: 
     profiles: # social platforms you are present on. see supported ones here | highly recommended
       youtube: "mailto:ktv8631@gmail.com"

@@ -120,19 +120,59 @@
       {{/* --- 開始：究極混合系統PayPal + 密碼混合式加密系統 --- */}}
       
 {{ if .Params.price }}
-    {{/* --- 選項一：PayPal 付費解鎖 --- */}}
-    {{/* 在 front matter 中設定 price: '1.00' 和 currency: 'USD' */}}
-    <div id="payment-unlock-container" class="encryption-container py-3 my-2" style="...">
+    {{/* --- 選項一：PayPal 付費解鎖 (HTML 和 JS 在一起) --- */}}
+    
+    {{/* 這是 HTML "畫框" */}}
+    <div id="payment-unlock-container" class="encryption-container py-3 my-2">
         <h3>💎 解鎖高級內容</h3>
         <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
-        
-        {{/* PayPal 官方按鈕將會被渲染到這裡 */}}
         <div id="paypal-button-container" style="margin-top: 20px;"></div>
-
     </div>
     <div id="real-content-wrapper" style="display: none;">
         {{ .Content }}
     </div>
+
+    {{/* 這是 JavaScript "畫家"，現在和畫框在一起了！ */}}
+    {{/* 1. 引入 PayPal SDK */}}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}&cy={{ .Params.currency | default "USD" }}"></script>
+    
+    {{/* 2. 執行 PayPal 按鈕渲染 */}}
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return fetch('/create-paypal-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        articlePath: '{{ .RelPermalink }}',
+                        price: '{{ .Params.price }}',
+                        currency: '{{ .Params.currency | default "USD" }}'
+                    })
+                }).then(res => res.json()).then(orderData => orderData.id);
+            },
+            onApprove: function(data, actions) {
+                return fetch('/capture-paypal-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderID: data.orderID, articlePath: '{{ .RelPermalink }}' })
+                })
+                .then(res => res.ok ? res.text() : Promise.reject('Capture failed'))
+                .then(htmlContent => {
+                    document.getElementById('payment-unlock-container').style.display = 'none';
+                    const contentWrapper = document.getElementById('real-content-wrapper');
+                    contentWrapper.innerHTML = htmlContent;
+                    contentWrapper.style.display = 'block';
+                    // 這裡可以加一個更友好的提示，但暫時先不加
+                }).catch(err => {
+                    alert('解鎖失敗，請聯繫管理員並提供您的訂單號：' + data.orderID);
+                });
+            },
+            onError: function(err) {
+                console.error('PayPal按鈕出錯:', err);
+                alert('支付過程中發生錯誤，請稍後重試。');
+            }
+        }).render('#paypal-button-container');
+    </script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項二：後端加密 (最高安全等級) --- */}}
