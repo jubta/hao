@@ -117,50 +117,10 @@
       </div>
       {{ end }}
       
-{{/* ============================================================= */}}
-{{/*        最終整合版：託管按鈕 + 後端密碼鎖 + 前端密碼鎖        */}}
-{{/* ============================================================= */}}
+      {{/* --- 開始：混合式加密系統 --- */}}
 
-    {{/* --- 選項一：PayPal 付費牆 (最高安全、最簡單) --- */}}
-<div id="paypal-button-container-P-8PT8308081603363WNBYTFGY"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=AQqzxepFNhAyaeTy5yABFEVxdq5-PL6AHrCOYDIfKotHd4ThaAwSOdwrvsUG_U4lfDsOOko4e9vy4OSg&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
-<script>
-  paypal.Buttons({
-      style: {
-          shape: 'pill',
-          color: 'gold',
-          layout: 'vertical',
-          label: 'subscribe'
-      },
-      createSubscription: function(data, actions) {
-        return actions.subscription.create({
-          /* Creates the subscription */
-          plan_id: 'P-8PT8308081603363WNBYTFGY'
-        });
-      },
-      onApprove: function(data, actions) {
-        alert(data.subscriptionID); // You can add optional success message for the subscriber here
-      }
-  }).render('#paypal-button-container-P-8PT8308081603363WNBYTFGY'); // Renders the PayPal button
-</script>
-
-    {{/* 引入 PayPal 託管按鈕的專用 SDK */}}
-    <script src="https://www.paypal.com/sdk/js?client-id=BAA99irLuNEDeaBl_wpurhLUAD6i0vCRPy9WoRwyGiVsFgruDyCSB42RW9PC24EE1e43ZuS3TfizCcnwwc&components=hosted-buttons&disable-funding=venmo¤cy=USD"></script>
-
-    {{/* 渲染按鈕的極簡腳本 */}}
-    <script>
-      try {
-        paypal.HostedButtons({
-          hostedButtonId: "{{ .Params.hosted_button_id }}",
-        }).render("#paypal-hosted-button-container");
-      } catch (error) {
-        console.error("渲染 PayPal 託管按鈕時出錯: ", error);
-        document.getElementById('paypal-hosted-button-container').innerText = "按鈕加載失敗，請刷新頁面重試。";
-      }
-    </script>
-
-{{ else if .Params.secure }}
-    {{/* --- 選項二：後端加密 (最高安全等級) --- */}}
+{{ if .Params.secure }}
+    {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
     {{/* 由 'secure: true' 觸發 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
         <div class="encryption-container py-3 my-2" style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
@@ -180,7 +140,7 @@
     </div>
     
 {{ else if .Params.password }}
-    {{/* --- 選項三：前端加密 (方便快捷) --- */}}
+    {{/* --- 選項二：前端加密 (方便快捷) --- */}}
     {{/* 由 'password: "abc"' 觸發 */}}
     <div id="encryption-container" class="encryption-container py-3 my-2">
         <h3>🔑 這篇文章已被加密</h3>
@@ -226,7 +186,7 @@
     </script>
 
 {{ else }}
-    {{/* --- 選項四：公開文章 (無加密) --- */}}
+    {{/* --- 選項三：公開文章 (無加密) --- */}}
     <div class="py-3 my-2">
         {{ .Content }}
     </div>
