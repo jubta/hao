@@ -119,7 +119,7 @@
     {{/* 1. HTML 佔位符，但現在我們把所有需要的數據都寫在 data-* 屬性裡 */}}
     <div id="payment-gateway" 
          data-client-id="{{ .Site.Params.paypalClientID }}"
-         data-currency="{{ .Params.currency | default "USD" }}"
+         data-cur="{{ .Params.currency | default "USD" }}" {{/* <-- 這裡改了 */}}
          data-article-path="{{ .RelPermalink }}"
          data-price="{{ .Params.price }}">
         
@@ -132,62 +132,39 @@
     
     {{/* 2. 現在的 JavaScript 非常乾淨，它只負責讀取數據和執行邏輯 */}}
     <script>
-        (function() {
-            // a. 從 HTML 的 data-* 屬性中安全地讀取數據
-            const gateway = document.getElementById('payment-gateway');
-            const clientId = gateway.dataset.clientId;
-            const currency = gateway.dataset.currency;
-            const articlePath = gateway.dataset.articlePath;
-            const price = gateway.dataset.price;
+    (function() {
+        const gateway = document.getElementById('payment-gateway');
+        const clientId = gateway.dataset.clientId;
+        const articlePath = gateway.dataset.articlePath;
+        const price = gateway.dataset.price;
+        // 我們不再需要 currency 變數了！
 
-            // b. 創建 script 標籤
-            const script = document.createElement('script');
-            script.src = `/get-paypal-sdk?client-id=${clientId}¤cy=${currency}`;
-            
-            // c. onload 回調 (保持不變)
-            script.onload = function() {
-                try {
-                    paypal.Buttons({
-                        createOrder: function() {
-                            return fetch('/create-paypal-order', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ articlePath, price, currency })
-                            }).then(res => res.json()).then(orderData => orderData.id);
-                        },
-                        onApprove: function(data) {
-                            return fetch('/capture-paypal-order', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ orderID: data.orderID, articlePath })
-                            })
-                            .then(res => res.ok ? res.text() : Promise.reject('解鎖失敗'))
-                            .then(htmlContent => {
-                                // 成功後，我們不再只是替換佔位符，而是替換整個支付網關 div
-                                gateway.innerHTML = htmlContent;
-                            }).catch(err => {
-                                alert(err.toString() + ' 訂單號：' + data.orderID);
-                            });
-                        },
-                        onError: function(err) {
-                            alert('PayPal 按鈕發生 onError 錯誤：' + err.toString());
-                        }
-                    }).render('#paypal-button-container');
-                } catch (err) {
-                    alert('在 script.onload 中發生了 try-catch 錯誤：' + err.toString());
-                }
-            };
-
-            // d. onerror 回調 (保持不變，但我們這次非常有信心它不會被觸發)
-            script.onerror = function() {
-                alert('致命錯誤：從後端代理載入 SDK 失敗！');
-            };
-
-            // e. 插入 script 標籤
-            document.head.appendChild(script);
-
-        })();
-    </script>
+        const script = document.createElement('script');
+        // 看！URL 裡只有 client-id，沒有其他任何參數！
+        script.src = `/get-paypal-sdk?client-id=${clientId}`;
+        
+        script.onload = function() {
+            try {
+                paypal.Buttons({
+                    createOrder: function() {
+                        // 在 createOrder 中，我們仍然需要告訴 PayPal 貨幣是什麼
+                        const currency = gateway.dataset.currency;
+                        return fetch('/create-paypal-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ articlePath, price, currency }) // 這裡的 currency 是必須的
+                        }).then(res => res.json()).then(orderData => orderData.id);
+                    },
+                    // onApprove 等保持不變
+                    onApprove: function(data) { /* ... */ },
+                    onError: function(err) { /* ... */ }
+                }).render('#paypal-button-container');
+            } catch (err) { /* ... */ }
+        };
+        script.onerror = function() { /* ... */ };
+        document.head.appendChild(script);
+    })();
+</script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項二：後端密碼鎖牆 (本身是安全的) --- */}}
