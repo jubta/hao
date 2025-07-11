@@ -121,18 +121,28 @@
 {{/*        最終整合版：託管按鈕 + 後端密碼鎖 + 前端密碼鎖        */}}
 {{/* ============================================================= */}}
 
-{{ if .Params.hosted_button_id }}
     {{/* --- 選項一：PayPal 付費牆 (最高安全、最簡單) --- */}}
-
-    <div id="payment-placeholder">
-        <div id="payment-unlock-container" class="encryption-container py-3 my-2">
-            <h3>💎 解鎖高級內容</h3>
-            <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可閱讀。</p>
-            
-            {{/* 我們使用一個簡單、固定的 ID，確保不會出錯 */}}
-            <div id="paypal-hosted-button-container" style="margin-top: 20px; text-align: center;"></div>
-        </div>
-    </div>
+<div id="paypal-button-container-P-8PT8308081603363WNBYTFGY"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=AQqzxepFNhAyaeTy5yABFEVxdq5-PL6AHrCOYDIfKotHd4ThaAwSOdwrvsUG_U4lfDsOOko4e9vy4OSg&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+<script>
+  paypal.Buttons({
+      style: {
+          shape: 'pill',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'subscribe'
+      },
+      createSubscription: function(data, actions) {
+        return actions.subscription.create({
+          /* Creates the subscription */
+          plan_id: 'P-8PT8308081603363WNBYTFGY'
+        });
+      },
+      onApprove: function(data, actions) {
+        alert(data.subscriptionID); // You can add optional success message for the subscriber here
+      }
+  }).render('#paypal-button-container-P-8PT8308081603363WNBYTFGY'); // Renders the PayPal button
+</script>
 
     {{/* 引入 PayPal 託管按鈕的專用 SDK */}}
     <script src="https://www.paypal.com/sdk/js?client-id=BAA99irLuNEDeaBl_wpurhLUAD6i0vCRPy9WoRwyGiVsFgruDyCSB42RW9PC24EE1e43ZuS3TfizCcnwwc&components=hosted-buttons&disable-funding=venmo¤cy=USD"></script>
