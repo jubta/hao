@@ -73,10 +73,6 @@ privacy:
 #           請用這整塊來替換你原來的 params 區塊
 # =============================================================
 params:
-  # --- 我們新增的參數 ---
-  # 確保這兩行有正確的縮排 (通常是兩個空格)
-  turnstileSiteKey: "0x4AAAAAABkOKSbtXgq5kRUl"
-  
   # --- 你原有的參數 ---
   social: 
     profiles:
