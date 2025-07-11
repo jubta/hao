@@ -113,13 +113,13 @@
 
 {{ if .Params.price }}
     {{/* ============================================================= */}}
-    {{/*      數據屬性傳遞版 - 這是我們最後的、最穩健的方案      */}}
+    {{/*    帶有完整後廚監視器的最終版本 - 請從這裡開始複製    */}}
     {{/* ============================================================= */}}
     
-    {{/* 1. HTML 佔位符，但現在我們把所有需要的數據都寫在 data-* 屬性裡 */}}
+    {{/* 1. HTML 佔位符和數據傳遞 (保持不變) */}}
     <div id="payment-gateway" 
          data-client-id="{{ .Site.Params.paypalClientID }}"
-         data-cur="{{ .Params.currency | default "USD" }}" {{/* <-- 這裡改了 */}}
+         data-currency="{{ .Params.currency | default "USD" }}"
          data-article-path="{{ .RelPermalink }}"
          data-price="{{ .Params.price }}">
         
@@ -130,41 +130,85 @@
         </div>
     </div>
     
-    {{/* 2. 現在的 JavaScript 非常乾淨，它只負責讀取數據和執行邏輯 */}}
+    {{/* 2. 這是最終的 JavaScript，帶有完整的錯誤捕獲和顯示 */}}
     <script>
-    (function() {
-        const gateway = document.getElementById('payment-gateway');
-        const clientId = gateway.dataset.clientId;
-        const articlePath = gateway.dataset.articlePath;
-        const price = gateway.dataset.price;
-        // 我們不再需要 currency 變數了！
+        (function() {
+            // a. 從 HTML 的 data-* 屬性中安全地讀取數據
+            const gateway = document.getElementById('payment-gateway');
+            const clientId = gateway.dataset.clientId;
+            const currency = gateway.dataset.currency;
+            const articlePath = gateway.dataset.articlePath;
+            const price = gateway.dataset.price;
 
-        const script = document.createElement('script');
-        // 看！URL 裡只有 client-id，沒有其他任何參數！
-        script.src = `/get-paypal-sdk?client-id=${clientId}`;
-        
-        script.onload = function() {
-            try {
-                paypal.Buttons({
-                    createOrder: function() {
-                        // 在 createOrder 中，我們仍然需要告訴 PayPal 貨幣是什麼
-                        const currency = gateway.dataset.currency;
-                        return fetch('/create-paypal-order', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ articlePath, price, currency }) // 這裡的 currency 是必須的
-                        }).then(res => res.json()).then(orderData => orderData.id);
-                    },
-                    // onApprove 等保持不變
-                    onApprove: function(data) { /* ... */ },
-                    onError: function(err) { /* ... */ }
-                }).render('#paypal-button-container');
-            } catch (err) { /* ... */ }
-        };
-        script.onerror = function() { /* ... */ };
-        document.head.appendChild(script);
-    })();
-</script>
+            // b. 動態創建 script 標籤
+            const script = document.createElement('script');
+            script.src = `/get-paypal-sdk?client-id=${clientId}`;
+            
+            // c. 當腳本成功載入後，執行按鈕渲染
+            script.onload = function() {
+                try {
+                    paypal.Buttons({
+                        // --- 這是我們修改過的部分，現在能顯示詳細錯誤 ---
+                        createOrder: function(data, actions) {
+                            return fetch('/create-paypal-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ articlePath, price, currency })
+                            })
+                            .then(res => {
+                                if (!res.ok) {
+                                    // 如果後端返回錯誤，讀取錯誤訊息並拋出
+                                    return res.json().then(errData => { throw errData; });
+                                }
+                                return res.json();
+                            })
+                            .then(orderData => {
+                                // 成功，返回訂單 ID
+                                return orderData.id;
+                            })
+                            .catch(err => {
+                                // 用 alert 顯示從後端傳來的詳細錯誤！
+                                alert('創建訂單失敗！\n\n後端說：\n' + JSON.stringify(err, null, 2));
+                                // 讓 PayPal 的彈窗關閉
+                                return actions.reject();
+                            });
+                        },
+                        
+                        // onApprove 保持不變
+                        onApprove: function(data, actions) {
+                            return fetch('/capture-paypal-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ orderID: data.orderID, articlePath })
+                            })
+                            .then(res => res.ok ? res.text() : Promise.reject('解鎖失敗'))
+                            .then(htmlContent => {
+                                gateway.innerHTML = htmlContent;
+                            }).catch(err => {
+                                alert(err.toString() + ' 訂單號：' + data.orderID);
+                            });
+                        },
+                        
+                        // onError 保持不變
+                        onError: function(err) {
+                            alert('PayPal 按鈕發生 onError 錯誤：' + err.toString());
+                        }
+                    }).render('#paypal-button-container');
+                } catch (err) {
+                    alert('在 script.onload 中發生了 try-catch 錯誤：' + err.toString());
+                }
+            };
+
+            // d. onerror 回調 (保持不變)
+            script.onerror = function() {
+                alert('致命錯誤：從後端代理載入 SDK 失敗！');
+            };
+
+            // e. 插入 script 標籤
+            document.head.appendChild(script);
+
+        })();
+    </script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項二：後端密碼鎖牆 (本身是安全的) --- */}}
