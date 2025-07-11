@@ -113,7 +113,7 @@
 
 {{ if .Params.price }}
     {{/* ============================================================= */}}
-    {{/*         原生 JS 強制載入版 - 這是我們最後的王牌          */}}
+    {{/*          終極代理版 - 這是我們最後的代碼方案         */}}
     {{/* ============================================================= */}}
     
     {{/* 1. HTML 佔位符 (保持不變) */}}
@@ -125,28 +125,29 @@
         </div>
     </div>
     
-    {{/* 2. 這是新的、絕對可靠的腳本載入和執行方式 */}}
+    {{/* 2. 這是新的、通過後端代理載入腳本的方式 */}}
     <script>
         (function() {
-            // a. 定義好所有需要的參數
+            // a. 定義參數
             const clientId = "{{ .Site.Params.paypalClientID }}";
             const currency = "{{ .Params.currency | default "USD" }}";
             const articlePath = "{{ .RelPermalink }}";
             const price = "{{ .Params.price }}";
 
-            // b. 動態創建 script 標籤
+            // b. 創建 script 標籤，但這次請求的是我們自己的後端 Function
             const script = document.createElement('script');
-            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}¤cy=${currency}`;
+            script.src = `/get-paypal-sdk?client-id=${clientId}¤cy=${currency}`;
             
-            // c. 當腳本成功載入後，執行我們的按鈕渲染邏輯
+            // c. 當腳本成功載入後 (從我們自己的後端)，執行按鈕渲染
             script.onload = function() {
                 try {
                     if (typeof paypal === 'undefined') {
-                        alert('奇怪的錯誤：腳本已觸發 onload，但 paypal 變數依然不存在！');
+                        // 這個錯誤理論上不會再發生，但作為保險
+                        alert('致命錯誤：paypal 變數依然不存在！');
                         return;
                     }
 
-                    // 渲染 PayPal 按鈕
+                    // 渲染 PayPal 按鈕 (這部分邏輯不變)
                     paypal.Buttons({
                         createOrder: function() {
                             return fetch('/create-paypal-order', {
@@ -180,10 +181,10 @@
 
             // d. 處理腳本載入失敗的情況
             script.onerror = function() {
-                alert('致命錯誤：PayPal SDK 腳本載入失敗！請檢查網路連線或瀏覽器安全設定。');
+                alert('致命錯誤：從後端代理載入 SDK 失敗！請檢查 /get-paypal-sdk Function 是否正常運作。');
             };
 
-            // e. 將創建好的 script 標籤插入到文檔中，觸發下載
+            // e. 將 script 標籤插入文檔，觸發請求
             document.head.appendChild(script);
 
         })();
