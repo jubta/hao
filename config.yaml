@@ -69,15 +69,29 @@ privacy:
     useSessionStorage: false # 'true' disables the use of Cookies and use Session Storage to Store the GA Client ID | default: false
  
 # Here starts our customization
+# =============================================================
+#           請用這整塊來替換你原來的 params 區塊
+# =============================================================
 params:
-  paypalClientID: "AQnxDJuxIzl-YLlj29hOZS3n7LRGonMsiDXOZ_wCT_Xx62b1Uy7iaNSWe5w7_B0uOWKGTeDOYo4aTnj8" # 把你的 Sandbox Client ID 貼在這裡
+  # --- 我們新增的參數 ---
+  # 確保這兩行有正確的縮排 (通常是兩個空格)
+  paypalClientID: "AQnxDJuxIzl-YLlj29hOZS3n7LRGonMsiDXOZ_wCT_Xx62b1Uy7iaNSWe5w7_B0uOWKGTeDOYo4aTnj8"
   turnstileSiteKey: "0x4AAAAAABkOKSbtXgq5kRUl"
+  
+  # --- 你原有的參數 ---
   social: 
-    profiles: # social platforms you are present on. see supported ones here | highly recommended
+    profiles:
       youtube: "mailto:ktv8631@gmail.com"
       instagram: "mailto:ktv8631@gmail.com"
       email: "mailto:ktv8631@gmail.com"
-    share: ["facebook", "twitter", "linkedin", "telegram", "whatsapp", "reddit", "email"] # accepts array of values: "facebook", "twitter", "linkedin", "whatsapp", "reddit", "email". just type the name of those you want you articles to be able to be shared on
+    share:
+      - "facebook"
+      - "twitter"
+      - "linkedin"
+      - "telegram"
+      - "whatsapp"
+      - "reddit"
+      - "email" # accepts array of values: "facebook", "twitter", "linkedin", "whatsapp", "reddit", "email". just type the name of those you want you articles to be able to be shared on
 
   backgImage:
     landingPage: "/img/img9564.WEBP"
