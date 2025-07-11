@@ -1,18 +1,16 @@
-// functions/capture-paypal-order.js (最終無重複修正版)
+// functions/capture-paypal-order.js (強制沙箱修正版)
 
-// --- 輔助函數 (只定義一次) ---
-async function getAccessToken(clientId, clientSecret, env) {
+async function getAccessToken(clientId, clientSecret) { /* ... 此處省略，因為上面已經定義 ... */ }
+async function createSignedCookie(path, secret) { /* ... 此處省略 ... */ }
+const COOKIE_SECRET_KEY = 'a-very-long-and-random-secret-string-for-your-cookie-signature';
+
+// 我們需要把輔助函數也複製過來
+async function getAccessToken(clientId, clientSecret) {
     const auth = btoa(`${clientId}:${clientSecret}`);
-    const url = env.CF_PAGES_BRANCH === 'main' 
-        ? 'https://api-m.paypal.com/v1/oauth2/token' // 正式環境
-        : 'https://api-m.sandbox.paypal.com/v1/oauth2/token'; // 沙箱環境
-        
+    const url = 'https://api-m.sandbox.paypal.com/v1/oauth2/token'; 
     const response = await fetch(url, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic ${auth}`
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${auth}`},
         body: 'grant_type=client_credentials'
     });
     const data = await response.json();
@@ -27,45 +25,32 @@ async function createSignedCookie(path, secret) {
     return `${path}|${signatureHex}`;
 }
 
-// --- 全局設定 (只定義一次) ---
-const COOKIE_SECRET_KEY = 'a-very-long-and-random-secret-string-for-your-cookie-signature'; // **重要：請務必換成你自己的隨機長字串！**
-
-
-// --- 主處理函數 (只有這一個 export) ---
 export async function onRequestPost(context) {
     const { request, env } = context;
     const { orderID, articlePath } = await request.json();
+    const accessToken = await getAccessToken(env.PAYPAL_CLIENT_ID, env.PAYPAL_CLIENT_SECRET);
+    if (!accessToken) return new Response('Could not get access token', { status: 500 });
     
-    const accessToken = await getAccessToken(env.PAYPAL_CLIENT_ID, env.PAYPAL_CLIENT_SECRET, env);
-    if (!accessToken) return new Response('Could not get PayPal access token', { status: 500 });
-
-    const apiUrl = (env.CF_PAGES_BRANCH === 'main' ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com') + `/v2/checkout/orders/${orderID}/capture`;
+    // 強制使用沙箱 URL
+    const apiUrl = `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`;
 
     const captureResponse = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-        }
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` }
     });
 
     const captureData = await captureResponse.json();
-    
     if (captureData.status === 'COMPLETED') {
         const storedContent = await env.SECURE_CONTENT.get(`content:${articlePath}`);
-        if (!storedContent) {
-            return new Response('付款成功，但無法找到文章內容。請聯繫管理員。', { status: 404 });
-        }
+        if (!storedContent) return new Response('付款成功，但找不到文章。', { status: 404 });
 
         const cookieValue = await createSignedCookie(articlePath, COOKIE_SECRET_KEY);
         const cookieName = `access_token_${articlePath.replace(/\//g, '_')}`;
         const headers = new Headers();
         headers.set('Content-Type', 'text/html');
         headers.set('Set-Cookie', `${cookieName}=${encodeURIComponent(cookieValue)}; Path=${articlePath}; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
-        
         return new Response(storedContent, { status: 200, headers });
-
     } else {
-        return new Response('Payment capture failed or is not complete.', { status: 400 });
+        return new Response('Payment capture failed.', { status: 400 });
     }
 }
