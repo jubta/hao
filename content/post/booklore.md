@@ -6,7 +6,7 @@ tags: ["BookLore","Hugo","自托管","Docker","图书管理"]
 keywords:
 date: "2025-07-04"
 image:
-  src: "https://btso.dpdns.org/huimg/img/img0577.WEBP"
+  src: "/img/img0577.WEBP"
   alt: "2025"
   thumbnail:
     size: "170px"
