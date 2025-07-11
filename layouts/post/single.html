@@ -126,41 +126,46 @@
     {{/* PayPal 的 JS 腳本。注意，我手動寫死了 currency='USD' 來避免 bug */}}
     <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}¤cy={{ .Params.currency | default "USD" }}"></script>
     <script>
+    alert('偵錯開始：準備渲染 PayPal 按鈕...');
+    try {
         paypal.Buttons({
             createOrder: function(data, actions) {
+                alert('步驟1：createOrder 被觸發了！準備呼叫後端...');
                 return fetch('/create-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        articlePath: '{{ .RelPermalink }}',
-                        price: '{{ .Params.price }}',
-                        currency: '{{ .Params.currency | default "USD" }}'
-                    })
-                }).then(res => res.json()).then(orderData => orderData.id);
+                    // ... fetch 的內容不變 ...
+                }).then(res => res.json()).then(orderData => {
+                    alert('步驟2：後端成功返回訂單 ID：' + orderData.id);
+                    return orderData.id;
+                });
             },
             onApprove: function(data, actions) {
+                alert('步驟3：付款被核准！準備捕獲訂單...');
                 return fetch('/capture-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderID: data.orderID, articlePath: '{{ .RelPermalink }}' })
+                    // ... fetch 的內容不變 ...
                 })
-                .then(res => {
-                    if (res.ok) return res.text();
-                    throw new Error('解鎖失敗，請聯繫管理員。');
-                })
+                .then(res => res.ok ? res.text() : Promise.reject('Capture failed'))
                 .then(htmlContent => {
-                    // 成功後，用從後端獲取的安全內容，直接替換整個佔位符
-                    document.getElementById('payment-placeholder').innerHTML = htmlContent;
+                    alert('步驟4：成功解鎖！準備顯示內容...');
+                    document.getElementById('payment-unlock-container').style.display = 'none';
+                    const mainContent = document.getElementById('main-content-area');
+                    mainContent.innerHTML = htmlContent;
+                    mainContent.style.display = 'block';
                 }).catch(err => {
-                    alert(err.message + ' 訂單號：' + data.orderID);
+                    alert('onApprove 捕獲時出錯：' + err.message);
                 });
             },
             onError: function(err) {
-                console.error('PayPal按鈕出錯:', err);
-                alert('支付過程中發生錯誤，請稍後重試。');
+                alert('PayPal 按鈕發生了 onError 錯誤：' + err.toString());
+            },
+            onInit: function(data, actions) {
+                // onInit 是按鈕初始化時會觸發的
+                alert('按鈕初始化 (onInit) 成功！如果還看不到按鈕，可能是樣式問題。');
             }
         }).render('#paypal-button-container');
-    </script>
+    } catch (err) {
+        alert('發生了致命的 try-catch 錯誤：' + err.toString());
+    }
+</script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項二：後端密碼鎖牆 (本身是安全的) --- */}}
