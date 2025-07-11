@@ -113,10 +113,10 @@
 
 {{ if .Params.price }}
     {{/* ============================================================= */}}
-    {{/*          選項一：PayPal 付費解鎖 (最終一體化版本)           */}}
+    {{/*         原生 JS 強制載入版 - 這是我們最後的王牌          */}}
     {{/* ============================================================= */}}
     
-    {{/* 1. HTML 佔位符 */}}
+    {{/* 1. HTML 佔位符 (保持不變) */}}
     <div id="payment-placeholder">
         <div id="payment-unlock-container" class="encryption-container py-3 my-2">
             <h3>💎 解鎖高級內容</h3>
@@ -125,77 +125,68 @@
         </div>
     </div>
     
-    {{/* 2. 引入 PayPal SDK (使用寫死的 URL，保證不出錯) */}}
-    <script src="https://www.paypal.com/sdk/js?client-id=AQnxDJuxIzl-YLlj29hOZS3n7LRGonMsiDXOZ_wCT_Xx62b1Uy7iaNSWe5w7_B0uOWKGTeDOYo4aTnj8&cy=USD"></script>
-
-    {{/* 3. 執行按鈕渲染的 JavaScript (帶有完整的 Alert 偵錯) */}}
+    {{/* 2. 這是新的、絕對可靠的腳本載入和執行方式 */}}
     <script>
-        // 我們延遲一點執行，確保 PayPal SDK 完全加載
-        setTimeout(function() {
-            try {
-                // 第一重檢查：paypal 這個變數到底存不存在？
-                if (typeof paypal === 'undefined') {
-                    alert('致命錯誤：paypal 變數不存在！這意味著上面的 SDK 腳本加載失敗了。請檢查瀏覽器是否有安全設定阻止了 paypal.com。');
-                    return; // 如果不存在，就直接停止，不再往下執行
-                }
-                
-                // 如果程式能跑到這裡，說明 SDK 至少被識別了
-                alert('好消息：paypal 變數已找到！準備初始化按鈕...');
-                
-                paypal.Buttons({
-                    // 按鈕初始化成功時觸發
-                    onInit: function(data, actions) {
-                        alert('按鈕初始化 (onInit) 成功！');
-                    },
+        (function() {
+            // a. 定義好所有需要的參數
+            const clientId = "{{ .Site.Params.paypalClientID }}";
+            const currency = "{{ .Params.currency | default "USD" }}";
+            const articlePath = "{{ .RelPermalink }}";
+            const price = "{{ .Params.price }}";
 
-                    // 創建訂單時觸發
-                    createOrder: function(data, actions) {
-                        alert('createOrder 已觸發，正在呼叫後端創建訂單...');
-                        return fetch('/create-paypal-order', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                articlePath: '{{ .RelPermalink }}',
-                                price: '{{ .Params.price }}',
-                                currency: '{{ .Params.currency | default "USD" }}'
-                            })
-                        }).then(res => res.json()).then(orderData => {
-                            alert('後端成功返回訂單 ID：' + orderData.id);
-                            return orderData.id;
-                        });
-                    },
-
-                    // 付款被核准時觸發
-                    onApprove: function(data, actions) {
-                        alert('付款被核准 (onApprove)！正在捕獲訂單...');
-                        return fetch('/capture-paypal-order', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ orderID: data.orderID, articlePath: '{{ .RelPermalink }}' })
-                        })
-                        .then(res => {
-                            if (res.ok) return res.text();
-                            throw new Error('解鎖失敗，伺服器返回錯誤。');
-                        })
-                        .then(htmlContent => {
-                            alert('成功解鎖！正在顯示內容...');
-                            document.getElementById('payment-placeholder').innerHTML = htmlContent;
-                        }).catch(err => {
-                            alert('onApprove 捕獲時出錯：' + err.message + ' 訂單號：' + data.orderID);
-                        });
-                    },
-
-                    // 發生錯誤時觸發
-                    onError: function(err) {
-                        alert('PayPal 按鈕發生了 onError 錯誤：' + err.toString());
+            // b. 動態創建 script 標籤
+            const script = document.createElement('script');
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}¤cy=${currency}`;
+            
+            // c. 當腳本成功載入後，執行我們的按鈕渲染邏輯
+            script.onload = function() {
+                try {
+                    if (typeof paypal === 'undefined') {
+                        alert('奇怪的錯誤：腳本已觸發 onload，但 paypal 變數依然不存在！');
+                        return;
                     }
-                }).render('#paypal-button-container');
 
-            } catch (err) {
-                // 這是最後的防線，如果連 try 本身都出錯了
-                alert('發生了最外層的 try-catch 錯誤：' + err.toString());
-            }
-        }, 500); // 延遲 500 毫秒執行
+                    // 渲染 PayPal 按鈕
+                    paypal.Buttons({
+                        createOrder: function() {
+                            return fetch('/create-paypal-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ articlePath, price, currency })
+                            }).then(res => res.json()).then(orderData => orderData.id);
+                        },
+                        onApprove: function(data) {
+                            return fetch('/capture-paypal-order', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ orderID: data.orderID, articlePath })
+                            })
+                            .then(res => res.ok ? res.text() : Promise.reject('解鎖失敗'))
+                            .then(htmlContent => {
+                                document.getElementById('payment-placeholder').innerHTML = htmlContent;
+                            }).catch(err => {
+                                alert(err.toString() + ' 訂單號：' + data.orderID);
+                            });
+                        },
+                        onError: function(err) {
+                            alert('PayPal 按鈕發生 onError 錯誤：' + err.toString());
+                        }
+                    }).render('#paypal-button-container');
+
+                } catch (err) {
+                    alert('在 script.onload 中發生了 try-catch 錯誤：' + err.toString());
+                }
+            };
+
+            // d. 處理腳本載入失敗的情況
+            script.onerror = function() {
+                alert('致命錯誤：PayPal SDK 腳本載入失敗！請檢查網路連線或瀏覽器安全設定。');
+            };
+
+            // e. 將創建好的 script 標籤插入到文檔中，觸發下載
+            document.head.appendChild(script);
+
+        })();
     </script>
 
 {{ else if .Params.secure }}
