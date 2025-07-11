@@ -4,8 +4,7 @@ author: "鈞鈞"
 description: "實用軟件"
 tags: ["影片", "軟件"]
 date: "2022-08-21"
-price: '1.00'      # 價格
-currency: 'USD'    # 貨幣，例如 USD, TWD
+hosted_button_id: "ETNG65HE98JMU" # 貼上你從 PayPal 生成的那個按鈕 ID
 image:
   src: "/img/wnQ-OKdeR.jpg"
   alt: "2023"

@@ -131,90 +131,33 @@
 
 {{/* --- 步驟二：根據不同條件，顯示對應的「解鎖牆」 --- */}}
 
-{{ if .Params.price }}
+
+{{ if .Params.hosted_button_id }}
     {{/* ============================================================= */}}
-    {{/*    帶有完整後廚監視器的最終版本 - 請從這裡開始複製    */}}
+    {{/*          託管按鈕終極方案 - 這是我們勝利的方程式          */}}
     {{/* ============================================================= */}}
     
-    {{/* 1. HTML 佔位符和數據傳遞 (保持不變) */}}
-    <div id="payment-gateway" 
-         data-client-id="{{ .Site.Params.paypalClientID }}"
-         data-currency="{{ .Params.currency | default "USD" }}"
-         data-article-path="{{ .RelPermalink }}"
-         data-price="{{ .Params.price }}">
-        
+    {{/* 1. HTML 佔位符，注意 ID 是動態的 */}}
+    <div id="payment-placeholder">
         <div id="payment-unlock-container" class="encryption-container py-3 my-2">
             <h3>💎 解鎖高級內容</h3>
             <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
-            <div id="paypal-button-container" style="margin-top: 20px;"></div>
+            
+            {{/* 這裡的 div ID 必須和下面的腳本匹配 */}}
+            <div id="paypal-container-{{ .Params.hosted_button_id }}" style="margin-top: 20px;"></div>
         </div>
     </div>
     
-    {{/* 2. 這是最終的 JavaScript，帶有完整的錯誤捕獲和顯示 */}}
+    {{/* 2. 引入 PayPal 託管按鈕的專用 SDK */}}
+    <script src="https://www.paypal.com/sdk/js?client-id=BAA99irLuNEDeaBl_wpurhLUAD6i0vCRPy9WoRwyGiVsFgruDyCSB42RW9PC24EE1e43ZuS3TfizCcnwwc&components=hosted-buttons&disable-funding=venmo¤cy=USD"></script>
+
+    {{/* 3. 渲染按鈕的極簡腳本 */}}
     <script>
-(function() {
-    const gateway = document.getElementById('payment-gateway');
-    const clientId = gateway.dataset.clientId;
-    const currency = gateway.dataset.currency;
-    const articlePath = gateway.dataset.articlePath;
-    const price = gateway.dataset.price;
-
-    const script = document.createElement('script');
-    script.src = `/get-paypal-sdk?client-id=${clientId}¤cy=${currency}`;
-    
-    script.onload = function() {
-        paypal.Buttons({
-            // --- createOrder (極簡版) ---
-            // 直接在前端定義訂單，不呼叫後端。
-            // 這可以 100% 避免彈窗被攔截！
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: price,
-                            currency_code: currency
-                        }
-                    }]
-                });
-            },
-
-            // --- onApprove (任務核心) ---
-            // 當使用者在 PayPal 彈窗中確認付款後觸發。
-            onApprove: function(data, actions) {
-                // `data.orderID` 是這次交易的 ID。
-                // 現在我們才去呼叫後端，完成收款和解鎖。
-                return fetch('/capture-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        orderID: data.orderID,
-                        articlePath: articlePath  // 確保傳遞文章路徑
-                    })
-                })
-                .then(res => {
-                    if (res.ok) return res.text();
-                    // 如果後端出錯，嘗試解析錯誤訊息
-                    return res.json().then(err => { throw new Error(err.error || '解鎖失敗') });
-                })
-                .then(htmlContent => {
-                    // 成功！用安全的內容替換佔位符。
-                    const placeholder = document.getElementById('payment-placeholder') || gateway;
-                    placeholder.innerHTML = htmlContent;
-                    placeholder.style.display = 'block';
-                }).catch(err => {
-                    alert('發生錯誤：' + err.message + '\n訂單號：' + data.orderID);
-                });
-            }
-        }).render('#paypal-button-container');
-    };
-
-    script.onerror = function() {
-        // 這個錯誤現在不會發生了，但留作保險
-    };
-    
-    document.head.appendChild(script);
-})();
-</script>
+      paypal.HostedButtons({
+        // 從 Front Matter 讀取這篇文章專屬的按鈕 ID
+        hostedButtonId: "{{ .Params.hosted_button_id }}",
+      }).render("#paypal-container-{{ .Params.hosted_button_id }}")
+    </script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項二：後端密碼鎖牆 (本身是安全的) --- */}}
