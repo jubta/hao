@@ -1,273 +1,40 @@
 {{ define "main" }}
-  <!-- 标题区 & 背景图 -->
-  <div 
-    class="container-fluid text-light text-center position-relative
-           {{- if and (ne site.Params.backgImage.post "disable") (.Params.image.src) }} py-5{{ else }} bg-clr1 pb-3 pt-4 shadow{{ end }}"
-    {{- if and (ne site.Params.backgImage.post "disable") (.Params.image.src) }}
-      style="background: url('{{ .Params.image.src | safeURL }}') 50% 95% / cover no-repeat fixed;
-             box-shadow: inset 2000px 0 0 0 rgba(0, 0, 0, 0.65);"
-    {{- end -}}
->
-  <div style="height:3.5rem;"></div>
-  <h2>{{ .Title }}</h2>
-  <p class="description">{{ .Description }}</p>
-</div>
-
-<div class="container-fluid bg-nav p-4">
-  <div class="row">
-    <!-- 目录 -->
-      <div class="col-md-3">
-        {{ if or (ne .Params.toc false) (ne .Params.toc "false") }}
-          <div class="bg-mat p-4 rounded" style="overflow-x: auto;">
-            <div class="h4 mb-3">目錄 👇</div>
-            {{ .TableOfContents }}
-          </div>
-        {{ end }}
-      </div>
-      
-    <!-- 内容区 -->
-      <div class="col-md-9">
-        {{/* 计算 postMetaTop / Bottom */}}
-        {{- $postMetaTop := false }}
-        {{- $postMetaBottom := false }}
-        {{- range site.Params.position.postMeta }}
-          {{- if eq .content "top" }}     {{- $postMetaTop = true }}
-          {{- else if eq .content "bottom" }} {{- $postMetaBottom = true }}
-          {{- end }}
-        {{- end }}
-        
-      {{/* --- 顶部：分享按钮 / PostMeta / Tags --- */}}
-        {{ if or
-            (and site.Params.social.share (eq site.Params.position.social.share "top"))
-            $postMetaTop
-            (and site.Params.position.postMeta.tags.content (eq site.Params.position.postMeta.tags.content "top"))
-          }}
-          <div class="py-1">
-            <div class="row">
-              <!-- PostMeta Top -->
-              {{ if $postMetaTop }}
-                <div class="col-md-7 small text-muted post-meta my-auto">
-                  {{- /* 逐项判断是否在 top 显示 */ -}}
-                  {{- $items := slice }}
-                  {{- if eq site.Params.position.postMeta.wordCount.content "top" -}}
-                    {{- $items = $items | append (print .WordCount " words") -}}
-                  {{- end }}
-                  {{- if eq site.Params.position.postMeta.readingTime.content "top" -}}
-                    {{- $items = $items | append (print (lang.NumFmt 0 (div .WordCount 130)) " 閱讀時間") -}}
-                  {{- end }}
-                  {{- if eq site.Params.position.postMeta.author.content "top" -}}
-                    {{- $items = $items | append (print "By " (default site.Params.meta.author .Params.author)) -}}
-                  {{- end }}
-                  {{- if and .Lastmod (eq site.Params.position.postMeta.lastUpdated.content "top") -}}
-                    {{- $items = $items | append (print "最近更新: " (.Lastmod.Format "2006 | 1 / 2")) -}}
-                  {{- end }}
-                  {{- delimit $items " &#183; " -}}
-                </div>
-              {{ end }}
-          
-          <!-- 分享按钮 Top -->
-              {{ if and site.Params.social.share (eq site.Params.position.social.share "top") }}
-                <div class="col-md-auto ml-3 my-auto">
-                  <div class="row">
-                    <div class="col-auto p-0 my-auto">分享 ➥&nbsp;</div>
-                    <div class="col p-0">
-                      <span class="lead">
-                        {{ if in site.Params.social.share "facebook" }}<a href="https://www.facebook.com/sharer/sharer.php?u={{ .Permalink }}&quote={{ .Title }}"><span class="fab fa-facebook"></span></a>&nbsp;{{ end }}
-                        {{ if in site.Params.social.share "twitter"  }}<a href="https://twitter.com/intent/tweet?text={{ .Title }} {{ .Permalink }}"><span class="fab fa-twitter"></span></a>&nbsp;{{ end }}
-                        {{ if in site.Params.social.share "linkedin" }}<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ .Permalink }}&title={{ .Title }}"><span class="fab fa-linkedin"></span></a>&nbsp;{{ end }}
-                        {{ if in site.Params.social.share "telegram" }}<a href="https://t.me/share/url?url={{ .Permalink }}&text={{ .Title }}"><span class="fab fa-telegram"></span></a>&nbsp;{{ end }}
-                        {{ if in site.Params.social.share "whatsapp" }}<a href="whatsapp://send?text={{ .Title }} {{ .Permalink }}"><span class="fab fa-whatsapp"></span></a>&nbsp;{{ end }}
-                        {{ if in site.Params.social.share "reddit"   }}<a href="https://reddit.com/submit?url={{ .Permalink }}&title={{ .Title }}"><span class="fab fa-reddit"></span></a>&nbsp;{{ end }}
-                        {{ if in site.Params.social.share "email"    }}<a href="mailto:?subject={{ .Title }}&body={{ .Permalink }}"><span class="fas fa-envelope"></span></a>{{ end }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              {{ end }}
-            </div>
-        
-        <!-- Tags Top -->
-            {{ if eq site.Params.position.postMeta.tags.content "top" }}
-              <div class="pt-2 pb-3">
-                {{ range .Params.tags }}
-                  <a href="/tags/{{ . | urlize }}/"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">#{{ . | humanize | upper }}</span></a>
-                {{ end }}
-              </div>
-            {{ end }}
-          </div>
-        {{ end }}
-      
-      {{/* ================================================================== */}}
-{{/*                  黃金標準版加密系統 - 請複製這裡                   */}}
-{{/* ================================================================== */}}
-
-{{/* --- 步驟一：先定義好文章內容的容器，並根據是否加密來決定是否預先隱藏 --- */}}
-<div id="main-content-area" class="py-3 my-2" {{ if or .Params.price .Params.secure .Params.password }}style="display: none;"{{ end }}>
-    {{ .Content }}
-</div>
-
-{{/* --- 步驟二：根據不同條件，顯示對應的「解鎖牆」 --- */}}
-
-{{ if .Params.price }}
-    {{/* --- 選項一：PayPal 付費解鎖牆 --- */}}
-    <div id="payment-unlock-container" class="encryption-container py-3 my-2">
-        <h3>💎 解鎖高級內容</h3>
-        <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
-        <div id="paypal-button-container" style="margin-top: 20px;"></div>
-    </div>
+<div style="padding: 50px; font-family: sans-serif; text-align: center;">
     
-    {{/* PayPal 的 JS 腳本，現在和它的 HTML 在一起，不會再出錯 */}}
-    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}&cy={{ .Params.currency | default "USD" }}"></script>
-    <script>
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return fetch('/create-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        articlePath: '{{ .RelPermalink }}',
-                        price: '{{ .Params.price }}',
-                        currency: '{{ .Params.currency | default "USD" }}'
-                    })
-                }).then(res => res.json()).then(orderData => orderData.id);
-            },
-            onApprove: function(data, actions) {
-                return fetch('/capture-paypal-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderID: data.orderID, articlePath: '{{ .RelPermalink }}' })
-                })
-                .then(res => res.ok ? res.text() : Promise.reject('Capture failed'))
-                .then(htmlContent => {
-                    // 成功後，隱藏付費牆
-                    document.getElementById('payment-unlock-container').style.display = 'none';
-                    // 獲取主內容區塊
-                    const mainContent = document.getElementById('main-content-area');
-                    // 為了確保內容最新，我們用後端返回的 HTML 替換它
-                    mainContent.innerHTML = htmlContent;
-                    // 讓主內容區塊顯示出來
-                    mainContent.style.display = 'block';
-                }).catch(err => {
-                    alert('解鎖失敗，請聯繫管理員並提供您的訂單號：' + data.orderID);
-                });
-            },
-            onError: function(err) {
-                console.error('PayPal按鈕出錯:', err);
-                alert('支付過程中發生錯誤，請稍後重試。');
-            }
-        }).render('#paypal-button-container');
-    </script>
+    <h1 style="color: blue;">--- 最小化測試開始 ---</h1>
+    
+    <h2>文章標題：{{ .Title }}</h2>
 
-{{ else if .Params.secure }}
-    {{/* --- 選項二：後端密碼鎖牆 --- */}}
-    <div id="secure-content-placeholder" class="encryption-container py-3 my-2" data-path="{{ .RelPermalink }}">
-        <div style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
-            <h3>🔒 這篇文章受到密碼保護</h3>
-            <p>請輸入密碼以查看內容。</p>
-            <form id="password-form" style="margin-top: 15px;">
-                <input type="password" id="password-input" placeholder="請輸入密碼" required style="padding: 8px; width: 60%; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
-                <button type="submit" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">解鎖</button>
-                <div class="cf-turnstile" data-sitekey="{{ .Site.Params.turnstileSiteKey }}" style="margin-top: 15px;"></div>
-            </form>
-            <p id="error-message" style="color: red; margin-top: 10px;"></p>
+    <hr>
+
+    {{ if .Params.price }}
+
+        <div style="background-color: #e0ffe0; padding: 20px; border: 2px solid green;">
+            <h2>偵測到【付費文章】</h2>
+            <p>價格是：{{ .Params.price }} {{ .Params.currency }}</p>
+            <p>PayPal Client ID 是：{{ .Site.Params.paypalClientID }}</p>
+            <p>如果能看到這段文字，代表 if 判斷成功！</p>
         </div>
-    </div>
-    {{/* 請確保這個密碼鎖的 JS 放在全局的 baseof.html 裡 */}}
 
-{{ else if .Params.password }}
-    {{/* --- 選項三：前端密碼鎖牆 --- */}}
-    <div id="encryption-container" class="encryption-container py-3 my-2">
-        <h3>🔑 這篇文章已被加密</h3>
-        <p>請輸入密碼來閱讀：</p>
-        <input type="password" id="password-input" placeholder="請在此輸入密碼" autocomplete="current-password" style="padding: 8px; width: 60%; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <button id="decrypt-button" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">解密</button>
-        <p id="error-message" class="error-message" style="color: red; margin-top: 10px;"></p>
-    </div>
-    <script>
-        const decryptButton = document.getElementById('decrypt-button');
-        const passwordInput = document.getElementById('password-input');
-        const errorMessage = document.getElementById('error-message');
-        
-        const verifyAndShow = () => {
-            if (passwordInput.value === "{{ .Params.password }}") {
-                document.getElementById('encryption-container').style.display = 'none';
-                document.getElementById('main-content-area').style.display = 'block';
-            } else {
-                errorMessage.textContent = '密碼錯誤，請重試。';
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        };
-        
-        decryptButton.addEventListener('click', verifyAndShow);
-        passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); verifyAndShow(); } });
-    </script>
-{{ end }}
+    {{ else if .Params.secure }}
+    
+        <div style="background-color: #fff0e0; padding: 20px; border: 2px solid orange;">
+            <h2>偵測到【後端加密文章】</h2>
+            <p>如果能看到這段文字，代表 else if 判斷成功！</p>
+        </div>
 
-{{/* ================================================================== */}}
-{{/*                  黃金標準版加密系統 - 複製到這裡結束                  */}}
-{{/* ================================================================== */}}
-      
-      {{/* --- 底部：PostMeta / Share / Tags --- */}}
-        {{ if or
-            (and site.Params.social.share (eq site.Params.position.social.share "bottom"))
-            $postMetaBottom
-            (and site.Params.position.postMeta.tags.content (eq site.Params.position.postMeta.tags.content "bottom"))
-          }}
-          <div class="pt-4 mt-2 border-top">
-            <div class="row">
-              <!-- PostMeta Bottom -->
-              {{ if $postMetaBottom }}
-                <div class="col-md-7 small text-muted post-meta my-1">
-                  {{- /* 同上逻辑，判断 bottom 显示项 */ -}}
-                  {{- $items := slice }}
-                  {{- if eq site.Params.position.postMeta.wordCount.content "bottom" -}}
-                    {{- $items = $items | append (print .WordCount " words") -}}
-                  {{- end }}
-                  {{- if eq site.Params.position.postMeta.readingTime.content "bottom" -}}
-                    {{- $items = $items | append (print (lang.NumFmt 0 (div .WordCount 130)) " min read") -}}
-                  {{- end }}
-                  {{- if eq site.Params.position.postMeta.author.content "bottom" -}}
-                    {{- $items = $items | append (print "By " (default site.Params.meta.author .Params.author)) -}}
-                  {{- end }}
-                  {{- if and .Lastmod (eq site.Params.position.postMeta.lastUpdated.content "bottom") -}}
-                    {{- $items = $items | append (print "Last updated: " (.Lastmod.Format "January 2, 2006")) -}}
-                  {{- end }}
-                  {{- delimit $items " &#183; " -}}
-                </div>
-              {{ end }}
-            
-            <!-- Share Bottom -->
-              {{ if and site.Params.social.share (eq site.Params.position.social.share "bottom") }}
-                <div class="col-md-auto ml-3 my-1">
-                  <!-- 同上分享按钮代码 -->
-                </div>
-              {{ end }}
-            </div>
-        
-          <!-- Tags Bottom -->
-            {{ if eq site.Params.position.postMeta.tags.content "bottom" }}
-              <div class="mt-3">
-                {{ range .Params.tags }}
-                  <a href="/tags/{{ . | urlize }}/"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">#{{ . | humanize | upper }}</span></a>
-                {{ end }}
-              </div>
-            {{ end }}
-          </div>
-        {{ end }}
-  
-  <!-- Disqus 评论 -->
-        {{ if site.DisqusShortname }}
-          <div class="my-5">
-            {{ if eq hugo.Environment "production" -}}
-              {{ template "_internal/disqus.html" . }}
-            {{ else }}
-              <p class="lead text-center">此处为 Disqus 评论（仅生产环境显示）。</p>
-            {{ end }}
-          </div>
-        {{ end }}
+    {{ else }}
 
-      </div>
-    </div>
-  </div>
+        <div style="background-color: #e0e0ff; padding: 20px; border: 2px solid purple;">
+            <h2>偵測到【公開文章】</h2>
+            <p>這是正常的公開文章。</p>
+        </div>
+
+    {{ end }}
+
+    <hr>
+    
+    <h1 style="color: red;">--- 最小化測試結束 ---</h1>
+
+</div>
 {{ end }}
