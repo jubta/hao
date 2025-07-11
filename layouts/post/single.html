@@ -117,10 +117,40 @@
       </div>
       {{ end }}
       
-      {{/* --- 開始：混合式加密系統 --- */}}
+{{/* ============================================================= */}}
+{{/*        最終整合版：託管按鈕 + 後端密碼鎖 + 前端密碼鎖        */}}
+{{/* ============================================================= */}}
 
-{{ if .Params.secure }}
-    {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
+{{ if .Params.hosted_button_id }}
+    {{/* --- 選項一：PayPal 付費牆 (最高安全、最簡單) --- */}}
+
+    <div id="payment-placeholder">
+        <div id="payment-unlock-container" class="encryption-container py-3 my-2">
+            <h3>💎 解鎖高級內容</h3>
+            <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可閱讀。</p>
+            
+            {{/* 我們使用一個簡單、固定的 ID，確保不會出錯 */}}
+            <div id="paypal-hosted-button-container" style="margin-top: 20px; text-align: center;"></div>
+        </div>
+    </div>
+
+    {{/* 引入 PayPal 託管按鈕的專用 SDK */}}
+    <script src="https://www.paypal.com/sdk/js?client-id=BAA99irLuNEDeaBl_wpurhLUAD6i0vCRPy9WoRwyGiVsFgruDyCSB42RW9PC24EE1e43ZuS3TfizCcnwwc&components=hosted-buttons&disable-funding=venmo¤cy=USD"></script>
+
+    {{/* 渲染按鈕的極簡腳本 */}}
+    <script>
+      try {
+        paypal.HostedButtons({
+          hostedButtonId: "{{ .Params.hosted_button_id }}",
+        }).render("#paypal-hosted-button-container");
+      } catch (error) {
+        console.error("渲染 PayPal 託管按鈕時出錯: ", error);
+        document.getElementById('paypal-hosted-button-container').innerText = "按鈕加載失敗，請刷新頁面重試。";
+      }
+    </script>
+
+{{ else if .Params.secure }}
+    {{/* --- 選項二：後端加密 (最高安全等級) --- */}}
     {{/* 由 'secure: true' 觸發 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
         <div class="encryption-container py-3 my-2" style="border: 1px solid #ddd; padding: 20px; text-align: center; max-width: 500px; margin: 40px auto; border-radius: 8px;">
@@ -140,7 +170,7 @@
     </div>
     
 {{ else if .Params.password }}
-    {{/* --- 選項二：前端加密 (方便快捷) --- */}}
+    {{/* --- 選項三：前端加密 (方便快捷) --- */}}
     {{/* 由 'password: "abc"' 觸發 */}}
     <div id="encryption-container" class="encryption-container py-3 my-2">
         <h3>🔑 這篇文章已被加密</h3>
@@ -186,7 +216,7 @@
     </script>
 
 {{ else }}
-    {{/* --- 選項三：公開文章 (無加密) --- */}}
+    {{/* --- 選項四：公開文章 (無加密) --- */}}
     <div class="py-3 my-2">
         {{ .Content }}
     </div>
