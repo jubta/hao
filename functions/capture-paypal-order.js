@@ -1,33 +1,17 @@
-// functions/capture-paypal-order.js (終極校對、帶快取優化)
+// functions/capture-paypal-order.js (終極校對、無重複版)
 
-async function getAccessToken(clientId, clientSecret, env) {
-    // 1. 先嘗試從 KV 快取中讀取 token
-    let token = await env.SECURE_CONTENT.get('paypal_access_token', { type: 'json' });
-    if (token && token.expires_at > Date.now()) {
-        return token.access_token;
-    }
-
-    // 2. 如果快取中沒有，或已過期，才去請求新的
+// --- 輔助函數 (只定義一次) ---
+async function getAccessToken(clientId, clientSecret) {
     const auth = btoa(`${clientId}:${clientSecret}`);
-    const url = 'https://api-m.sandbox.paypal.com/v1/oauth2/token';
+    // 強制使用沙箱 URL
+    const url = 'https://api-m.sandbox.paypal.com/v1/oauth2/token'; 
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${auth}`},
         body: 'grant_type=client_credentials'
     });
-
-    if (!response.ok) return null;
     const data = await response.json();
-    
-    // 3. 將新的 token 存入 KV 快取，並設定過期時間
-    const new_token = {
-        access_token: data.access_token,
-        // 讓它在 8 小時後過期 (PayPal token 通常是 9 小時)
-        expires_at: Date.now() + 8 * 60 * 60 * 1000 
-    };
-    await env.SECURE_CONTENT.put('paypal_access_token', JSON.stringify(new_token));
-
-    return new_token.access_token;
+    return data.access_token;
 }
 
 async function createSignedCookie(path, secret) {
