@@ -1,55 +1,62 @@
-// functions/capture-paypal-order.js (終極校對、無重複版)
+// functions/capture-paypal-order.js (王者歸來最終版)
 
-// --- 輔助函數 (只定義一次) ---
-async function getAccessToken(clientId, clientSecret) {
+const COOKIE_SECRET_KEY = 'F0u5beoiCxQBTsTwbQMMZ5tbGR9sf60NM0FOMgd6PFBH0UqEZxMWzH14i8dsP6'; // 使用你自己的密鑰
+
+// 輔助函數：帶快取的 getAccessToken
+async function getAccessToken(clientId, clientSecret, env) {
+    const cacheKey = 'paypal_access_token';
+    let token = await env.SECURE_CONTENT.get(cacheKey, { type: 'json' });
+    if (token && token.expires_at > Date.now()) {
+        return token.access_token;
+    }
     const auth = btoa(`${clientId}:${clientSecret}`);
-    // 強制使用沙箱 URL
-    const url = 'https://api-m.sandbox.paypal.com/v1/oauth2/token'; 
+    const url = 'https://api-m.sandbox.paypal.com/v1/oauth2/token';
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Basic ${auth}`},
         body: 'grant_type=client_credentials'
     });
+    if (!response.ok) return null;
     const data = await response.json();
-    return data.access_token;
+    const newToken = {
+        access_token: data.access_token,
+        expires_at: Date.now() + (data.expires_in - 300) * 1000
+    };
+    await env.SECURE_CONTENT.put(cacheKey, JSON.stringify(newToken));
+    return newToken.access_token;
 }
 
+// 輔助函數：創建帶簽名的 Cookie
 async function createSignedCookie(path, secret) {
     const encoder = new TextEncoder();
     const data = encoder.encode(path + secret);
     const signature = await crypto.subtle.digest('SHA-256', data);
-    const signatureHex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
-    return `${path}|${signatureHex}`;
+    return `${path}|${Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')}`;
 }
 
-// --- 全局設定 ---
-const COOKIE_SECRET_KEY = 'F0u5beoiCxQBTsTwbQMMZ5tbGR9sf60NM0FOMgd6PFBH0UqEZxMWzH14i8dsP6'; // **重要：請務必換成你自己的隨機長字串！**
-
-
-// --- 主處理函數 ---
+// 主處理函數
 export async function onRequestPost(context) {
     const { request, env } = context;
     const { orderID, articlePath } = await request.json();
-    
-    const accessToken = await getAccessToken(env.PAYPAL_CLIENT_ID, env.PAYPAL_CLIENT_SECRET);
-    if (!accessToken) return new Response('Could not get access token', { status: 500 });
-    
-    // 強制使用沙箱 URL
-    const apiUrl = `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`;
 
-    const captureResponse = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` }
-    });
+    try {
+        const accessToken = await getAccessToken(env.PAYPAL_CLIENT_ID, env.PAYPAL_CLIENT_SECRET, env);
+        if (!accessToken) throw new Error('後端錯誤：無法獲取 PayPal Access Token。');
+        
+        const apiUrl = `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}/capture`;
+        const captureResponse = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` }
+        });
 
-    const captureData = await captureResponse.json();
-    
-    if (captureData.status === 'COMPLETED') {
-        const storedContent = await env.SECURE_CONTENT.get(`content:${articlePath}`);
-        if (!storedContent) {
-            return new Response('付款成功，但找不到文章。請聯繫管理員。', { status: 404 });
+        const captureData = await captureResponse.json();
+        if (captureData.status !== 'COMPLETED') {
+            throw new Error('PayPal 收款失敗或未完成: ' + (captureData.details ? captureData.details[0].description : '未知原因'));
         }
-
+        
+        const storedContent = await env.SECURE_CONTENT.get(`content:${articlePath}`);
+        if (!storedContent) throw new Error('付款成功，但後端找不到對應的文章內容。');
+        
         const cookieValue = await createSignedCookie(articlePath, COOKIE_SECRET_KEY);
         const cookieName = `access_token_${articlePath.replace(/\//g, '_')}`;
         const headers = new Headers();
@@ -58,7 +65,8 @@ export async function onRequestPost(context) {
         
         return new Response(storedContent, { status: 200, headers });
 
-    } else {
-        return new Response('Payment capture failed.', { status: 400 });
+    } catch (err) {
+        console.error("Capture Error:", err.message);
+        return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
 }
