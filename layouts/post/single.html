@@ -119,7 +119,34 @@
       
       {{/* --- 開始：混合式加密系統 --- */}}
 
-{{ if .Params.secure }}
+{{ if .Params.hosted_button_id }}
+    {{/* --- 託管按鈕：最終的、最簡單的勝利方案 --- */}}
+    
+    <div id="payment-placeholder">
+        <div id="payment-unlock-container" class="encryption-container py-3 my-2">
+            <h3>💎 解鎖高級內容</h3>
+            <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可閱讀。</p>
+            
+            {{/* 1. 這是 PayPal 給你的「第 2 部分」程式碼 */}}
+            <div id="paypal-container-{{ .Params.hosted_button_id }}" style="margin-top: 20px; text-align: center;"></div>
+        </div>
+    </div>
+    
+    {{/* 2. 這是 PayPal 給你的「第 1 部分」程式碼，我們把它也放在這裡，確保它們永遠在一起 */}}
+    <script src="https://www.paypal.com/sdk/js?client-id=BAA-ncm45-R99CNpbQLQL3-f_fmVkgfXSynph5TvZxYPj_nRndaThikuGa1Fbw1zzDUPgd3xhpw2IHXfNE&components=hosted-buttons&disable-funding=venmo¤cy=USD"></script>
+
+    {{/* 3. 這是 PayPal 給你的渲染腳本 */}}
+    <script>
+      try {
+        paypal.HostedButtons({
+          hostedButtonId: "{{ .Params.hosted_button_id }}",
+        }).render("#paypal-container-{{ .Params.hosted_button_id }}");
+      } catch (error) {
+        document.getElementById('paypal-container-{{ .Params.hosted_button_id }}').innerText = "按鈕加載失敗，請刷新。";
+      }
+    </script>
+
+{{ else if .Params.secure }}
     {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
     {{/* 由 'secure: true' 觸發 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">

@@ -4,7 +4,7 @@ author: "鈞鈞"
 description: "實用軟件"
 tags: ["影片", "軟件"]
 date: "2022-08-21"
-secure: true  # 我們用 'secure' 這個詞，代表後端安全
+hosted_button_id: "DK737S5DX6RPE" # 貼上你新生成的「一次性購買」按鈕 ID
 image:
   src: "/img/wnQ-OKdeR.jpg"
   alt: "2023"
