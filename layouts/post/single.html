@@ -121,36 +121,41 @@
 
 {{ if .Params.secure }}
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-  
-    <!-- Eruda（手机调试用，可部署后再删） -->
+    <!-- Eruda（手机端调试，用完请删除） -->
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
-    
+
+    <!-- 按钮容器 & 错误提示 -->
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
 
-    <!-- 动态插入 PayPal SDK -->
+    <!-- 动态插入并打印 URL 调试用 -->
     <script>
-      console.log('開始插入 PayPal SDK');
       (function() {
+        // 1. 取环境变量（HUGO_PAYPAL_CLIENT_ID）并拼 URL
+        const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
+        const url = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
+        console.log('🔗 PayPal SDK URL =', url);
+        // 2. 创建 <script>
         const sdk = document.createElement('script');
-        sdk.src = "{{ printf "https://www.paypal.com/sdk/js?client-id=%s&amp;currency=USD" (getenv "HUGO_PAYPAL_CLIENT_ID") | safeURL }}";
+        sdk.src = url;
         sdk.onload = () => {
-          console.log('✅ PayPal SDK 已加载，开始渲染按鈕');
+          console.log('✅ PayPal SDK 加載成功，開始渲染按鈕');
           paypal.Buttons({
             createOrder: (data, actions) =>
               actions.order.create({ purchase_units: [{ amount: { value: "9.99" } }] }),
             onApprove: async data => {
               console.log('付款授權，orderID=', data.orderID);
-              // …你的 /verify-paypal & /verify 逻辑…
+              // …在这里放你的 verify-paypal & verify 调用逻辑…
             },
             onError: err => {
-              console.error('PayPal Buttons 發生錯誤', err);
+              console.error('❌ PayPal Buttons 錯誤', err);
               document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
             }
           }).render('#paypal-button-container');
         };
-        sdk.onerror = () => console.error('❌ PayPal SDK 加载失败');
+        sdk.onerror = () => console.error('❌ PayPal SDK 加載失敗 for', sdk.src);
+        // 3. 注入到 <head>
         document.head.appendChild(sdk);
       })();
     </script>
