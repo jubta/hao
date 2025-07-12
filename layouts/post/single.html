@@ -119,96 +119,62 @@
       
       {{/* --- 開始：混合式加密系統 --- */}}
 
-
 {{ if .Params.secure }}
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-    <!-- PayPal 按钮容器 -->
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
+    <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
 
-    <!-- Eruda（手机调试用，可部署后再删） -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-
-    <!-- 动态插入 PayPal SDK，并在 onload 后 render -->
+    <!-- 动态插入 PayPal SDK -->
     <script>
+      console.log('開始插入 PayPal SDK');
       (function() {
         const sdk = document.createElement('script');
         sdk.src = "{{ printf "https://www.paypal.com/sdk/js?client-id=%s&amp;currency=USD" (getenv "HUGO_PAYPAL_CLIENT_ID") | safeURL }}";
         sdk.onload = () => {
-          // SDK 加载完毕，再渲染按钮
+          console.log('✅ PayPal SDK 已加载，开始渲染按鈕');
           paypal.Buttons({
             createOrder: (data, actions) =>
               actions.order.create({ purchase_units: [{ amount: { value: "9.99" } }] }),
             onApprove: async data => {
-              const orderID = data.orderID;
-              const res = await fetch('/verify-paypal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ path: window.location.pathname, orderID })
-              });
-              if (!res.ok) {
-                document.getElementById('error-message').textContent = '付款驗證失敗。';
-                return;
-              }
-              const { unlockToken } = await res.json();
-              const contentRes = await fetch('/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ path: window.location.pathname, unlockToken })
-              });
-              if (contentRes.ok) {
-                document.getElementById('secure-content-placeholder').innerHTML = await contentRes.text();
-              } else {
-                document.getElementById('error-message').textContent = '解鎖文章失敗。';
-              }
+              console.log('付款授權，orderID=', data.orderID);
+              // …你的 /verify-paypal & /verify 逻辑…
             },
             onError: err => {
-              console.error(err);
+              console.error('PayPal Buttons 發生錯誤', err);
               document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
             }
           }).render('#paypal-button-container');
         };
+        sdk.onerror = () => console.error('❌ PayPal SDK 加载失败');
         document.head.appendChild(sdk);
       })();
     </script>
-
-    <!-- 错误提示 -->
-    <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
   </div>
     
 {{ else if .Params.password }}
-  <div id="encryption-container" class="encryption-container py-3 my-2">
-    <h3>🔑 這篇文章已被加密</h3>
-    <p>請輸入密碼來閱讀：</p>
-    <form id="password-form">
-      <input type="password" id="password-input" placeholder="請在此輸入密碼" required>
-      <button type="submit">解密</button>
-      <p id="error-message" style="color:red;"></p>
+  <div id="encryption-container">
+    <form id="password-form" style="text-align:center; margin:2rem;">
+      <h3>🔒 請輸入密碼解鎖文章</h3>
+      <input type="password" id="password-input" required>
+      <button type="submit">解鎖</button>
+      <p id="pw-error" style="color:red;"></p>
     </form>
   </div>
   <div id="real-content-wrapper" style="display:none;">
-    <div class="py-3 my-2 post-content">{{ .Content }}</div>
+    {{ .Content }}
   </div>
-
   <script>
-    // 先检查表单是否存在（避免 secure 分支跑到这里）
+    // 只在密码分支跑
     const pwForm = document.getElementById('password-form');
     if (pwForm) {
-      const correctPassword = "{{ .Params.password }}";
-      const container = document.getElementById('encryption-container');
-      const real = document.getElementById('real-content-wrapper');
-      const input = document.getElementById('password-input');
-      const err = document.getElementById('error-message');
-
       pwForm.addEventListener('submit', e => {
         e.preventDefault();
-        if (input.value === correctPassword) {
-          container.style.display = 'none';
-          real.style.display = 'block';
+        const val = document.getElementById('password-input').value;
+        if (val === "{{ .Params.password }}") {
+          document.getElementById('encryption-container').style.display = 'none';
+          document.getElementById('real-content-wrapper').style.display = 'block';
         } else {
-          err.textContent = '密碼錯誤，請重試。';
-          input.value = '';
-          input.focus();
+          document.getElementById('pw-error').textContent = '密碼錯誤';
         }
       });
     }
