@@ -1,40 +1,45 @@
-// functions/payment.js
-export async function onRequestPost(context) {
-  const { request, env } = context;
+export async function onRequestPost({ request, env }) {
   const { path, orderID } = await request.json();
 
-  // 1. 呼叫 PayPal API 驗證訂單狀態
-  const auth = Buffer.from(env.PAYPAL_CLIENT_ID + ':' + env.PAYPAL_CLIENT_SECRET).toString('base64');
-  // 先取得 access token
-  let res = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Basic ${auth}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: 'grant_type=client_credentials'
-  });
+  // 1) 取 access token
+  const auth = btoa(env.PAYPAL_CLIENT_ID + ':' + env.PAYPAL_CLIENT_SECRET);
+  let res = await fetch(
+    'https://api-m.sandbox.paypal.com/v1/oauth2/token',
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials'
+    }
+  );
+  if (!res.ok) {
+    console.error('Error fetching access token:', await res.text());
+    return new Response(JSON.stringify({ error: '無法取得 PayPal token' }), { status: 500 });
+  }
   const { access_token } = await res.json();
 
-  // 再用 access token 查訂單詳情
-  res = await fetch(
-  `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
-    method: 'GET',
+  // 2) 驗證訂單
+  res = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
     headers: { 'Authorization': `Bearer ${access_token}` }
   });
+  if (!res.ok) {
+    console.error('Error fetching order:', await res.text());
+    return new Response(JSON.stringify({ error: '無法查詢訂單狀態' }), { status: 500 });
+  }
   const order = await res.json();
-
-  // 2. 確認訂單狀態為已捕獲（CAPTURED）
-  const isCaptured = order.status === 'COMPLETED' || 
+  const isCaptured =
+    order.status === 'COMPLETED' ||
     (order.purchase_units?.[0]?.payments?.captures?.[0]?.status === 'COMPLETED');
   if (!isCaptured) {
     return new Response(JSON.stringify({ error: '尚未完成付款。' }), { status: 400 });
   }
 
-  // 3. 產生一次性 unlockToken（JWT 或 隨機字串），並寫入 KV
-  const unlockToken = crypto.randomUUID();  
+  // 3) 寫入 unlockToken
+  const unlockToken = crypto.randomUUID();
   const kvKey = `payunlock:${path}:${unlockToken}`;
-  await env.SECURE_CONTENT.put(kvKey, 'true', { expirationTtl: 60 * 60 * 24 }); // 24 小時內有效
+  await env.SECURE_CONTENT.put(kvKey, 'true', { expirationTtl: 86400 });
 
   return new Response(JSON.stringify({ unlockToken }), { status: 200 });
 }
