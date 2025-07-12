@@ -16,6 +16,7 @@ categories:
 ---
 
 這是加密文章需要支持解鎖！
+<!--more-->
 
 ## 電腦使用技巧
 <a href="/img/wnQ-OKdeR.jpg " data-lightbox="image-1" data-title="我的图片">

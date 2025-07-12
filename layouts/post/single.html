@@ -121,58 +121,55 @@
 
 {{ if .Params.secure }}
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-    <!-- PayPal 按鈕容器 -->
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
 
-    <!-- 1. 載入 PayPal SDK -->
-    <script
+    <!-- PayPal SDK -->
+    <script defer
       src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&amp;currency=USD" (getenv "HUGO_PAYPAL_CLIENT_ID") | safeURL }}">
     </script>
 
-    <!-- 2. 付款邏輯 -->
+    <!-- Buttons Render -->
     <script>
-      paypal.Buttons({
-        // 建立訂單：金額可用 .Params.price 動態帶入
-        createOrder: (data, actions) => actions.order.create({
-          purchase_units: [{ amount: { value: "9.99" } }]
-        }),
-
-        // 付款授權後
-        onApprove: async (data, actions) => {
-          const orderID = data.orderID;
-          // 呼叫 /verify-paypal 並記錄解鎖憑證
-          const res = await fetch('/verify-paypal', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: window.location.pathname, orderID })
-          });
-          if (!res.ok) {
-            document.getElementById('error-message').textContent = '付款驗證失敗。';
-            return;
-          }
-          const { unlockToken } = await res.json();
-          // 呼叫原本 /verify 拿文章內容
-          const contentRes = await fetch('/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path: window.location.pathname, unlockToken })
-          });
-          if (contentRes.ok) {
-            const html = await contentRes.text();
-            document.getElementById('secure-content-placeholder').innerHTML = html;
-          } else {
-            document.getElementById('error-message').textContent = '解鎖文章失敗。';
-          }
-        },
-
-        onError: err => {
-          document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
-          console.error(err);
+      document.addEventListener('DOMContentLoaded', () => {
+        if (!window.paypal) {
+          console.error('PayPal SDK 尚未加載完成！');
+          return;
         }
-      }).render('#paypal-button-container');
+        paypal.Buttons({
+          createOrder: (data, actions) =>
+            actions.order.create({ purchase_units: [{ amount: { value: "9.99" } }] }),
+          onApprove: async (data) => {
+            const orderID = data.orderID;
+            const res = await fetch('/verify-paypal', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ path: window.location.pathname, orderID })
+            });
+            if (!res.ok) {
+              document.getElementById('error-message').textContent = '付款驗證失敗。';
+              return;
+            }
+            const { unlockToken } = await res.json();
+            const contentRes = await fetch('/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ path: window.location.pathname, unlockToken })
+            });
+            if (contentRes.ok) {
+              const html = await contentRes.text();
+              document.getElementById('secure-content-placeholder').innerHTML = html;
+            } else {
+              document.getElementById('error-message').textContent = '解鎖文章失敗。';
+            }
+          },
+          onError: err => {
+            console.error('PayPal Buttons 錯誤：', err);
+            document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
+          }
+        }).render('#paypal-button-container');
+      });
     </script>
 
-    <!-- 顯示錯誤訊息的容器 -->
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
   </div>
     
