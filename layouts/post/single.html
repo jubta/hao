@@ -121,41 +121,87 @@
 
 {{ if .Params.secure }}
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-    <!-- Eruda（手机端调试，用完请删除） -->
+    <!-- Eruda for mobile debugging (remove in production) -->
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
 
-    <!-- 按钮容器 & 错误提示 -->
+    <!-- PayPal button container & error message -->
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
 
-    <!-- 动态插入并打印 URL 调试用 -->
+    <!-- Dynamic SDK injection + detailed onApprove logging -->
     <script>
       (function() {
-        // 1. 取环境变量（HUGO_PAYPAL_CLIENT_ID）并拼 URL
+        // 1. 拼出 SDK URL 并打印
         const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
-        const url = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
-        console.log('🔗 PayPal SDK URL =', url);
-        // 2. 创建 <script>
+        const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
+        console.log('🔗 PayPal SDK URL =', sdkUrl);
+
+        // 2. 动态插入 SDK
         const sdk = document.createElement('script');
-        sdk.src = url;
+        sdk.src = sdkUrl;
         sdk.onload = () => {
           console.log('✅ PayPal SDK 加載成功，開始渲染按鈕');
+
           paypal.Buttons({
             createOrder: (data, actions) =>
               actions.order.create({ purchase_units: [{ amount: { value: "9.99" } }] }),
-            onApprove: async data => {
-              console.log('付款授權，orderID=', data.orderID);
-              // …在这里放你的 verify-paypal & verify 调用逻辑…
+
+            onApprove: async (data) => {
+              const orderID = data.orderID;
+              console.log('🍀 付款授權，orderID =', orderID);
+
+              // 调用 /verify-paypal
+              console.log('🛠️ 呼叫 /verify-paypal');
+              const res = await fetch('/verify-paypal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  path: window.location.pathname,
+                  orderID
+                })
+              });
+              console.log('🔔 /verify-paypal 回應狀態 =', res.status);
+              const text = await res.text();
+              console.log('🔔 /verify-paypal 回應內容 =', text);
+
+              if (!res.ok) {
+                document.getElementById('error-message').textContent = '付款驗證失敗。';
+                return;
+              }
+
+              // 解析 unlockToken
+              const { unlockToken } = JSON.parse(text);
+              console.log('🗝️ 收到 unlockToken =', unlockToken);
+
+              // 调用 /verify
+              console.log('🛠️ 呼叫 /verify');
+              const res2 = await fetch('/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  path: window.location.pathname,
+                  unlockToken
+                })
+              });
+              console.log('🔔 /verify 回應狀態 =', res2.status);
+              const html = await res2.text();
+              console.log('🔔 /verify 回傳 HTML =', html);
+
+              if (res2.ok) {
+                document.getElementById('secure-content-placeholder').innerHTML = html;
+              } else {
+                document.getElementById('error-message').textContent = '解鎖文章失敗。';
+              }
             },
+
             onError: err => {
-              console.error('❌ PayPal Buttons 錯誤', err);
+              console.error('❌ PayPal Buttons 發生錯誤', err);
               document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
             }
           }).render('#paypal-button-container');
         };
         sdk.onerror = () => console.error('❌ PayPal SDK 加載失敗 for', sdk.src);
-        // 3. 注入到 <head>
         document.head.appendChild(sdk);
       })();
     </script>
