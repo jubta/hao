@@ -4,8 +4,7 @@ author: "鈞鈞"
 description: "實用軟件"
 tags: ["影片", "軟件"]
 date: "2022-08-21"
-price: '1.00'
-currency: 'USD'
+secure: true  # 我們用 'secure' 這個詞，代表後端安全
 image:
   src: "/img/wnQ-OKdeR.jpg"
   alt: "2023"

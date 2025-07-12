@@ -119,52 +119,7 @@
       
       {{/* --- 開始：混合式加密系統 --- */}}
 
-{{ if .Params.price }}
-    {{/* ============================================================= */}}
-    {{/*               回歸本源版 - 我們只要按鈕！               */}}
-    {{/* ============================================================= */}}
-    
-    <div id="payment-gateway">
-        <div id="payment-unlock-container" class="encryption-container py-3 my-2">
-            <h3>💎 解鎖高級內容</h3>
-            <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
-            <div id="paypal-button-container" style="margin-top: 20px; text-align: center;"></div>
-        </div>
-    </div>
-    
-    {{/* 1. 我們直接使用 PayPal 官方推薦的、最標準的 SDK 引入方式 */}}
-    {{/*    我們不再自己拼接 URL，而是讓 Hugo 幫我們把變數填進去    */}}
-    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}&intent=capture¤cy={{ .Params.currency | default "USD" }}"></script>
-
-    {{/* 2. 我們使用一個極度簡化的按鈕渲染腳本 */}}
-    <script>
-        try {
-            // 我們只做最核心的事情：定義一個訂單
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                // 我們直接從 Front Matter 讀取，確保數據準確
-                                value: "{{ .Params.price }}",
-                                currency_code: "{{ .Params.currency | default "USD" }}"
-                            }
-                        }]
-                    });
-                },
-                // onApprove 暫時留空，我們先不處理付款成功後的邏輯
-                onApprove: function(data, actions) {
-                    alert("付款已核准！訂單 ID: " + data.orderID + "\n\n後續的自動解鎖功能即將完成！");
-                }
-            }).render('#paypal-button-container');
-
-        } catch (err) {
-            // 如果連這樣都失敗，那絕對是 SDK 加載問題
-            document.getElementById('paypal-button-container').innerText = "按鈕加載失敗，請檢查 Client ID 或刷新頁面。";
-        }
-    </script>
-
-{{ else if .Params.secure }}
+{{ if .Params.secure }}
     {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
     {{/* 由 'secure: true' 觸發 */}}
     <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
