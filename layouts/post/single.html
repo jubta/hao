@@ -121,58 +121,48 @@
 
 {{ if .Params.price }}
     {{/* ============================================================= */}}
-    {{/*      數據屬性傳遞版 - 這是我們最後的、最穩健的方案      */}}
+    {{/*               回歸本源版 - 我們只要按鈕！               */}}
     {{/* ============================================================= */}}
     
-    {{/* 1. HTML 佔位符，但現在我們把所有需要的數據都寫在 data-* 屬性裡 */}}
-    <div id="payment-gateway" 
-         data-client-id="{{ .Site.Params.paypalClientID }}"
-         data-currency="{{ .Params.currency | default "USD" }}"
-         data-article-path="{{ .RelPermalink }}"
-         data-price="{{ .Params.price }}">
-        
+    <div id="payment-gateway">
         <div id="payment-unlock-container" class="encryption-container py-3 my-2">
             <h3>💎 解鎖高級內容</h3>
             <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
-            <div id="paypal-button-container" style="margin-top: 20px;"></div>
+            <div id="paypal-button-container" style="margin-top: 20px; text-align: center;"></div>
         </div>
     </div>
     
-    {{/* 2. 現在的 JavaScript 非常乾淨，它只負責讀取數據和執行邏輯 */}}
-    <script>
-    (function() {
-        const gateway = document.getElementById('payment-gateway');
-        const clientId = gateway.dataset.clientId;
-        const articlePath = gateway.dataset.articlePath;
-        const price = gateway.dataset.price;
-        // 我們不再需要 currency 變數了！
+    {{/* 1. 我們直接使用 PayPal 官方推薦的、最標準的 SDK 引入方式 */}}
+    {{/*    我們不再自己拼接 URL，而是讓 Hugo 幫我們把變數填進去    */}}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}&intent=capture¤cy={{ .Params.currency | default "USD" }}"></script>
 
-        const script = document.createElement('script');
-        // 看！URL 裡只有 client-id，沒有其他任何參數！
-        script.src = `/get-paypal-sdk?client-id=${clientId}`;
-        
-        script.onload = function() {
-            try {
-                paypal.Buttons({
-                    createOrder: function() {
-                        // 在 createOrder 中，我們仍然需要告訴 PayPal 貨幣是什麼
-                        const currency = gateway.dataset.currency;
-                        return fetch('/create-paypal-order', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ articlePath, price, currency }) // 這裡的 currency 是必須的
-                        }).then(res => res.json()).then(orderData => orderData.id);
-                    },
-                    // onApprove 等保持不變
-                    onApprove: function(data) { /* ... */ },
-                    onError: function(err) { /* ... */ }
-                }).render('#paypal-button-container');
-            } catch (err) { /* ... */ }
-        };
-        script.onerror = function() { /* ... */ };
-        document.head.appendChild(script);
-    })();
-</script>
+    {{/* 2. 我們使用一個極度簡化的按鈕渲染腳本 */}}
+    <script>
+        try {
+            // 我們只做最核心的事情：定義一個訂單
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                // 我們直接從 Front Matter 讀取，確保數據準確
+                                value: "{{ .Params.price }}",
+                                currency_code: "{{ .Params.currency | default "USD" }}"
+                            }
+                        }]
+                    });
+                },
+                // onApprove 暫時留空，我們先不處理付款成功後的邏輯
+                onApprove: function(data, actions) {
+                    alert("付款已核准！訂單 ID: " + data.orderID + "\n\n後續的自動解鎖功能即將完成！");
+                }
+            }).render('#paypal-button-container');
+
+        } catch (err) {
+            // 如果連這樣都失敗，那絕對是 SDK 加載問題
+            document.getElementById('paypal-button-container').innerText = "按鈕加載失敗，請檢查 Client ID 或刷新頁面。";
+        }
+    </script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
