@@ -123,7 +123,9 @@
     {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
     {{/* 由 'secure: true' 觸發 */}}
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
-<script src="https://www.paypal.com/sdk/js?client-id={{ env.PAYPAL_CLIENT_ID }}&currency=USD"></script>
+<script
+  src="https://www.paypal.com/sdk/js?client-id={{ getenv "PAYPAL_CLIENT_ID" }}&currency=USD">
+</script>
 <script>
   // 1. 建立訂單
   paypal.Buttons({
