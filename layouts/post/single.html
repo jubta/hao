@@ -120,53 +120,62 @@
       {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-    {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
-    {{/* 由 'secure: true' 觸發 */}}
+  <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+    <!-- PayPal 按鈕容器 -->
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
-<script
-  src="https://www.paypal.com/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&amp;currency=USD">
-</script>
-  // 1. 建立訂單
-  paypal.Buttons({
-    createOrder: (data, actions) => actions.order.create({
-      purchase_units: [{ amount: { value: "9.99" } }] // 金額可從 .Params.price 讀取
-    }),
 
-    // 2. 付款授權後
-    onApprove: async (data, actions) => {
-      const orderID = data.orderID;
-      // 3. 向 Worker 發起「記錄付款」請求
-      const res = await fetch('/verify-paypal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: window.location.pathname, orderID })
-      });
-      if (res.ok) {
-        // 拿到一個 unlockToken
-        const { unlockToken } = await res.json();
-        // 再用這個 token 去呼叫原本的 /verify，取得文章內容
-        const contentRes = await fetch('/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path: window.location.pathname, unlockToken })
-        });
-        if (contentRes.ok) {
-          const html = await contentRes.text();
-          document.getElementById('secure-content-placeholder').innerHTML = html;
-        } else {
-          document.getElementById('error-message').textContent = '解鎖文章失敗。';
+    <!-- 1. 載入 PayPal SDK -->
+    <script
+      src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&amp;currency=USD" (getenv "HUGO_PAYPAL_CLIENT_ID") | safeURL }}">
+    </script>
+
+    <!-- 2. 付款邏輯 -->
+    <script>
+      paypal.Buttons({
+        // 建立訂單：金額可用 .Params.price 動態帶入
+        createOrder: (data, actions) => actions.order.create({
+          purchase_units: [{ amount: { value: "9.99" } }]
+        }),
+
+        // 付款授權後
+        onApprove: async (data, actions) => {
+          const orderID = data.orderID;
+          // 呼叫 /verify-paypal 並記錄解鎖憑證
+          const res = await fetch('/verify-paypal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname, orderID })
+          });
+          if (!res.ok) {
+            document.getElementById('error-message').textContent = '付款驗證失敗。';
+            return;
+          }
+          const { unlockToken } = await res.json();
+          // 呼叫原本 /verify 拿文章內容
+          const contentRes = await fetch('/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: window.location.pathname, unlockToken })
+          });
+          if (contentRes.ok) {
+            const html = await contentRes.text();
+            document.getElementById('secure-content-placeholder').innerHTML = html;
+          } else {
+            document.getElementById('error-message').textContent = '解鎖文章失敗。';
+          }
+        },
+
+        onError: err => {
+          document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
+          console.error(err);
         }
-      } else {
-        document.getElementById('error-message').textContent = '付款驗證失敗。';
-      }
-    },
+      }).render('#paypal-button-container');
+    </script>
 
-    onError: err => {
-      document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
-      console.error(err);
-    }
-  }).render('#paypal-button-container');
-</script>
+    <!-- 顯示錯誤訊息的容器 -->
+    <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
+  </div>
+{{ end }}
     
 {{ else if .Params.password }}
     {{/* --- 選項二：前端加密 (方便快捷) --- */}}
