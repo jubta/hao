@@ -119,32 +119,60 @@
       
       {{/* --- 開始：混合式加密系統 --- */}}
 
-{{ if .Params.hosted_button_id }}
-    {{/* --- 託管按鈕：最終的、最簡單的勝利方案 --- */}}
+{{ if .Params.price }}
+    {{/* ============================================================= */}}
+    {{/*      數據屬性傳遞版 - 這是我們最後的、最穩健的方案      */}}
+    {{/* ============================================================= */}}
     
-    <div id="payment-placeholder">
+    {{/* 1. HTML 佔位符，但現在我們把所有需要的數據都寫在 data-* 屬性裡 */}}
+    <div id="payment-gateway" 
+         data-client-id="{{ .Site.Params.paypalClientID }}"
+         data-currency="{{ .Params.currency | default "USD" }}"
+         data-article-path="{{ .RelPermalink }}"
+         data-price="{{ .Params.price }}">
+        
         <div id="payment-unlock-container" class="encryption-container py-3 my-2">
             <h3>💎 解鎖高級內容</h3>
-            <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可閱讀。</p>
-            
-            {{/* 1. 這是 PayPal 給你的「第 2 部分」程式碼 */}}
-            <div id="paypal-container-{{ .Params.hosted_button_id }}" style="margin-top: 20px; text-align: center;"></div>
+            <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
+            <div id="paypal-button-container" style="margin-top: 20px;"></div>
         </div>
     </div>
     
-    {{/* 2. 這是 PayPal 給你的「第 1 部分」程式碼，我們把它也放在這裡，確保它們永遠在一起 */}}
-    <script src="https://www.paypal.com/sdk/js?client-id=BAA-ncm45-R99CNpbQLQL3-f_fmVkgfXSynph5TvZxYPj_nRndaThikuGa1Fbw1zzDUPgd3xhpw2IHXfNE&components=hosted-buttons&disable-funding=venmo¤cy=USD"></script>
-
-    {{/* 3. 這是 PayPal 給你的渲染腳本 */}}
+    {{/* 2. 現在的 JavaScript 非常乾淨，它只負責讀取數據和執行邏輯 */}}
     <script>
-      try {
-        paypal.HostedButtons({
-          hostedButtonId: "{{ .Params.hosted_button_id }}",
-        }).render("#paypal-container-{{ .Params.hosted_button_id }}");
-      } catch (error) {
-        document.getElementById('paypal-container-{{ .Params.hosted_button_id }}').innerText = "按鈕加載失敗，請刷新。";
-      }
-    </script>
+    (function() {
+        const gateway = document.getElementById('payment-gateway');
+        const clientId = gateway.dataset.clientId;
+        const articlePath = gateway.dataset.articlePath;
+        const price = gateway.dataset.price;
+        // 我們不再需要 currency 變數了！
+
+        const script = document.createElement('script');
+        // 看！URL 裡只有 client-id，沒有其他任何參數！
+        script.src = `/get-paypal-sdk?client-id=${clientId}`;
+        
+        script.onload = function() {
+            try {
+                paypal.Buttons({
+                    createOrder: function() {
+                        // 在 createOrder 中，我們仍然需要告訴 PayPal 貨幣是什麼
+                        const currency = gateway.dataset.currency;
+                        return fetch('/create-paypal-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ articlePath, price, currency }) // 這裡的 currency 是必須的
+                        }).then(res => res.json()).then(orderData => orderData.id);
+                    },
+                    // onApprove 等保持不變
+                    onApprove: function(data) { /* ... */ },
+                    onError: function(err) { /* ... */ }
+                }).render('#paypal-button-container');
+            } catch (err) { /* ... */ }
+        };
+        script.onerror = function() { /* ... */ };
+        document.head.appendChild(script);
+    })();
+</script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
