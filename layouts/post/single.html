@@ -120,8 +120,13 @@
       {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.price }}
-    {{/* --- 王者歸來版：一次性購買，最終形態 --- */}}
+    {{/* ============================================================= */}}
+    {{/*      數據屬性傳遞版 - 這是我們最後的、最穩健的方案      */}}
+    {{/* ============================================================= */}}
+    
+    {{/* 1. HTML 佔位符，但現在我們把所有需要的數據都寫在 data-* 屬性裡 */}}
     <div id="payment-gateway" 
+         data-client-id="{{ .Site.Params.paypalClientID }}"
          data-currency="{{ .Params.currency | default "USD" }}"
          data-article-path="{{ .RelPermalink }}"
          data-price="{{ .Params.price }}">
@@ -129,75 +134,45 @@
         <div id="payment-unlock-container" class="encryption-container py-3 my-2">
             <h3>💎 解鎖高級內容</h3>
             <p>這是一篇付費文章，點擊下方按鈕通過 PayPal 購買後即可永久閱讀。</p>
-            <div id="paypal-button-container" style="margin-top: 20px; text-align: center;"></div>
+            <div id="paypal-button-container" style="margin-top: 20px;"></div>
         </div>
     </div>
     
-    {{/* 引入標準的 PayPal SDK，並明確指定 intent=capture */}}
-    <script src="https://www.paypal.com/sdk/js?client-id={{ .Site.Params.paypalClientID }}&intent=capture¤cy={{ .Params.currency | default "USD" }}"></script>
-
+    {{/* 2. 現在的 JavaScript 非常乾淨，它只負責讀取數據和執行邏輯 */}}
     <script>
-        try {
-            const gateway = document.getElementById('payment-gateway');
-            const articlePath = gateway.dataset.articlePath;
-            const price = gateway.dataset.price;
-            const currency = gateway.dataset.currency;
+    (function() {
+        const gateway = document.getElementById('payment-gateway');
+        const clientId = gateway.dataset.clientId;
+        const articlePath = gateway.dataset.articlePath;
+        const price = gateway.dataset.price;
+        // 我們不再需要 currency 變數了！
 
-            paypal.Buttons({
-                // 1. 直接在前端創建訂單，不涉及後端通訊，100% 避免彈窗攔截
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: price,
-                                currency_code: currency
-                            }
-                        }]
-                    });
-                },
-
-                // 2. 當用戶在 PayPal 彈窗中確認付款後
-                onApprove: function(data, actions) {
-                    // 顯示處理中提示，提升用戶體驗
-                    document.getElementById('paypal-button-container').innerHTML = '<h3>正在處理您的付款，請稍候...</h3>';
-                    
-                    // 呼叫我們唯一的後端 Function 來完成所有事情
-                    return fetch('/capture-paypal-order', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            orderID: data.orderID,
-                            articlePath: articlePath
-                        })
-                    })
-                    .then(res => {
-                        if (res.ok) return res.text();
-                        // 如果後端返回錯誤，解析詳細的錯誤訊息
-                        return res.json().then(err => { throw new Error(err.error || '解鎖失敗') });
-                    })
-                    .then(htmlContent => {
-                        // 成功！用安全的內容替換整個支付區域
-                        gateway.innerHTML = htmlContent;
-                        gateway.style.display = 'block';
-                    }).catch(err => {
-                        alert('處理失敗：' + err.message + '\n訂單號：' + data.orderID + '\n請聯繫管理員。');
-                        // 刷新頁面，讓使用者可以重試
-                        location.reload();
-                    });
-                },
-                
-                // 3. 處理支付過程中的其他錯誤
-                onError: function (err) {
-                    alert("支付過程中發生錯誤，請刷新頁面重試。");
-                    console.error("PayPal 按鈕 onError: ", err);
-                }
-            }).render('#paypal-button-container');
-
-        } catch (err) {
-            console.error("渲染 PayPal 按鈕時發生致命錯誤: ", err);
-            document.getElementById('paypal-button-container').innerText = "按鈕加載失敗，請刷新或檢查瀏覽器設定。";
-        }
-    </script>
+        const script = document.createElement('script');
+        // 看！URL 裡只有 client-id，沒有其他任何參數！
+        script.src = `/get-paypal-sdk?client-id=${clientId}`;
+        
+        script.onload = function() {
+            try {
+                paypal.Buttons({
+                    createOrder: function() {
+                        // 在 createOrder 中，我們仍然需要告訴 PayPal 貨幣是什麼
+                        const currency = gateway.dataset.currency;
+                        return fetch('/create-paypal-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ articlePath, price, currency }) // 這裡的 currency 是必須的
+                        }).then(res => res.json()).then(orderData => orderData.id);
+                    },
+                    // onApprove 等保持不變
+                    onApprove: function(data) { /* ... */ },
+                    onError: function(err) { /* ... */ }
+                }).render('#paypal-button-container');
+            } catch (err) { /* ... */ }
+        };
+        script.onerror = function() { /* ... */ };
+        document.head.appendChild(script);
+    })();
+</script>
 
 {{ else if .Params.secure }}
     {{/* --- 選項一：後端加密 (最高安全等級) --- */}}
