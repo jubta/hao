@@ -122,6 +122,10 @@
 {{ if .Params.secure }}
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
+    
+    <!-- 移动端调试，部署完成找到页面底部小图标点开即可 -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
 
     <!-- PayPal SDK -->
     <script defer
