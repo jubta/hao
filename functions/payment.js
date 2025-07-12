@@ -6,7 +6,7 @@ export async function onRequestPost(context) {
   // 1. 呼叫 PayPal API 驗證訂單狀態
   const auth = Buffer.from(env.PAYPAL_CLIENT_ID + ':' + env.PAYPAL_CLIENT_SECRET).toString('base64');
   // 先取得 access token
-  let res = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+  let res = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
     method: 'POST',
     headers: {
       'Authorization': `Basic ${auth}`,
@@ -17,7 +17,8 @@ export async function onRequestPost(context) {
   const { access_token } = await res.json();
 
   // 再用 access token 查訂單詳情
-  res = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderID}`, {
+  res = await fetch(
+  `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
     method: 'GET',
     headers: { 'Authorization': `Bearer ${access_token}` }
   });
