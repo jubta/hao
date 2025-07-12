@@ -15,8 +15,9 @@ export async function onRequestPost({ request, env }) {
     }
   );
   if (!res.ok) {
-    console.error('Error fetching access token:', await res.text());
-    return new Response(JSON.stringify({ error: '無法取得 PayPal token' }), { status: 500 });
+  const text = await res.text();
+  console.error('Error fetching access token, status:', res.status, 'body:', text);
+  return new Response(JSON.stringify({ error: '無法取得 PayPal token' }), { status: 500 });
   }
   const { access_token } = await res.json();
 
