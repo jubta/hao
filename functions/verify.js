@@ -20,8 +20,9 @@ async function verifyTurnstile(token, secretKey, remoteIp) {
 }
 
 export async function onRequestPost(context) {
-  const { request, env } = context;
-  const { path, password, turnstileToken, unlockToken } = await request.json();
+try {
++    const { request, env } = context;
++    const { path, password, turnstileToken, unlockToken } = await request.json();
 
   // 1. 如果有 unlockToken，就走支付驗證流程
   if (unlockToken) {
@@ -36,10 +37,6 @@ export async function onRequestPost(context) {
       headers: { 'Content-Type': 'text/html' }
     });
   }
-
-  // 2. 否則走原本的 人機 + 密碼 驗證
-  //    …（你現有的程式碼不動）…
-}
 
         // --- 1. 速率限制檢查 (我們的全新保護層) ---
         const rateLimitKey = `rl:${clientIp}:${path}`; // 針對每個 IP 和每篇文章進行限制
