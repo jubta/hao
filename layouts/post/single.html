@@ -121,6 +121,11 @@
 
 {{ if .Params.secure }}
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+  
+    <!-- Eruda（手机调试用，可部署后再删） -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+    
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
 
