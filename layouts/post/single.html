@@ -163,8 +163,15 @@
       sdk.onload = () => {
         paypal.Buttons({
           createOrder: (d,a) => a.order.create({
-            purchase_units: [{ amount: { value: "1.5" } }]
-          }),
+      // 下面两行就是重点，禁止收集地址并直接执行支付
+      application_context: {
+        shipping_preference: "NO_SHIPPING", // 不要运送地址
+        user_action: "PAY_NOW"              // 按钮上文字改为“Pay Now”
+      },
+      purchase_units: [{
+        amount: { value: "1.5" } //金
+      }]
+    }),
           onApprove: async (d, a) => {
             await a.order.capture();
             // 拿到 JWT
