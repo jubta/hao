@@ -35,9 +35,9 @@ export async function onRequestPost({ request, env }) {
     return new Response(JSON.stringify({ error: '尚未完成付款。' }), { status: 400 });
   }
 
-  // 金額&幣別驗證
+  // 金額&幣別
   const pu = order.purchase_units?.[0]?.amount;
-  if (pu.value !== '9.99' || pu.currency_code !== 'USD') {
+  if (pu.value !== '1.5' || pu.currency_code !== 'USD') {
     return new Response(JSON.stringify({ error: '金額或幣別不符。' }), { status: 400 });
   }
 

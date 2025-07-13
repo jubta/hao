@@ -163,7 +163,7 @@
       sdk.onload = () => {
         paypal.Buttons({
           createOrder: (d,a) => a.order.create({
-            purchase_units: [{ amount: { value: "9.99" } }]
+            purchase_units: [{ amount: { value: "1.5" } }]
           }),
           onApprove: async (d, a) => {
             await a.order.capture();
