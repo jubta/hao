@@ -8,7 +8,7 @@ export async function onRequestPost({ request, env }) {
 
   // ——— 1) 验证 PayPal 订单（略：取 token、GET /orders/{id}、金额 & capture 检查） ———
   const auth = btoa(env.PAYPAL_CLIENT_ID + ':' + env.PAYPAL_CLIENT_SECRET);
-  let res = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
+  let res = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
     method: 'POST',
     headers: {
       'Authorization': `Basic ${auth}`,
@@ -22,7 +22,7 @@ export async function onRequestPost({ request, env }) {
   }
   const { access_token } = await res.json();
 
-  res = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
+  res = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderID}`, {
     headers: { 'Authorization': `Bearer ${access_token}` }
   });
   if (!res.ok) {
