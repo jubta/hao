@@ -21,28 +21,56 @@ async function verifyTurnstile(token, secretKey, remoteIp) {
   return data.success
 }
 
-export async function onRequestPost(context) {
-  try {
-    const { request, env } = context
-    const { path, password, turnstileToken, unlockToken } = await request.json()
+// functions/verify.js
+// ———————————
+// 负责：验证前端发来的 JWT，返回文章 HTML
+// ———————————
 
-    // === 支付解鎖流程 ===
-    if (unlockToken) {
-      const paid = await env.SECURE_CONTENT.get(
-        `payunlock:${path}:${unlockToken}`
-      )
-      if (!paid) {
-        return new Response(
-          JSON.stringify({ error: '無效或已過期的解鎖憑證。' }),
-          { status: 401 }
-        )
-      }
-      const html = await env.SECURE_CONTENT.get(`content:${path}`)
-      return new Response(html, {
-        status: 200,
-        headers: { 'Content-Type': 'text/html' },
-      })
-    }
+export async function onRequestPost({ request, env }) {
+  const { path, token } = await request.json();
+  if (!token) {
+    return new Response(JSON.stringify({ error: '缺少 token。' }), { status: 401 });
+  }
+
+  // 拆分 JWT
+  const [hB64, pB64, sig] = token.split('.');
+  const data = `${hB64}.${pB64}`;
+
+  // 验签
+  const JWT_SECRET = env.JWT_SIGNING_KEY;
+  const key = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(JWT_SECRET),
+    { name:'HMAC', hash:'SHA-256' }, false, ['verify']
+  );
+  const valid = await crypto.subtle.verify(
+    'HMAC', key,
+    Uint8Array.from(atob(sig.replace(/-/g,'+').replace(/_/g,'/')), c=>c.charCodeAt(0)),
+    new TextEncoder().encode(data)
+  );
+  if (!valid) {
+    return new Response(JSON.stringify({ error: 'Invalid token' }), { status: 401 });
+  }
+
+  // 解码 payload
+  const payload = JSON.parse(atob(pB64.replace(/-/g,'+').replace(/_/g,'/')));
+  if (payload.path !== path) {
+    return new Response(JSON.stringify({ error: 'Path mismatch' }), { status: 403 });
+  }
+  if (payload.exp < Math.floor(Date.now()/1000)) {
+    return new Response(JSON.stringify({ error: 'Token expired' }), { status: 401 });
+  }
+
+  // 从 KV 读文章内容
+  const html = await env.SECURE_CONTENT.get(`content:${path}`);
+  if (!html) {
+    return new Response(JSON.stringify({ error: '文章未找到。' }), { status: 404 });
+  }
+
+  return new Response(html, {
+    status: 200,
+    headers: { 'Content-Type': 'text/html' }
+  });
+}
 
     // === 人機 + 密碼保護流程 ===
     const clientIp =

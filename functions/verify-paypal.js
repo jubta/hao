@@ -1,46 +1,65 @@
+// functions/verify-paypal.js
+// ———————————
+// 负责：验证 PayPal 订单 → 签发 JWT token 返回给前端。
+// ———————————
+
 export async function onRequestPost({ request, env }) {
   const { path, orderID } = await request.json();
 
-  // 1) 取 access token
+  // ——— 1) 验证 PayPal 订单（略：取 token、GET /orders/{id}、金额 & capture 检查） ———
   const auth = btoa(env.PAYPAL_CLIENT_ID + ':' + env.PAYPAL_CLIENT_SECRET);
-  let res = await fetch(
-    'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'grant_type=client_credentials'
-    }
-  );
+  let res = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'grant_type=client_credentials'
+  });
   if (!res.ok) {
-  const body = await res.text();
-  // 直接把状态码+原文透给前端
-  return new Response(body, { status: res.status });
+    const body = await res.text();
+    return new Response(body, { status: res.status });
   }
   const { access_token } = await res.json();
 
-  // 2) 驗證訂單
   res = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
     headers: { 'Authorization': `Bearer ${access_token}` }
   });
   if (!res.ok) {
-    console.error('Error fetching order:', await res.text());
     return new Response(JSON.stringify({ error: '無法查詢訂單狀態' }), { status: 500 });
   }
   const order = await res.json();
-  const isCaptured =
-    order.status === 'COMPLETED' ||
-    (order.purchase_units?.[0]?.payments?.captures?.[0]?.status === 'COMPLETED');
-  if (!isCaptured) {
+  const cap = order.status === 'COMPLETED'
+           || order.purchase_units?.[0]?.payments?.captures?.[0]?.status === 'COMPLETED';
+  if (!cap) {
     return new Response(JSON.stringify({ error: '尚未完成付款。' }), { status: 400 });
   }
 
-  // 3) 寫入 unlockToken
-  const unlockToken = crypto.randomUUID();
-  const kvKey = `payunlock:${path}:${unlockToken}`;
-  await env.SECURE_CONTENT.put(kvKey, 'true', { expirationTtl: 86400 });
+  // 金額&幣別驗證
+  const pu = order.purchase_units?.[0]?.amount;
+  if (pu.value !== '9.99' || pu.currency_code !== 'USD') {
+    return new Response(JSON.stringify({ error: '金額或幣別不符。' }), { status: 400 });
+  }
 
-  return new Response(JSON.stringify({ unlockToken }), { status: 200 });
+  // ——— 2) 签发 JWT ———
+  const JWT_SECRET = env.JWT_SIGNING_KEY;
+  const header  = { alg: 'HS256', typ: 'JWT' };
+  const payload = {
+    path,
+    iat: Math.floor(Date.now()/1000),
+    exp: Math.floor(Date.now()/1000) + 30*24*3600  // 30天后过期
+  };
+  const b64u = obj => btoa(JSON.stringify(obj))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const hB64 = b64u(header), pB64 = b64u(payload), data = `${hB64}.${pB64}`;
+  const key = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(JWT_SECRET),
+    { name:'HMAC', hash:'SHA-256' }, false, ['sign']
+  );
+  const sigBuf = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data));
+  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sigBuf)))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const token = `${data}.${sigB64}`;
+
+  return new Response(JSON.stringify({ token }), { status: 200 });
 }
