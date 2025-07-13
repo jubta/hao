@@ -129,37 +129,47 @@
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
 
-    <!-- Dynamic SDK injection + detailed onApprove logging -->
+    <!-- Dynamic SDK injection + onApprove 前端 capture -->
     <script>
       (function() {
-        // 1. 拼出 SDK URL 并打印
         const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
         const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
         console.log('🔗 PayPal SDK URL =', sdkUrl);
 
-        // 2. 动态插入 SDK
         const sdk = document.createElement('script');
         sdk.src = sdkUrl;
         sdk.onload = () => {
           console.log('✅ PayPal SDK 加載成功，開始渲染按鈕');
 
           paypal.Buttons({
+            // 建立訂單
             createOrder: (data, actions) =>
               actions.order.create({ purchase_units: [{ amount: { value: "9.99" } }] }),
 
-            onApprove: async (data) => {
-              const orderID = data.orderID;
-              console.log('🍀 付款授權，orderID =', orderID);
+            // 付款授權後，先捕獲(Order Capture)，再呼叫 /verify-paypal
+            onApprove: async (data, actions) => {
+              console.log('🍀 付款授權，orderID =', data.orderID);
 
-              // 调用 /verify-paypal
-              console.log('🛠️ 呼叫 /verify-paypal');
+              // 1. 前端捕獲
+              let captureResult;
+              try {
+                captureResult = await actions.order.capture();
+                console.log('✅ 前端已捕獲:', captureResult);
+              } catch (err) {
+                console.error('❌ 前端捕獲失敗:', err);
+                document.getElementById('error-message').textContent = '訂單捕獲失敗，請稍後重試。';
+                return;
+              }
+
+              // 2. 取回捕獲後的 orderID
+              const orderID = captureResult.id || data.orderID;
+
+              // 3. 呼叫 /verify-paypal
+              console.log('🛠️ 呼叫 /verify-paypal, orderID =', orderID);
               const res = await fetch('/verify-paypal', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  path: window.location.pathname,
-                  orderID
-                })
+                body: JSON.stringify({ path: window.location.pathname, orderID })
               });
               console.log('🔔 /verify-paypal 回應狀態 =', res.status);
               const text = await res.text();
@@ -170,19 +180,15 @@
                 return;
               }
 
-              // 解析 unlockToken
+              // 4. 解析 unlockToken，呼叫 /verify
               const { unlockToken } = JSON.parse(text);
               console.log('🗝️ 收到 unlockToken =', unlockToken);
 
-              // 调用 /verify
               console.log('🛠️ 呼叫 /verify');
               const res2 = await fetch('/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  path: window.location.pathname,
-                  unlockToken
-                })
+                body: JSON.stringify({ path: window.location.pathname, unlockToken })
               });
               console.log('🔔 /verify 回應狀態 =', res2.status);
               const html = await res2.text();
