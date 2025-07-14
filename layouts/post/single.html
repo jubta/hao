@@ -125,9 +125,7 @@
   <script>eruda.init();</script>
 
 <!-- 安全內容區塊 -->
-<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}"
-     data-price="{{ .Params.price | default "1.50" }}"
-     data-currency="{{ .Params.currency | default "USD" }}">
+<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
 </div>
@@ -190,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             user_action: 'PAY_NOW'
           },
           purchase_units: [{
-            amount: { value: price, currency_code: currency }
+            amount: { value: '1.50', currency_code: 'USD' }
           }]
         });
       },
