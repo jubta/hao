@@ -156,9 +156,11 @@
   const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
   console.log('PayPal Client ID =', clientId);
 
-  // ←—— 这里改为单个模板字符串，不再用 + 拼接 ——→
-    const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&shipping_preference=NO_SHIPPING&user-action=PAY_NOW`;
-    console.log('📦 PayPal SDK URL =', sdkUrl);
+  <!-- 1) 直接引入 PayPal SDK，Hugo 帮你安全填入 client-id -->
+  <script
+    src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&shipping_preference=NO_SHIPPING&user-action=PAY_NOW" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
+    data-sdk-integration-source="button-factory">
+  </script>
 
   const sdk = document.createElement('script');
   sdk.src = sdkUrl;
