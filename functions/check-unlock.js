@@ -2,7 +2,7 @@ export async function onRequestPost({ request, env }) {
   try {
     const { path, userId } = await request.json();
     if (!path || !userId) {
-      return new Response(JSON.stringify({ error: '缺少 path 或 userId' }), { status: 401 });
+      return new Response(JSON.stringify({ error: '缺少 path 或 userId' }), { status: 400 });
     }
 
     const html = await env.SECURE_CONTENT.get(`unlock:${userId}:${path}`);
@@ -15,7 +15,7 @@ export async function onRequestPost({ request, env }) {
 
     return new Response(JSON.stringify({ error: '未解鎖' }), { status: 404 });
   } catch (err) {
-    console.error('[verify] error:', err);
+    console.error('[check-unlock] error:', err);
     return new Response(JSON.stringify({ error: '伺服器錯誤，請稍後重試' }), { status: 500 });
   }
 }
