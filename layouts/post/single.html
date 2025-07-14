@@ -124,7 +124,7 @@
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
   
-  <!-- Secure 模式：只有 PayPal + JWT 解鎖，不要任何 form 代码 -->
+  <!-- Secure 模式：只有 PayPal + JWT，不要密碼 form 相關代碼 -->
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
@@ -136,25 +136,25 @@
     const jwtKey = `jwt:${path}`;
     const savedToken = localStorage.getItem(jwtKey);
 
-    // 已存 JWT? 直接解鎖
+    // 如果 localStorage 有 token，先自動解鎖
     if (savedToken) {
       fetch('/verify', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({ path, token: savedToken })
       })
-      .then(r=> r.ok? r.text(): Promise.reject())
-      .then(html=> {
-        document.getElementById('secure-content-placeholder').innerHTML = html;
-      })
-      .catch(()=>{
-        localStorage.removeItem(jwtKey);
-        document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
-      });
+        .then(r => r.ok ? r.text() : Promise.reject())
+        .then(html => {
+          document.getElementById('secure-content-placeholder').innerHTML = html;
+        })
+        .catch(() => {
+          localStorage.removeItem(jwtKey);
+          document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
+        });
       return;
     }
 
-    // 否則注入 PayPal SDK
+    // 否則載入 PayPal SDK
     const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" | safeURL }}";
     console.log('PayPal Client ID =', clientId);
     const sdkUrl = [
@@ -170,27 +170,27 @@
     sdk.src = sdkUrl;
     sdk.onload = () => {
       paypal.Buttons({
-        createOrder: (d,a)=> a.order.create({
+        createOrder: (d,a) => a.order.create({
           application_context:{
             shipping_preference:"NO_SHIPPING",
             user_action:"PAY_NOW"
           },
           purchase_units:[{ amount:{ value:"1.5" } }]
         }),
-        onApprove: async (d,a)=>{
+        onApprove: async (d,a) => {
           await a.order.capture();
-          const res = await fetch('/verify-paypal',{
+          const res = await fetch('/verify-paypal', {
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({ path, orderID:d.orderID })
           });
-          if(!res.ok){
-            document.getElementById('error-message').textContent='付款驗證失敗。';
+          if (!res.ok) {
+            document.getElementById('error-message').textContent = '付款驗證失敗。';
             return;
           }
           const { token } = await res.json();
-          localStorage.setItem(jwtKey,token);
-          const r2 = await fetch('/verify',{
+          localStorage.setItem(jwtKey, token);
+          const r2 = await fetch('/verify', {
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({ path, token })
@@ -198,13 +198,13 @@
           const html = await r2.text();
           document.getElementById('secure-content-placeholder').innerHTML = html;
         },
-        onError:err=>{
+        onError: err => {
           console.error(err);
-          document.getElementById('error-message').textContent='PayPal 錯誤，請重試。';
+          document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
         }
       }).render('#paypal-button-container');
     };
-    sdk.onerror = ()=>{
+    sdk.onerror = () => {
       document.getElementById('error-message').textContent = '載入 PayPal SDK 失敗';
     };
     document.head.appendChild(sdk);
@@ -213,7 +213,7 @@
 
 
 {{ else if .Params.password }}
-  <!-- Password 模式：只有這裡會有 form -->
+  <!-- Password 模式，才顯示並綁定 form -->
   <div id="encryption-container" style="text-align:center; margin:2rem;">
     <h3>🔒 請輸入密碼解鎖文章</h3>
     <form id="password-form">
@@ -226,17 +226,20 @@
     {{ .Content }}
   </div>
   <script>
+    // 只有在有 #password-form 時才綁定
     const pwForm = document.getElementById('password-form');
-    pwForm.addEventListener('submit', e=>{
-      e.preventDefault();
-      const v = document.getElementById('password-input').value;
-      if(v === "{{ .Params.password }}"){
-        document.getElementById('encryption-container').style.display='none';
-        document.getElementById('real-content-wrapper').style.display='block';
-      } else {
-        document.getElementById('pw-error').textContent='密碼錯誤';
-      }
-    });
+    if (pwForm) {
+      pwForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const val = document.getElementById('password-input').value;
+        if (val === "{{ .Params.password }}") {
+          document.getElementById('encryption-container').style.display='none';
+          document.getElementById('real-content-wrapper').style.display='block';
+        } else {
+          document.getElementById('pw-error').textContent='密碼錯誤';
+        }
+      });
+    }
   </script>
 
 {{ else }}
