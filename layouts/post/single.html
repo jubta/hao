@@ -124,29 +124,6 @@
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.17.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.17.0/firebase-auth.js"></script>
-
-<!-- Firebase 配置 -->
-<script>
-  const firebaseConfig = {
-    apiKey: "{{ getenv "FIREBASE_API_KEY" }}",
-    authDomain: "{{ getenv "FIREBASE_AUTH_DOMAIN" }}",
-    projectId: "{{ getenv "FIREBASE_PROJECT_ID" }}",
-    storageBucket: "{{ getenv "FIREBASE_STORAGE_BUCKET" }}",
-    messagingSenderId: "{{ getenv "FIREBASE_MESSAGING_SENDER_ID" }}",
-    appId: "{{ getenv "FIREBASE_APP_ID" }}"
-  };
-  console.log('Firebase Config:', firebaseConfig); // 檢查配置值
-  try {
-    firebase.initializeApp(firebaseConfig);
-  } catch (err) {
-    console.error('Firebase 初始化失敗:', err);
-    document.getElementById('error-message')?.textContent = '❌ Firebase 初始化失敗，請稍後重試';
-  }
-</script>
-
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}"
      data-price="{{ .Params.price | default "1.50" }}"
@@ -157,64 +134,54 @@
 
 <!-- PayPal SDK -->
 <script
-  src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&components=buttons" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
+  src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&components=buttons" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
   data-sdk-integration-source="button-factory"
   async
 ></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 檢查 Firebase 是否可用
-  if (typeof firebase === 'undefined' || !firebase.auth) {
-    console.error('Firebase SDK 未載入');
-    document.getElementById('error-message')?.textContent = '❌ Firebase SDK 載入失敗，請稍後重試';
-    initPayPalFlow(null);
-    return;
-  }
+  // 等待 PayPal SDK 載入
+  const checkPayPal = setInterval(() => {
+    if (window.paypal) {
+      clearInterval(checkPayPal);
+      initPayPalFlow();
+    }
+  }, 100);
 
-  firebase.auth().signInAnonymously().then(user => {
-    const userId = user.user.uid;
-    initPayPalFlow(userId);
-  }).catch(err => {
-    console.error('Firebase 登入失敗:', err);
-    document.getElementById('error-message')?.textContent = '❌ 無法驗證用戶身份，請稍後重試';
-    initPayPalFlow(null);
-  });
-
-  function initPayPalFlow(userId) {
+  function initPayPalFlow() {
     const path = window.location.pathname;
+    const jwtKey = 'jwt:' + path;
+    const savedToken = localStorage.getItem(jwtKey);
     const errorMessage = document.getElementById('error-message');
-    const placeholder = document.getElementById('secure-content-placeholder');
-    const price = placeholder.dataset.price || '1.50';
-    const currency = placeholder.dataset.currency || 'USD';
 
-    // 如果有 userId，檢查解鎖狀態
-    if (userId) {
-      fetch('/check-unlock', {
+    // 已付款，驗證 token
+    if (savedToken) {
+      fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, userId })
+        body: JSON.stringify({ path, token: savedToken })
       })
-      .then(r => r.ok ? r.text() : Promise.reject())
+      .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
       .then(html => {
-        placeholder.innerHTML = html;
+        document.getElementById('secure-content-placeholder').innerHTML = html;
       })
-      .catch(() => {
-        renderPayPalButton(path, errorMessage, placeholder, price, currency, userId);
+      .catch(err => {
+        localStorage.removeItem(jwtKey);
+        errorMessage.textContent = '⚠️ 自動解鎖失敗，請重新整理頁面';
+        console.error('驗證錯誤:', err);
       });
-    } else {
-      // 無 userId，直接渲染 PayPal 按鈕
-      renderPayPalButton(path, errorMessage, placeholder, price, currency, null);
+      return;
     }
-  }
 
-  function renderPayPalButton(path, errorMessage, placeholder, price, currency, userId) {
+    // 檢查 PayPal SDK 是否可用
     if (!window.paypal) {
-      errorMessage?.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
+      errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
       console.error('PayPal SDK 未載入');
       return;
     }
 
+    // 渲染 PayPal 按鈕
     paypal.Buttons({
       createOrder: (data, actions) => {
         return actions.order.create({
@@ -233,51 +200,42 @@ document.addEventListener('DOMContentLoaded', () => {
           const res = await fetch('/verify-paypal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, orderID: data.orderID, userId, price, currency })
+            body: JSON.stringify({ path, orderID: data.orderID })
           });
 
           if (!res.ok) {
-            errorMessage?.textContent = '❌ 付款驗證失敗，請聯絡站長';
+            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
             throw new Error('驗證 PayPal 失敗');
           }
+
+          const { token } = await res.json();
+          localStorage.setItem(jwtKey, token);
 
           const r2 = await fetch('/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, userId })
+            body: JSON.stringify({ path, token })
           });
 
           if (!r2.ok) {
-            errorMessage?.textContent = '❌ 內容解鎖失敗，請聯絡站長';
+            errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
             throw new Error('內容解鎖失敗');
           }
 
           const html = await r2.text();
-          placeholder.innerHTML = html;
+          document.getElementById('secure-content-placeholder').innerHTML = html;
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
-          errorMessage?.textContent = '❌ 付款處理失敗，請稍後重試';
+          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
         }
       },
       onError: err => {
         console.error('PayPal 按鈕錯誤:', err);
-        errorMessage?.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+        errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
       }
     }).render('#paypal-button-container');
   }
 });
-</script>
-
-<!-- 檢查 form 元素 -->
-<script>
-  const form = document.querySelector('form');
-  if (form) {
-    form.addEventListener('submit', e => {
-      console.log('Form submitted');
-    });
-  } else {
-    console.warn('No form element found on page');
-  }
 </script>
 
 {{ else if .Params.password }}

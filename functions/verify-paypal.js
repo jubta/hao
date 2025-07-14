@@ -1,13 +1,13 @@
+// functions/verify-paypal.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, orderID, userId, price, currency } = await request.json();
-    // 允許 userId 為 null，但其他字段必須存在
-    if (!path || !orderID || !price || !currency) {
-      return new Response(JSON.stringify({ error: '缺少 path, orderID, price 或 currency' }), { status: 400 });
+    const { path, orderID } = await request.json();
+    if (!path || !orderID) {
+      return new Response(JSON.stringify({ error: '缺少 path 或 orderID' }), { status: 400 });
     }
-    console.log('[verify-paypal] path=', path, 'orderID=', orderID, 'userId=', userId, 'price=', price, 'currency=', currency);
+    console.log('[verify-paypal] path=', path, 'orderID=', orderID);
 
-    // 驗證 PayPal 訂單
+    // 1) 驗證 PayPal 訂單
     const auth = btoa(`${env.PAYPAL_CLIENT_ID}:${env.PAYPAL_CLIENT_SECRET}`);
     const tokenRes = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
       method: 'POST',
@@ -36,26 +36,50 @@ export async function onRequestPost({ request, env }) {
     }
     const order = await orderRes.json();
 
+    // 檢查訂單狀態
     const captured = order.status === 'COMPLETED' ||
       order.purchase_units?.[0]?.payments?.captures?.[0]?.status === 'COMPLETED';
     if (!captured) {
       return new Response(JSON.stringify({ error: '尚未完成付款', order }), { status: 400 });
     }
 
+    // 檢查金額與幣別
     const pu = order.purchase_units?.[0]?.amount;
-    if (pu.value !== price || pu.currency_code !== currency) {
+    if (pu.value !== '1.50' || pu.currency_code !== 'USD') {
       return new Response(JSON.stringify({ error: '金額或幣別不符' }), { status: 400 });
     }
 
-    // 儲存解鎖狀態到 KV（即使 userId 為 null，也儲存臨時解鎖）
-    const html = await env.SECURE_CONTENT.get(`content:${path}`);
-    if (!html) {
-      return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
-    }
-    const kvKey = userId ? `unlock:${userId}:${path}` : `unlock:guest:${path}`;
-    await env.SECURE_CONTENT.put(kvKey, html, { expirationTtl: 30 * 24 * 3600 });
+    // 2) 簽發 JWT
+    const JWT_SECRET = env.JWT_SIGNING_KEY;
+    const header = { alg: 'HS256', typ: 'JWT' };
+    const payload = {
+      path,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 30 * 24 * 3600
+    };
 
-    return new Response(JSON.stringify({ success: true }), {
+    const b64u = obj => btoa(JSON.stringify(obj))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    const hB64 = b64u(header);
+    const pB64 = b64u(payload);
+    const data = `${hB64}.${pB64}`;
+
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(JWT_SECRET),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const sigBuf = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data));
+    const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sigBuf)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    const token = `${data}.${sigB64}`;
+    console.log('[verify-paypal] issued JWT');
+
+    return new Response(JSON.stringify({ token }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
