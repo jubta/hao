@@ -131,7 +131,7 @@
 
 <!-- PayPal SDK：靜態 script，& 要寫成 &amp; -->
 <script
-  src="https://www.paypal.com/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&amp;currency=USD&amp;shipping_preference=NO_SHIPPING&amp;user-action=PAY_NOW"
+  src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&shipping_preference=NO_SHIPPING&user-action=PAY_NOW" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
   data-sdk-integration-source="button-factory"
   onload="initPayPalFlow()"
   onerror="document.getElementById('error-message').textContent = '❌ 無法載入 PayPal SDK，請稍後重試';">
