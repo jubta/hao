@@ -119,90 +119,100 @@
       
 {{/* --- 開始：混合式加密系統 --- */}}
 {{ if .Params.secure }}
-  <!-- Eruda 手机调试：部署测试完毕可删除 -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
+<!-- Eruda 調試工具（記得部署正式時刪除） -->
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
 
-  <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-    <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
-    <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
-  </div>
+<!-- 安全內容區塊 -->
+<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+  <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
+  <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
+</div>
 
-  <!-- 1. 静态加载 PayPal SDK，注意这里的 &amp; -->
-  <script
-    src="https://www.paypal.com/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&amp;currency=USD&amp;shipping_preference=NO_SHIPPING&amp;user-action=PAY_NOW"
-    data-sdk-integration-source="button-factory">
-  </script>
+<!-- PayPal SDK：靜態 script，& 要寫成 &amp; -->
+<script
+  src="https://www.paypal.com/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&amp;currency=USD&amp;shipping_preference=NO_SHIPPING&amp;user-action=PAY_NOW"
+  data-sdk-integration-source="button-factory"
+  onload="initPayPalFlow()"
+  onerror="document.getElementById('error-message').textContent = '❌ 無法載入 PayPal SDK，請稍後重試';">
+</script>
 
-  <!-- 2. 渲染按鈕 & JWT 解鎖 -->
-  <script>
-  (function(){
-    const path       = window.location.pathname;
-    const jwtKey     = 'jwt:' + path;
-    const savedToken = localStorage.getItem(jwtKey);
+<script>
+function initPayPalFlow() {
+  const path = window.location.pathname;
+  const jwtKey = 'jwt:' + path;
+  const savedToken = localStorage.getItem(jwtKey);
 
-    // 如果已有 token，直接呼 /verify 自動解鎖
-    if (savedToken) {
-      fetch('/verify', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ path, token: savedToken })
-      })
-      .then(r => r.ok ? r.text() : Promise.reject())
-      .then(html => {
-        document.getElementById('secure-content-placeholder').innerHTML = html;
-      })
-      .catch(() => {
-        localStorage.removeItem(jwtKey);
-        document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
+  // 已經付款過，就驗證 token
+  if (savedToken) {
+    fetch('/verify', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ path, token: savedToken })
+    })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(html => {
+      document.getElementById('secure-content-placeholder').innerHTML = html;
+    })
+    .catch(() => {
+      localStorage.removeItem(jwtKey);
+      document.getElementById('error-message').textContent = '⚠️ 自動解鎖失敗，請重新整理頁面';
+    });
+    return;
+  }
+
+  // 確保 PayPal 已經載入
+  if (!window.paypal) {
+    document.getElementById('error-message').textContent = '❌ PayPal SDK 尚未載入，請稍後重試';
+    return;
+  }
+
+  // 渲染 PayPal 按鈕
+  paypal.Buttons({
+    createOrder: (data, actions) => {
+      return actions.order.create({
+        application_context: {
+          shipping_preference: "NO_SHIPPING",
+          user_action: "PAY_NOW"
+        },
+        purchase_units: [{
+          amount: { value: "1.50" }
+        }]
       });
-      return;
-    }
+    },
+    onApprove: async (data, actions) => {
+      await actions.order.capture();
 
-    // 確保 SDK 已載入
-    if (!window.paypal) {
-      document.getElementById('error-message').textContent = 'PayPal SDK 尚未載入，請稍後重試';
-      return;
-    }
+      const res = await fetch('/verify-paypal', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ path, orderID: data.orderID })
+      });
 
-    // 渲染 Smart Buttons
-    paypal.Buttons({
-      createOrder: (d, a) =>
-        a.order.create({
-          application_context:{
-            shipping_preference: "NO_SHIPPING",
-            user_action:         "PAY_NOW"
-          },
-          purchase_units: [{ amount:{ value:"1.50" } }]
-        }),
-      onApprove: async (d, a) => {
-        await a.order.capture();
-        const res = await fetch('/verify-paypal', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ path, orderID: d.orderID })
-        });
-        if (!res.ok) {
-          document.getElementById('error-message').textContent = '付款驗證失敗';
-          return;
-        }
-        const { token } = await res.json();
-        localStorage.setItem(jwtKey, token);
-        const r2 = await fetch('/verify', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ path, token })
-        });
-        const html = await r2.text();
-        document.getElementById('secure-content-placeholder').innerHTML = html;
-      },
-      onError: err => {
-        console.error(err);
-        document.getElementById('error-message').textContent = 'PayPal 按鈕錯誤，請重試';
+      if (!res.ok) {
+        document.getElementById('error-message').textContent = '❌ 付款驗證失敗，請聯絡站長';
+        return;
       }
-    }).render('#paypal-button-container');
-  })();
-  </script>
+
+      const { token } = await res.json();
+      localStorage.setItem(jwtKey, token);
+
+      const r2 = await fetch('/verify', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ path, token })
+      });
+
+      const html = await r2.text();
+      document.getElementById('secure-content-placeholder').innerHTML = html;
+    },
+    onError: err => {
+      console.error('PayPal 錯誤', err);
+      document.getElementById('error-message').textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+    }
+  }).render('#paypal-button-container');
+}
+</script>
 
 {{ else if .Params.password }}
   <!-- 只有 password 模式下才跑這段 form -->
