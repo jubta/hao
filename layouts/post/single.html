@@ -132,7 +132,7 @@
 
 <!-- PayPal SDK -->
 <script
-  src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&components=buttons&disable-funding=card" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
+  src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&components=buttons" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
   data-sdk-integration-source="button-factory"
   async
 ></script>
