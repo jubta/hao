@@ -118,93 +118,92 @@
       {{ end }}
       
 {{ if .Params.secure }}
-<!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
-  
-<!-- === Secure 模式 (PayPal + JWT 解锁) === -->
-<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-  <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
-  <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
-</div>
+  <!-- Eruda 手机调试：部署完记得删掉 -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
 
-<script>
-;(function(){
-  const path = window.location.pathname;
-  const jwtKey = `jwt:${path}`;
-  const savedToken = localStorage.getItem(jwtKey);
+  <!-- 文章解锁容器 -->
+  <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+    <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
+    <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
+  </div>
 
-  // 1. 自动解锁
-  if (savedToken) {
-    fetch('/verify', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ path, token: savedToken })
-    })
-    .then(r => r.ok ? r.text() : Promise.reject())
-    .then(html => {
-      document.getElementById('secure-content-placeholder').innerHTML = html;
-    })
-    .catch(() => {
-      localStorage.removeItem(jwtKey);
-      document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
-    });
-    return;
-  }
-
-  // 直接把 Client-ID 注入成纯字符串
-  const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
-  console.log('PayPal Client ID =', clientId);
-
-  <!-- 1) 直接引入 PayPal SDK，Hugo 帮你安全填入 client-id -->
+  <!-- 1) 直接引入 PayPal SDK，Hugo 帮你填入 client-id -->
   <script
     src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&shipping_preference=NO_SHIPPING&user-action=PAY_NOW" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
     data-sdk-integration-source="button-factory">
   </script>
 
-  const sdk = document.createElement('script');
-  sdk.src = sdkUrl;
-  sdk.onload = () => {
-    paypal.Buttons({
-      createOrder: (data, actions) => actions.order.create({
-        application_context: {
-          shipping_preference: "NO_SHIPPING",
-          user_action: "PAY_NOW"
-        },
-        purchase_units: [{ amount: { value: "1.5" } }]
-      }),
-      onApprove: async (data, actions) => {
-        await actions.order.capture();
-        const res = await fetch('/verify-paypal', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ path, orderID: data.orderID })
+  <!-- 2) PayPal 按钮逻辑 -->
+  <script>
+    (function(){
+      const path       = window.location.pathname;
+      const jwtKey     = `jwt:${path}`;
+      const savedToken = localStorage.getItem(jwtKey);
+
+      // 已有 JWT？自动解锁
+      if (savedToken) {
+        fetch('/verify', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ path, token: savedToken })
+        })
+        .then(r => r.ok ? r.text() : Promise.reject())
+        .then(html => {
+          document.getElementById('secure-content-placeholder').innerHTML = html;
+        })
+        .catch(() => {
+          localStorage.removeItem(jwtKey);
+          document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
         });
-        if (!res.ok) {
-          document.getElementById('error-message').textContent = '付款驗證失敗。';
-          return;
-        }
-        const { token } = await res.json();
-        localStorage.setItem(jwtKey, token);
-        const r2 = await fetch('/verify', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ path, token })
-        });
-        document.getElementById('secure-content-placeholder').innerHTML = await r2.text();
-      },
-      onError: err => {
-        console.error(err);
-        document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
+        return;
       }
-    }).render('#paypal-button-container');
-  };
-  sdk.onerror = () => {
-    document.getElementById('error-message').textContent = '載入 PayPal SDK 失敗';
-  };
-  document.head.appendChild(sdk);
-})();
-</script>
+
+      // 渲染 PayPal 按钮
+      paypal.Buttons({
+        createOrder: (data, actions) =>
+          actions.order.create({
+            application_context:{
+              shipping_preference:"NO_SHIPPING",
+              user_action:"PAY_NOW"
+            },
+            purchase_units:[{ amount:{ value:"1.50" } }]
+          }),
+
+        onApprove: async (data, actions) => {
+          // 前端 capture
+          await actions.order.capture();
+
+          // server-side 验证并拿 JWT
+          const res = await fetch('/verify-paypal', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ path, orderID: data.orderID })
+          });
+          if (!res.ok) {
+            document.getElementById('error-message').textContent = '付款驗證失敗。';
+            return;
+          }
+          const { token } = await res.json();
+
+          // 存 JWT 并去 /verify 拿内容
+          localStorage.setItem(jwtKey, token);
+          const res2 = await fetch('/verify', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ path, token })
+          });
+          const html = await res2.text();
+          document.getElementById('secure-content-placeholder').innerHTML = html;
+        },
+
+        onError: err => {
+          console.error(err);
+          document.getElementById('error-message').textContent = 'PayPal 按鈕出錯，請重試。';
+        }
+      }).render('#paypal-button-container');
+    })();
+  </script>
 
 {{ else if .Params.password }}
   <!-- === Password 模式 (前端解密) === -->
