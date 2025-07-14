@@ -130,15 +130,20 @@
 
 <!-- Firebase 配置 -->
 <script>
-  const firebaseConfig = {
-    apiKey: "{{ getenv "FIREBASE_API_KEY" }}",
-    authDomain: "{{ getenv "FIREBASE_AUTH_DOMAIN" }}",
-    projectId: "{{ getenv "FIREBASE_PROJECT_ID" }}",
-    storageBucket: "{{ getenv "FIREBASE_STORAGE_BUCKET" }}",
-    messagingSenderId: "{{ getenv "FIREBASE_MESSAGING_SENDER_ID" }}",
-    appId: "{{ getenv "FIREBASE_APP_ID" }}"
-  };
-  firebase.initializeApp(firebaseConfig);
+  try {
+    const firebaseConfig = {
+      apiKey: "{{ getenv "FIREBASE_API_KEY" }}",
+      authDomain: "{{ getenv "FIREBASE_AUTH_DOMAIN" }}",
+      projectId: "{{ getenv "FIREBASE_PROJECT_ID" }}",
+      storageBucket: "{{ getenv "FIREBASE_STORAGE_BUCKET" }}",
+      messagingSenderId: "{{ getenv "FIREBASE_MESSAGING_SENDER_ID" }}",
+      appId: "{{ getenv "FIREBASE_APP_ID" }}"
+    };
+    firebase.initializeApp(firebaseConfig);
+  } catch (err) {
+    console.error('Firebase 初始化失敗:', err);
+    document.getElementById('error-message').textContent = '❌ Firebase 初始化失敗，請稍後重試';
+  }
 </script>
 
 <!-- 安全內容區塊 -->
@@ -158,12 +163,23 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // 檢查 Firebase 是否可用
+  if (typeof firebase === 'undefined' || !firebase.auth) {
+    console.error('Firebase SDK 未載入');
+    document.getElementById('error-message').textContent = '❌ Firebase SDK 載入失敗，請稍後重試';
+    // 即使 Firebase 失敗，仍嘗試顯示 PayPal 按鈕
+    initPayPalFlow(null);
+    return;
+  }
+
   firebase.auth().signInAnonymously().then(user => {
     const userId = user.user.uid;
     initPayPalFlow(userId);
   }).catch(err => {
     console.error('Firebase 登入失敗:', err);
     document.getElementById('error-message').textContent = '❌ 無法驗證用戶身份，請稍後重試';
+    // 即使登入失敗，仍嘗試顯示 PayPal 按鈕
+    initPayPalFlow(null);
   });
 
   function initPayPalFlow(userId) {
@@ -173,72 +189,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const price = placeholder.dataset.price || '1.50';
     const currency = placeholder.dataset.currency || 'USD';
 
-    fetch('/check-unlock', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path, userId })
-    })
-    .then(r => r.ok ? r.text() : Promise.reject())
-    .then(html => {
-      placeholder.innerHTML = html;
-    })
-    .catch(() => {
-      if (!window.paypal) {
-        errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
-        console.error('PayPal SDK 未載入');
-        return;
-      }
+    // 如果有 userId，檢查解鎖狀態
+    if (userId) {
+      fetch('/check-unlock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, userId })
+      })
+      .then(r => r.ok ? r.text() : Promise.reject())
+      .then(html => {
+        placeholder.innerHTML = html;
+      })
+      .catch(() => {
+        renderPayPalButton(path, errorMessage, placeholder, price, currency, userId);
+      });
+    } else {
+      // 無 userId，直接渲染 PayPal 按鈕
+      renderPayPalButton(path, errorMessage, placeholder, price, currency, null);
+    }
+  }
 
-      paypal.Buttons({
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            application_context: {
-              shipping_preference: 'NO_SHIPPING',
-              user_action: 'PAY_NOW'
-            },
-            purchase_units: [{
-              amount: { value: price, currency_code: currency }
-            }]
+  function renderPayPalButton(path, errorMessage, placeholder, price, currency, userId) {
+    if (!window.paypal) {
+      errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
+      console.error('PayPal SDK 未載入');
+      return;
+    }
+
+    paypal.Buttons({
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          application_context: {
+            shipping_preference: 'NO_SHIPPING',
+            user_action: 'PAY_NOW'
+          },
+          purchase_units: [{
+            amount: { value: price, currency_code: currency }
+          }]
+        });
+      },
+      onApprove: async (data, actions) => {
+        try {
+          await actions.order.capture();
+          const res = await fetch('/verify-paypal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, orderID: data.orderID, userId, price, currency })
           });
-        },
-        onApprove: async (data, actions) => {
-          try {
-            await actions.order.capture();
-            const res = await fetch('/verify-paypal', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ path, orderID: data.orderID, userId, price, currency })
-            });
 
-            if (!res.ok) {
-              errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
-              throw new Error('驗證 PayPal 失敗');
-            }
-
-            const r2 = await fetch('/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ path, userId })
-            });
-
-            if (!r2.ok) {
-              errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
-              throw new Error('內容解鎖失敗');
-            }
-
-            const html = await r2.text();
-            placeholder.innerHTML = html;
-          } catch (err) {
-            console.error('PayPal 處理錯誤:', err);
-            errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+          if (!res.ok) {
+            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
+            throw new Error('驗證 PayPal 失敗');
           }
-        },
-        onError: err => {
-          console.error('PayPal 按鈕錯誤:', err);
-          errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+
+          const r2 = await fetch('/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, userId })
+          });
+
+          if (!r2.ok) {
+            errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
+            throw new Error('內容解鎖失敗');
+          }
+
+          const html = await r2.text();
+          placeholder.innerHTML = html;
+        } catch (err) {
+          console.error('PayPal 處理錯誤:', err);
+          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
         }
-      }).render('#paypal-button-container');
-    });
+      },
+      onError: err => {
+        console.error('PayPal 按鈕錯誤:', err);
+        errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+      }
+    }).render('#paypal-button-container');
   }
 });
 </script>
