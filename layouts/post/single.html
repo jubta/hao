@@ -120,6 +120,10 @@
       {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
+  <!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
+  
   <!-- Secure 模式：只有 PayPal + JWT 解鎖，不要任何 form 代码 -->
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
