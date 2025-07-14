@@ -119,35 +119,34 @@
       
 {{/* --- 開始：混合式加密系統 --- */}}
 {{ if .Params.secure }}
-  <!-- （可临时加 Eruda 调试，删也行） -->
+  <!-- Eruda 手机调试：部署测试完毕可删除 -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
-  <!-- 解锁内容容器 -->
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
     <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
     <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
   </div>
 
-  <!-- 1. 直接静态加载 PayPal SDK（确保 client-id 没有多余引号） -->
+  <!-- 1. 静态加载 PayPal SDK，注意这里的 &amp; -->
   <script
-    src="https://www.paypal.com/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&currency=USD&shipping_preference=NO_SHIPPING&user-action=PAY_NOW"
+    src="https://www.paypal.com/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&amp;currency=USD&amp;shipping_preference=NO_SHIPPING&amp;user-action=PAY_NOW"
     data-sdk-integration-source="button-factory">
   </script>
 
-  <!-- 2. SDK 加载后马上渲染按钮并处理 JWT 解锁 -->
+  <!-- 2. 渲染按鈕 & JWT 解鎖 -->
   <script>
   (function(){
     const path       = window.location.pathname;
     const jwtKey     = 'jwt:' + path;
     const savedToken = localStorage.getItem(jwtKey);
 
-    // 如果 localStorage 已有 token，就直接调用 /verify 解锁
+    // 如果已有 token，直接呼 /verify 自動解鎖
     if (savedToken) {
       fetch('/verify', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ path, token: savedToken })
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ path, token: savedToken })
       })
       .then(r => r.ok ? r.text() : Promise.reject())
       .then(html => {
@@ -160,51 +159,43 @@
       return;
     }
 
-    // SDK 加载完成后 window.paypal 就存在了
+    // 確保 SDK 已載入
     if (!window.paypal) {
       document.getElementById('error-message').textContent = 'PayPal SDK 尚未載入，請稍後重試';
       return;
     }
 
-    // 渲染 PayPal Smart Buttons
+    // 渲染 Smart Buttons
     paypal.Buttons({
-      createOrder: (data, actions) =>
-        actions.order.create({
-          application_context: {
+      createOrder: (d, a) =>
+        a.order.create({
+          application_context:{
             shipping_preference: "NO_SHIPPING",
             user_action:         "PAY_NOW"
           },
-          purchase_units: [{ amount: { value: "1.50" } }]
+          purchase_units: [{ amount:{ value:"1.50" } }]
         }),
-
-      onApprove: async (data, actions) => {
-        // 前端捕獲
-        await actions.order.capture();
-
-        // call verify-paypal 簽發 JWT
+      onApprove: async (d, a) => {
+        await a.order.capture();
         const res = await fetch('/verify-paypal', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ path, orderID: data.orderID })
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ path, orderID: d.orderID })
         });
         if (!res.ok) {
           document.getElementById('error-message').textContent = '付款驗證失敗';
           return;
         }
         const { token } = await res.json();
-        // 存下 token
         localStorage.setItem(jwtKey, token);
-
-        // call /verify 拿文章
         const r2 = await fetch('/verify', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ path, token })
         });
         const html = await r2.text();
         document.getElementById('secure-content-placeholder').innerHTML = html;
       },
-
       onError: err => {
         console.error(err);
         document.getElementById('error-message').textContent = 'PayPal 按鈕錯誤，請重試';
@@ -214,7 +205,7 @@
   </script>
 
 {{ else if .Params.password }}
-  <!-- 僅在 password 模式下才顯示這段表單 -->
+  <!-- 只有 password 模式下才跑這段 form -->
   <div id="encryption-container" style="text-align:center;margin:2rem;">
     <h3>🔒 請輸入密碼解鎖文章</h3>
     <form id="password-form">
@@ -230,8 +221,7 @@
     const pwForm = document.getElementById('password-form');
     pwForm.addEventListener('submit', e => {
       e.preventDefault();
-      const val = document.getElementById('password-input').value;
-      if (val === "{{ .Params.password }}") {
+      if (document.getElementById('password-input').value === "{{ .Params.password }}") {
         document.getElementById('encryption-container').style.display       = 'none';
         document.getElementById('real-content-wrapper').style.display       = 'block';
       } else {
