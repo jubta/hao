@@ -120,11 +120,9 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda 調試工具（僅在開發環境載入） -->
-{{ if eq hugo.Environment "development" }}
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
-{{ end }}
+<!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
