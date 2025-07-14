@@ -54,6 +54,13 @@ outputs:
     - JSON
     - SITEMAP
     - ROBOTS
+    
+security:
+  funcs:
+    getenv:
+      - ^HUGO_
+      - ^CI$
+      - ^FIREBASE_
 
 paginate: 5
 
