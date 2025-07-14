@@ -1,8 +1,9 @@
 export async function onRequestPost({ request, env }) {
   try {
     const { path, orderID, userId, price, currency } = await request.json();
-    if (!path || !orderID || !userId || !price || !currency) {
-      return new Response(JSON.stringify({ error: '缺少 path, orderID, userId, price 或 currency' }), { status: 400 });
+    // 允許 userId 為 null，但其他字段必須存在
+    if (!path || !orderID || !price || !currency) {
+      return new Response(JSON.stringify({ error: '缺少 path, orderID, price 或 currency' }), { status: 400 });
     }
     console.log('[verify-paypal] path=', path, 'orderID=', orderID, 'userId=', userId, 'price=', price, 'currency=', currency);
 
@@ -46,12 +47,13 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: '金額或幣別不符' }), { status: 400 });
     }
 
-    // 儲存解鎖狀態到 KV
+    // 儲存解鎖狀態到 KV（即使 userId 為 null，也儲存臨時解鎖）
     const html = await env.SECURE_CONTENT.get(`content:${path}`);
     if (!html) {
       return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
     }
-    await env.SECURE_CONTENT.put(`unlock:${userId}:${path}`, html, { expirationTtl: 30 * 24 * 3600 });
+    const kvKey = userId ? `unlock:${userId}:${path}` : `unlock:guest:${path}`;
+    await env.SECURE_CONTENT.put(kvKey, html, { expirationTtl: 30 * 24 * 3600 });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

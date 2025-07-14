@@ -1,11 +1,13 @@
+// functions/check-unlock.js
 export async function onRequestPost({ request, env }) {
   try {
     const { path, userId } = await request.json();
-    if (!path || !userId) {
-      return new Response(JSON.stringify({ error: '缺少 path 或 userId' }), { status: 400 });
+    if (!path) {
+      return new Response(JSON.stringify({ error: '缺少 path' }), { status: 400 });
     }
 
-    const html = await env.SECURE_CONTENT.get(`unlock:${userId}:${path}`);
+    const kvKey = userId ? `unlock:${userId}:${path}` : `unlock:guest:${path}`;
+    const html = await env.SECURE_CONTENT.get(kvKey);
     if (html) {
       return new Response(html, {
         status: 200,

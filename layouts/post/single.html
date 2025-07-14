@@ -125,24 +125,25 @@
   <script>eruda.init();</script>
 
 <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.17.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.17.0/firebase-auth.js"></script>
 
 <!-- Firebase 配置 -->
 <script>
+  const firebaseConfig = {
+    apiKey: "{{ getenv "FIREBASE_API_KEY" }}",
+    authDomain: "{{ getenv "FIREBASE_AUTH_DOMAIN" }}",
+    projectId: "{{ getenv "FIREBASE_PROJECT_ID" }}",
+    storageBucket: "{{ getenv "FIREBASE_STORAGE_BUCKET" }}",
+    messagingSenderId: "{{ getenv "FIREBASE_MESSAGING_SENDER_ID" }}",
+    appId: "{{ getenv "FIREBASE_APP_ID" }}"
+  };
+  console.log('Firebase Config:', firebaseConfig); // 檢查配置值
   try {
-    const firebaseConfig = {
-      apiKey: "{{ getenv "FIREBASE_API_KEY" }}",
-      authDomain: "{{ getenv "FIREBASE_AUTH_DOMAIN" }}",
-      projectId: "{{ getenv "FIREBASE_PROJECT_ID" }}",
-      storageBucket: "{{ getenv "FIREBASE_STORAGE_BUCKET" }}",
-      messagingSenderId: "{{ getenv "FIREBASE_MESSAGING_SENDER_ID" }}",
-      appId: "{{ getenv "FIREBASE_APP_ID" }}"
-    };
     firebase.initializeApp(firebaseConfig);
   } catch (err) {
     console.error('Firebase 初始化失敗:', err);
-    document.getElementById('error-message').textContent = '❌ Firebase 初始化失敗，請稍後重試';
+    document.getElementById('error-message')?.textContent = '❌ Firebase 初始化失敗，請稍後重試';
   }
 </script>
 
@@ -166,8 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 檢查 Firebase 是否可用
   if (typeof firebase === 'undefined' || !firebase.auth) {
     console.error('Firebase SDK 未載入');
-    document.getElementById('error-message').textContent = '❌ Firebase SDK 載入失敗，請稍後重試';
-    // 即使 Firebase 失敗，仍嘗試顯示 PayPal 按鈕
+    document.getElementById('error-message')?.textContent = '❌ Firebase SDK 載入失敗，請稍後重試';
     initPayPalFlow(null);
     return;
   }
@@ -177,8 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPayPalFlow(userId);
   }).catch(err => {
     console.error('Firebase 登入失敗:', err);
-    document.getElementById('error-message').textContent = '❌ 無法驗證用戶身份，請稍後重試';
-    // 即使登入失敗，仍嘗試顯示 PayPal 按鈕
+    document.getElementById('error-message')?.textContent = '❌ 無法驗證用戶身份，請稍後重試';
     initPayPalFlow(null);
   });
 
@@ -211,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderPayPalButton(path, errorMessage, placeholder, price, currency, userId) {
     if (!window.paypal) {
-      errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
+      errorMessage?.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
       console.error('PayPal SDK 未載入');
       return;
     }
@@ -238,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           if (!res.ok) {
-            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
+            errorMessage?.textContent = '❌ 付款驗證失敗，請聯絡站長';
             throw new Error('驗證 PayPal 失敗');
           }
 
@@ -249,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           if (!r2.ok) {
-            errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
+            errorMessage?.textContent = '❌ 內容解鎖失敗，請聯絡站長';
             throw new Error('內容解鎖失敗');
           }
 
@@ -257,16 +256,28 @@ document.addEventListener('DOMContentLoaded', () => {
           placeholder.innerHTML = html;
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
-          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+          errorMessage?.textContent = '❌ 付款處理失敗，請稍後重試';
         }
       },
       onError: err => {
         console.error('PayPal 按鈕錯誤:', err);
-        errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+        errorMessage?.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
       }
     }).render('#paypal-button-container');
   }
 });
+</script>
+
+<!-- 檢查 form 元素 -->
+<script>
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', e => {
+      console.log('Form submitted');
+    });
+  } else {
+    console.warn('No form element found on page');
+  }
 </script>
 
 {{ else if .Params.password }}
