@@ -117,14 +117,12 @@
       </div>
       {{ end }}
       
-      {{/* --- 開始：混合式加密系統 --- */}}
-
 {{ if .Params.secure }}
-  <!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+<!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
   
-  <!-- Secure 模式：只有 PayPal + JWT，不要密碼 form 相關代碼 -->
+  <!-- === Secure 模式 (PayPal + JWT 解锁) === -->
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
@@ -136,25 +134,25 @@
     const jwtKey = `jwt:${path}`;
     const savedToken = localStorage.getItem(jwtKey);
 
-    // 如果 localStorage 有 token，先自動解鎖
+    // 1. 自动解锁
     if (savedToken) {
       fetch('/verify', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({ path, token: savedToken })
       })
-        .then(r => r.ok ? r.text() : Promise.reject())
-        .then(html => {
-          document.getElementById('secure-content-placeholder').innerHTML = html;
-        })
-        .catch(() => {
-          localStorage.removeItem(jwtKey);
-          document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
-        });
+      .then(r=>r.ok? r.text(): Promise.reject())
+      .then(html=>{
+        document.getElementById('secure-content-placeholder').innerHTML = html;
+      })
+      .catch(_=>{
+        localStorage.removeItem(jwtKey);
+        document.getElementById('error-message').textContent = '自動解鎖失敗，請刷新重試';
+      });
       return;
     }
 
-    // 否則載入 PayPal SDK
+    // 2. 动态插入 PayPal SDK
     const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" | safeURL }}";
     console.log('PayPal Client ID =', clientId);
     const sdkUrl = [
@@ -170,37 +168,37 @@
     sdk.src = sdkUrl;
     sdk.onload = () => {
       paypal.Buttons({
-        createOrder: (d,a) => a.order.create({
-          application_context:{
-            shipping_preference:"NO_SHIPPING",
-            user_action:"PAY_NOW"
-          },
-          purchase_units:[{ amount:{ value:"1.5" } }]
-        }),
-        onApprove: async (d,a) => {
+        createOrder: (d,a)=>
+          a.order.create({
+            application_context:{
+              shipping_preference:"NO_SHIPPING",
+              user_action:"PAY_NOW"
+            },
+            purchase_units:[{ amount:{ value:"1.5" } }]
+          }),
+        onApprove: async (d,a)=>{
           await a.order.capture();
-          const res = await fetch('/verify-paypal', {
+          const res = await fetch('/verify-paypal',{
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({ path, orderID:d.orderID })
           });
           if (!res.ok) {
-            document.getElementById('error-message').textContent = '付款驗證失敗。';
+            document.getElementById('error-message').textContent='付款驗證失敗。';
             return;
           }
           const { token } = await res.json();
           localStorage.setItem(jwtKey, token);
-          const r2 = await fetch('/verify', {
+          const r2 = await fetch('/verify',{
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({ path, token })
           });
-          const html = await r2.text();
-          document.getElementById('secure-content-placeholder').innerHTML = html;
+          document.getElementById('secure-content-placeholder').innerHTML = await r2.text();
         },
-        onError: err => {
+        onError: err=>{
           console.error(err);
-          document.getElementById('error-message').textContent = 'PayPal 錯誤，請重試。';
+          document.getElementById('error-message').textContent='PayPal 錯誤，請重試。';
         }
       }).render('#paypal-button-container');
     };
@@ -211,9 +209,8 @@
   })();
   </script>
 
-
 {{ else if .Params.password }}
-  <!-- Password 模式，才顯示並綁定 form -->
+  <!-- === Password 模式 (前端解密) === -->
   <div id="encryption-container" style="text-align:center; margin:2rem;">
     <h3>🔒 請輸入密碼解鎖文章</h3>
     <form id="password-form">
@@ -226,13 +223,12 @@
     {{ .Content }}
   </div>
   <script>
-    // 只有在有 #password-form 時才綁定
     const pwForm = document.getElementById('password-form');
     if (pwForm) {
-      pwForm.addEventListener('submit', e => {
+      pwForm.addEventListener('submit', e=>{
         e.preventDefault();
-        const val = document.getElementById('password-input').value;
-        if (val === "{{ .Params.password }}") {
+        const v = document.getElementById('password-input').value;
+        if (v === "{{ .Params.password }}") {
           document.getElementById('encryption-container').style.display='none';
           document.getElementById('real-content-wrapper').style.display='block';
         } else {
@@ -243,11 +239,10 @@
   </script>
 
 {{ else }}
-  <!-- 公開文章 -->
+  <!-- === 公開文章 === -->
   <div class="py-3 my-2">{{ .Content }}</div>
 {{ end }}
-
-{{/* --- 結束：混合式加密系統 --- */}}
+{{/* --- 結束混合式加密 --- */}}
       
       {{ if or (and site.Params.social.share (eq site.Params.position.social.share "bottom")) (and site.Params.position.postMeta $postMetaBottom) (and (site.Params.position.postMeta.tags.content) (eq site.Params.position.postMeta.tags.content "bottom")) }}
         <div class="pt-4 mt-2 border-top">
