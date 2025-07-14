@@ -152,17 +152,13 @@
     return;
   }
 
-  // 2. 动态插入 PayPal SDK（用 jsonify 保证 clientId 不被转义）
-  const clientId = {{ getenv "HUGO_PAYPAL_CLIENT_ID" | jsonify }};
+  // 直接把 Client-ID 注入成纯字符串
+  const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
   console.log('PayPal Client ID =', clientId);
 
-  const sdkUrl = 
-      'https://www.paypal.com/sdk/js'
-    + '?client-id=' + clientId
-    + '&currency=USD'
-    + '&shipping_preference=NO_SHIPPING'
-    + '&user-action=PAY_NOW';
-  console.log('📦 PayPal SDK URL =', sdkUrl);
+  // ←—— 这里改为单个模板字符串，不再用 + 拼接 ——→
+    const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&shipping_preference=NO_SHIPPING&user-action=PAY_NOW`;
+    console.log('📦 PayPal SDK URL =', sdkUrl);
 
   const sdk = document.createElement('script');
   sdk.src = sdkUrl;
