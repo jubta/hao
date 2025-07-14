@@ -120,23 +120,21 @@
       {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-  <!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+  <!-- Eruda（手機測試用，生產環境可刪） -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-    <!-- 错误提示 -->
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
-    <!-- PayPal 按钮要渲染到这里 -->
     <div id="paypal-button-container" style="text-align:center; margin:40px auto;"></div>
 
     <script>
-    (function() {
+    (function(){
       const path = window.location.pathname;
       const jwtKey = `jwt:${path}`;
       const savedToken = localStorage.getItem(jwtKey);
 
-      // 1) 自动解锁：如果已有 token
+      // 如果已經有 token，就自動解鎖
       if (savedToken) {
         fetch('/verify', {
           method: 'POST',
@@ -154,16 +152,20 @@
         return;
       }
 
-      // 2) 加载 PayPal SDK 并渲染按钮
-      const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
-      const sdk = document.createElement('script');
-      sdk.src = [
+      // 否則注入 PayPal SDK
+      const clientId = "{{ getenv "PAYPAL_CLIENT_ID" | safeURL }}";
+      console.log('PayPal Client ID =', clientId);
+      const sdkUrl = [
         'https://www.paypal.com/sdk/js',
         `?client-id=${clientId}`,
         '&currency=USD',
         '&shipping_preference=NO_SHIPPING',
         '&user-action=PAY_NOW'
       ].join('');
+      console.log('📦 PayPal SDK URL =', sdkUrl);
+
+      const sdk = document.createElement('script');
+      sdk.src = sdkUrl;
       sdk.onload = () => {
         paypal.Buttons({
           createOrder: (data, actions) =>
@@ -208,8 +210,9 @@
     })();
     </script>
   </div>
-    
+
 {{ else if .Params.password }}
+  <!-- 僅在 password 模式下才載入這段 form 解密 -->
   <div id="encryption-container">
     <form id="password-form" style="text-align:center; margin:2rem;">
       <h3>🔒 請輸入密碼解鎖文章</h3>
@@ -222,27 +225,24 @@
     {{ .Content }}
   </div>
   <script>
-    // 只在密码分支跑
     const pwForm = document.getElementById('password-form');
-    if (pwForm) {
-      pwForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const val = document.getElementById('password-input').value;
-        if (val === "{{ .Params.password }}") {
-          document.getElementById('encryption-container').style.display = 'none';
-          document.getElementById('real-content-wrapper').style.display = 'block';
-        } else {
-          document.getElementById('pw-error').textContent = '密碼錯誤';
-        }
-      });
-    }
+    pwForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const val = document.getElementById('password-input').value;
+      if (val === "{{ .Params.password }}") {
+        document.getElementById('encryption-container').style.display = 'none';
+        document.getElementById('real-content-wrapper').style.display = 'block';
+      } else {
+        document.getElementById('pw-error').textContent = '密碼錯誤';
+      }
+    });
   </script>
 
 {{ else }}
-    {{/* --- 選項三：公開文章 (無加密) --- */}}
-    <div class="py-3 my-2">
-        {{ .Content }}
-    </div>
+  <!-- 公開文章 -->
+  <div class="py-3 my-2">
+    {{ .Content }}
+  </div>
 {{ end }}
 
 {{/* --- 結束：混合式加密系統 --- */}}
