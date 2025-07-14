@@ -123,7 +123,7 @@
   <!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
-  
+
   <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
     <!-- 错误提示 -->
     <p id="error-message" style="color:red; text-align:center; margin-top:1rem;"></p>
@@ -136,7 +136,7 @@
       const jwtKey = `jwt:${path}`;
       const savedToken = localStorage.getItem(jwtKey);
 
-      // 1) 如果 localStorage 有 token，自动解锁
+      // 1) 自动解锁：如果已有 token
       if (savedToken) {
         fetch('/verify', {
           method: 'POST',
@@ -145,9 +145,7 @@
         })
         .then(r => r.ok ? r.text() : Promise.reject())
         .then(html => {
-          document
-            .getElementById('secure-content-placeholder')
-            .innerHTML = html;
+          document.getElementById('secure-content-placeholder').innerHTML = html;
         })
         .catch(() => {
           localStorage.removeItem(jwtKey);
@@ -156,47 +154,46 @@
         return;
       }
 
-      // 2) localStorage 没有，就加载 PayPal SDK 渲染按钮
+      // 2) 加载 PayPal SDK 并渲染按钮
       const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" }}";
       const sdk = document.createElement('script');
-      sdk.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
+      sdk.src = [
+        'https://www.paypal.com/sdk/js',
+        `?client-id=${clientId}`,
+        '&currency=USD',
+        '&shipping_preference=NO_SHIPPING',
+        '&user-action=PAY_NOW'
+      ].join('');
       sdk.onload = () => {
         paypal.Buttons({
-          createOrder: (d,a) => a.order.create({
-      // 下面两行就是重点，禁止收集地址并直接执行支付
-      application_context: {
-        shipping_preference: "NO_SHIPPING", // 不要运送地址
-        user_action: "PAY_NOW"              // 按钮上文字改为“Pay Now”
-      },
-      purchase_units: [{
-        amount: { value: "1.5" } //金
-      }]
-    }),
-          onApprove: async (d, a) => {
-            await a.order.capture();
-            // 拿到 JWT
+          createOrder: (data, actions) =>
+            actions.order.create({
+              application_context: {
+                shipping_preference: "NO_SHIPPING",
+                user_action: "PAY_NOW"
+              },
+              purchase_units: [{ amount: { value: "1.5" } }]
+            }),
+          onApprove: async (data, actions) => {
+            await actions.order.capture();
             const res = await fetch('/verify-paypal', {
               method: 'POST',
               headers: {'Content-Type':'application/json'},
-              body: JSON.stringify({ path, orderID: d.orderID })
+              body: JSON.stringify({ path, orderID: data.orderID })
             });
             if (!res.ok) {
               document.getElementById('error-message').textContent = '付款驗證失敗。';
               return;
             }
             const { token } = await res.json();
-            // 存下 token
             localStorage.setItem(jwtKey, token);
-            // 再用 token 解鎖文章
             const res2 = await fetch('/verify', {
               method: 'POST',
               headers: {'Content-Type':'application/json'},
               body: JSON.stringify({ path, token })
             });
             const html = await res2.text();
-            document
-              .getElementById('secure-content-placeholder')
-              .innerHTML = html;
+            document.getElementById('secure-content-placeholder').innerHTML = html;
           },
           onError: err => {
             console.error(err);
