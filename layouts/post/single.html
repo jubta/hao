@@ -153,7 +153,7 @@
       }
 
       // 否則注入 PayPal SDK
-      const clientId = "{{ getenv "PAYPAL_CLIENT_ID" | safeURL }}";
+      const clientId = "{{ getenv "HUGO_PAYPAL_CLIENT_ID" | safeURL }}";
       console.log('PayPal Client ID =', clientId);
       const sdkUrl = [
         'https://www.paypal.com/sdk/js',
