@@ -102,13 +102,22 @@
     
     {{/* Clerk aathentication script */}}
    <script>
-  const clerkPublishableKey = "{{ getenv "HUGO_CLERK_PUBLISHABLE_KEY" }}";
-  const frontendApi = "https://{{ (urls.Parse clerkPublishableKey).Host }}";
+  // 步驟 1: 使用 Hugo 的 getenv 函數獲取完整的 Key，並將其賦值給一個 Hugo 模板變數
+  {{- $clerkKey := getenv "HUGO_CLERK_PUBLISHABLE_KEY" -}}
+  // 步驟 2: 使用 Hugo 的 urls.Parse 函數來解析這個 Key，獲取 Host 部分
+  {{- $clerkHost := (urls.Parse $clerkKey).Host -}}
 
+  // 步驟 3: 現在，將這兩個處理好的值直接輸出到 JavaScript 變數中
+  const clerkPublishableKey = "{{ $clerkKey }}";
+  const frontendApi = "https://{{ $clerkHost }}";
+
+  // --- 後續的腳本保持不變 ---
   const script = document.createElement("script");
   script.setAttribute("data-clerk-publishable-key", clerkPublishableKey);
-  script.setAttribute("data-clerk-frontend-api", frontendApi);
+  // data-clerk-frontend-api 屬性是舊版用法，現在可以省略，但保留也無妨
+  // script.setAttribute("data-clerk-frontend-api", frontendApi); 
   script.async = true;
+  // 直接使用 frontendApi 變數來構建 src
   script.src = `${frontendApi}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
   
   script.addEventListener("load", async function () {
@@ -117,20 +126,25 @@
     const userButtonDiv = document.getElementById("user-button");
     const signInDiv = document.getElementById("sign-in");
 
-    // 監聽登入狀態變化
-    window.Clerk.addListener(({ user }) => {
+    // 為了確保在頁面載入時就能正確顯示，立即執行一次檢查
+    function updateUserState(user) {
+      if (!userButtonDiv || !signInDiv) return; // 如果容器不存在，就什麼都不做
       if (user) {
-        // 如果用戶登入，顯示用戶按鈕，隱藏登入按鈕
         signInDiv.style.display = "none";
         userButtonDiv.style.display = "block";
         window.Clerk.mountUserButton(userButtonDiv);
       } else {
-        // 如果用戶登出，顯示登入按鈕，隱藏用戶按鈕
         signInDiv.style.display = "block";
         userButtonDiv.style.display = "none";
         window.Clerk.mountSignIn(signInDiv);
       }
-    });
+    }
+    
+    // 監聽登入狀態變化
+    window.Clerk.addListener(({ user }) => updateUserState(user));
+    
+    // 初始載入時檢查一次
+    updateUserState(window.Clerk.user);
   });
   document.body.appendChild(script);
    </script>
