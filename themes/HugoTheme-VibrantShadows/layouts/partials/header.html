@@ -52,6 +52,16 @@
               {{ end }}
             {{ end }}
           </ul>
+          
+          <!-- ================= Clerk Auth Container Start ================= -->
+<div class="navbar-nav ml-auto align-items-center">
+    <!-- 登入/用戶按鈕的容器 -->
+    <!-- 初始狀態隱藏，由 baseof.html 中的 JS 控制顯示 -->
+    <div id="user-button" class="nav-item" style="display: none;"></div>
+    <div id="sign-in" class="nav-item" style="display: none;"></div>
+</div>
+<!-- ================= Clerk Auth Container End =================== -->
+          
           {{ if site.Params.social.profiles }}
             {{ if eq site.Params.position.social.profiles "navbar" }}
               <div class="navbar-navalign-items-center ml-md-auto my-2 bg-nav{{ if ne site.Params.theme.borders "square" }} rounded{{ end }} p-1 pr-2">

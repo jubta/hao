@@ -99,6 +99,41 @@
     }
     </script>
     {{/* --- 結束：混合式加密系統的全局腳本 --- */}}
+    
+    {{/* Clerk aathentication script */}}
+   <script>
+  const clerkPublishableKey = "{{ getenv "HUGO_CLERK_PUBLISHABLE_KEY" }}";
+  const frontendApi = "https://{{ (urls.Parse clerkPublishableKey).Host }}";
+
+  const script = document.createElement("script");
+  script.setAttribute("data-clerk-publishable-key", clerkPublishableKey);
+  script.setAttribute("data-clerk-frontend-api", frontendApi);
+  script.async = true;
+  script.src = `${frontendApi}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
+  
+  script.addEventListener("load", async function () {
+    await window.Clerk.load();
+
+    const userButtonDiv = document.getElementById("user-button");
+    const signInDiv = document.getElementById("sign-in");
+
+    // 監聽登入狀態變化
+    window.Clerk.addListener(({ user }) => {
+      if (user) {
+        // 如果用戶登入，顯示用戶按鈕，隱藏登入按鈕
+        signInDiv.style.display = "none";
+        userButtonDiv.style.display = "block";
+        window.Clerk.mountUserButton(userButtonDiv);
+      } else {
+        // 如果用戶登出，顯示登入按鈕，隱藏用戶按鈕
+        signInDiv.style.display = "block";
+        userButtonDiv.style.display = "none";
+        window.Clerk.mountSignIn(signInDiv);
+      }
+    });
+  });
+  document.body.appendChild(script);
+   </script>
 
   </body>
 </html>
