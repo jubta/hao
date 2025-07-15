@@ -356,15 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
   
-  {{ if site.DisqusShortname }}
-    <div class="my-5">
-      {{ if eq hugo.Environment "production" -}}
-        {{ template "_internal/disqus.html" . }}
-      {{ else }}
-        <p class="lead text-center">This is where Disqus comments would appear on production website.</p>
-      {{ end }}
-    </div>
-  {{ end }}
+  {{ partial "comments.html" . }}
   
 </div>
 {{ end }}
