@@ -120,134 +120,118 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Firebase SDK (透過 Worker 代理) -->
-<script src="/sdk-proxy/firebase/9.23.0/firebase-app.js"></script>
-<script src="/sdk-proxy/firebase/9.23.0/firebase-auth.js"></script>
-<script src="/sdk-proxy/firebase/9.23.0/firebase-firestore.js"></script>
-<script src="/sdk-proxy/firebase/9.23.0/firebase-analytics.js"></script> <!-- 如果需要 -->
+<!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
 
-<!-- PayPal SDK (透過 Worker 代理) -->
+<!-- 安全內容區塊 -->
+<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+  <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
+  <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
+</div>
+
+<!-- PayPal SDK -->
 <script
-  src="/sdk-proxy/paypal/sdk/js?client-id={{ getenv "HUGO_PAYPAL_CLIENT_ID" }}&currency=USD&components=buttons"
+  src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&components=buttons" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
   data-sdk-integration-source="button-factory"
   async
 ></script>
 
-<!-- 內容區塊 -->
-<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-  <div id="login-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>請登入以購買或解鎖內容</h3>
-    <button id="google-login-btn">Google 登入</button>
-    <div id="login-error" style="color:red;"></div>
-  </div>
-  <div id="paypal-button-container" style="text-align:center;margin:40px auto;display:none;"></div>
-  <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
-</div>
-
-<!-- Debug 顯示區 -->
-<div id="debug-log" style="font-size:14px; margin-top:20px; border:1px solid #ccc; padding:10px; background:#f9f9f9;"></div>
-<div id="debug-error" style="color:red; font-size:14px; margin-top:10px; display:none;"></div>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  function logToPage(message, isError) {
-    var logDiv = document.getElementById('debug-log');
-    var errorDiv = document.getElementById('debug-error');
-    if (isError) {
-      errorDiv.style.display = 'block';
-      errorDiv.innerHTML += '<p>' + message + '</p>';
-    } else {
-      logDiv.innerHTML += '<p style="color:green;">' + message + '</p>';
+document.addEventListener('DOMContentLoaded', () => {
+  // 等待 PayPal SDK 載入
+  const checkPayPal = setInterval(() => {
+    if (window.paypal) {
+      clearInterval(checkPayPal);
+      initPayPalFlow();
     }
-  }
+  }, 100);
 
-  var originalConsoleError = console.error;
-  console.error = function(message) {
-    originalConsoleError.apply(console, arguments);
-    logToPage(message, true);
-  };
+  function initPayPalFlow() {
+    const path = window.location.pathname;
+    const jwtKey = 'jwt:' + path;
+    const savedToken = localStorage.getItem(jwtKey);
+    const errorMessage = document.getElementById('error-message');
 
-  logToPage('步驟1: 頁面載入開始', false);
-
-  var firebaseConfig = {
-    apiKey: "AIzaSyCggbtYRExOD9Hp1-Gdn_avpAM-3AksTG4",
-    authDomain: "hugo-login-2be80.firebaseapp.com",
-    projectId: "hugo-login-2be80",
-    storageBucket: "hugo-login-2be80.firebasestorage.app",
-    messagingSenderId: "137087794302",
-    appId: "1:137087794302:web:d1a3852ba616835bc06c2f",
-    measurementId: "G-XP4MMGBYFJ"
-  };
-
-  var auth, db;
-  try {
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
-    auth = firebase.auth();
-    db = firebase.firestore();
-    logToPage('步驟2: Firebase 初始化成功', false);
-  } catch (e) {
-    console.error('Firebase 初始化失敗: ' + e.message);
-    document.getElementById('error-message').textContent = '❌ Firebase 初始化失敗，使用備援模式';
-    initPayPalFlowFallback();
-    return;
-  }
-
-  // ... (剩餘邏輯同之前版本，包含 onAuthStateChanged, showPayPal, renderPayPal, unlockContent)
-
-  function initPayPalFlowFallback() {
-    logToPage('步驟0: 切換備援模式', false);
-    var jwtKey = 'jwt:' + path;
-    var savedToken = localStorage.getItem(jwtKey);
-
+    // 已付款，驗證 token
     if (savedToken) {
-      logToPage('備援: 找到 savedToken，嘗試解鎖', false);
       fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: path, token: savedToken })
+        body: JSON.stringify({ path, token: savedToken })
       })
-      .then(function(r) { return r.ok ? r.text() : Promise.reject(new Error('驗證失敗')); })
-      .then(function(html) {
+      .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
+      .then(html => {
         document.getElementById('secure-content-placeholder').innerHTML = html;
-        logToPage('備援: 解鎖成功', false);
       })
-      .catch(function(err) {
+      .catch(err => {
         localStorage.removeItem(jwtKey);
-        console.error('備援驗證錯誤: ' + err.message);
-        logToPage('備援: 解鎖失敗，顯示 PayPal', true);
-        showPayPalFallback();
+        errorMessage.textContent = '⚠️ 自動解鎖失敗，請重新整理頁面';
+        console.error('驗證錯誤:', err);
       });
       return;
     }
 
-    logToPage('備援: 無 savedToken，顯示 PayPal', false);
-    showPayPalFallback();
-  }
+    // 檢查 PayPal SDK 是否可用
+    if (!window.paypal) {
+      errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
+      console.error('PayPal SDK 未載入');
+      return;
+    }
 
-  function showPayPalFallback() {
-    paypalContainer.style.display = 'block';
-    logToPage('備援: 等待 PayPal SDK 載入', false);
-    var attempts = 0;
-    var checkPayPal = setInterval(function() {
-      attempts++;
-      if (window.paypal) {
-        clearInterval(checkPayPal);
-        logToPage('備援: PayPal SDK 載入成功，渲染按鈕', false);
-        renderPayPalFallback();
-      } else if (attempts > 30) {
-        clearInterval(checkPayPal);
-        console.error('備援: PayPal SDK 載入超時 (15秒)');
-      }
-    }, 500);
-  }
-
-  function renderPayPalFallback() {
+    // 渲染 PayPal 按鈕
     paypal.Buttons({
-      // ... (你的原 PayPal Buttons 邏輯，包含 createOrder, onApprove 用 localStorage, onError)
-      // 從你最初代碼複製，確保完整
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          application_context: {
+            shipping_preference: 'NO_SHIPPING',
+            user_action: 'PAY_NOW'
+          },
+          purchase_units: [{
+            amount: { value: '1.50', currency_code: 'USD' }
+          }]
+        });
+      },
+      onApprove: async (data, actions) => {
+        try {
+          await actions.order.capture();
+          const res = await fetch('/verify-paypal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, orderID: data.orderID })
+          });
+
+          if (!res.ok) {
+            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
+            throw new Error('驗證 PayPal 失敗');
+          }
+
+          const { token } = await res.json();
+          localStorage.setItem(jwtKey, token);
+
+          const r2 = await fetch('/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, token })
+          });
+
+          if (!r2.ok) {
+            errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
+            throw new Error('內容解鎖失敗');
+          }
+
+          const html = await r2.text();
+          document.getElementById('secure-content-placeholder').innerHTML = html;
+        } catch (err) {
+          console.error('PayPal 處理錯誤:', err);
+          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+        }
+      },
+      onError: err => {
+        console.error('PayPal 按鈕錯誤:', err);
+        errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+      }
     }).render('#paypal-button-container');
-    logToPage('備援: PayPal 按鈕渲染完成', false);
   }
 });
 </script>
