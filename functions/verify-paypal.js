@@ -78,10 +78,11 @@ export async function onRequestPost({ request, env }) {
 
     const token = `${data}.${sigB64}`;
     console.log('[verify-paypal] issued JWT');
-    
-    // 3) 存到 KV (email + path)
-    const key = `payment:${email}:${path}`;
-    await env.PAYMENT_RECORDS.put(key, token, { expirationTtl: 0 }); // 永久，或設 TTL
+
+    // 3) 存到 KV (email + path 綁定 token，永久)
+    const kvKey = `payment:${email}:${path}`;
+    await env.PAYMENT_RECORDS.put(kvKey, token, { expirationTtl: 0 }); // 0 = 永久
+    console.log('[verify-paypal] saved to KV:', kvKey);
 
     return new Response(JSON.stringify({ token }), {
       status: 200,
