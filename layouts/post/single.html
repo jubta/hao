@@ -120,9 +120,6 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda 手机调试 -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
 
 <!-- Firebase SDK (ESM 版本，從官方配置) -->
 <script type="module" src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js"></script>
@@ -356,6 +353,24 @@
       }
     }).render('#paypal-button-container');
   }
+</script>
+
+<!-- ... (你的原有 secure 內容) -->
+
+<!-- 錯誤顯示腳本 -->
+<div id="debug-error" style="color:red; font-size:14px; margin-top:20px; display:none;"></div>
+<script>
+  // 覆寫 console.error，讓錯誤顯示在頁面
+  var originalConsoleError = console.error;
+  console.error = function(message) {
+    originalConsoleError.apply(console, arguments);
+    var debugDiv = document.getElementById('debug-error');
+    debugDiv.style.display = 'block';
+    debugDiv.innerHTML += '<p>' + message + '</p>';
+  };
+
+  // 测试 log
+  console.error('測試錯誤訊息：如果看到這行，偵錯正常');
 </script>
 
 {{ else if .Params.password }}
