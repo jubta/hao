@@ -120,7 +120,7 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda 手机调试 -->
+<!-- Eruda 调试 -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
@@ -128,7 +128,7 @@
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>輸入 email 購買或解鎖內容</h3>
+    <h3>輸入 email 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
@@ -136,6 +136,7 @@
     <h3>已購買？輸入 email 解鎖</h3>
     <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
     <button onclick="unlockWithEmail()" style="margin-left:10px; padding:5px 10px;">解鎖</button>
+    <button onclick="showPaymentSection()" style="margin-left:10px; padding:5px 10px;">購買新內容</button>
   </div>
 </div>
 
@@ -163,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // 如果無 localStorage，顯示 unlock-section (輸入 email 解鎖)
+  // 如果無 localStorage，顯示 unlock-section (優先解鎖)
   unlockSection.style.display = 'block';
 
   // 等待 PayPal SDK (如果需顯示付款框)
@@ -224,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const html = await r2.text();
           document.getElementById('secure-content-placeholder').innerHTML = html;
           emailSection.style.display = 'none';
+          unlockSection.style.display = 'none';
           errorMessage.textContent = '付款成功！記錄已綁定到 ' + email;
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
@@ -252,7 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (!res.ok) {
         const errData = await res.json();
-        errorMessage.textContent = errData.error || '⚠️ 解鎖失敗，請檢查 email';
+        errorMessage.textContent = errData.error || '⚠️ 未找到付款記錄';
+        // 失敗後自動顯示付款框
+        unlockSection.style.display = 'none';
+        emailSection.style.display = 'block';
         return;
       }
       const html = await res.text();
@@ -262,7 +267,16 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('解鎖錯誤:', err);
       errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
+      // 失敗後顯示付款框
+      unlockSection.style.display = 'none';
+      emailSection.style.display = 'block';
     }
+  };
+
+  // 手動顯示付款框函數
+  window.showPaymentSection = () => {
+    unlockSection.style.display = 'none';
+    emailSection.style.display = 'block';
   };
 
   // 驗證 token 函數 (原邏輯)
