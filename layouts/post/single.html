@@ -120,9 +120,8 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda 调试 -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
+<!-- Turnstile CAPTCHA SDK -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
@@ -130,14 +129,20 @@
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 email 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABkOKSbtXgq5kRUl" data-theme="light"></div> <!-- 替換 YOUR_TURNSTILE_SITE_KEY -->
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
-  <h3>已購買？輸入 email 解鎖</h3>
-  <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-  <button onclick="unlockWithEmail()" style="margin-left:10px; padding:5px 10px;">解鎖</button>
-  <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:10px; padding:5px 10px;">購買新內容</button> <!-- 添加 margin-top:10px 往下移 -->
-</div>
+    <h3>已購買？輸入 email 解鎖</h3>
+    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <button onclick="sendCode()" style="margin-left:10px; padding:5px 10px;">發送 code</button>
+    <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:10px; padding:5px 10px;">購買新內容</button>
+    <div style="margin-top:10px;">
+      <input type="text" id="unlock-code" placeholder="輸入 6 位 code" required style="width:200px; padding:5px; display:none;">
+      <button onclick="unlockWithEmailAndCode()" style="margin-left:10px; padding:5px 10px; display:none;">確認解鎖</button>
+    </div>
+    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div> <!-- CAPTCHA -->
+  </div>
 </div>
 
 <!-- PayPal SDK -->
@@ -155,8 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const unlockSection = document.getElementById('unlock-section');
   const userEmail = document.getElementById('user-email');
   const unlockEmail = document.getElementById('unlock-email');
+  const unlockCode = document.getElementById('unlock-code');
+  const confirmButton = unlockCode.nextElementSibling; // 確認解鎖按鈕
 
-  // 檢查是否已購買 (用 localStorage 兼容舊記錄)
+  // 檢查 localStorage
   const jwtKey = 'jwt:' + path;
   const savedToken = localStorage.getItem(jwtKey);
   if (savedToken) {
@@ -164,10 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // 如果無 localStorage，顯示 unlock-section (優先解鎖)
+  // 顯示 unlock-section
   unlockSection.style.display = 'block';
 
-  // 等待 PayPal SDK (如果需顯示付款框)
+  // 等待 PayPal SDK
   const checkPayPal = setInterval(() => {
     if (window.paypal) {
       clearInterval(checkPayPal);
@@ -175,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 100);
 
-  function renderPayPalButtons() {
+function renderPayPalButtons() {
     paypal.Buttons({
       createOrder: (data, actions) => {
         const email = userEmail.value.trim();
@@ -239,25 +246,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }).render('#paypal-button-container');
   }
 
-  // 解鎖函數 (輸入 email 檢查 KV)
-  window.unlockWithEmail = async () => {
+  // 發送 code 函數
+  window.sendCode = async () => {
     const email = unlockEmail.value.trim();
     if (!email) {
       errorMessage.textContent = '請輸入 email';
+      return;
+    }
+    const turnstileElement = document.querySelector('#unlock-section .cf-turnstile input[name="cf-turnstile-response"]');
+    const turnstileToken = turnstileElement ? turnstileElement.value : '';
+    try {
+      const res = await fetch('/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, path, turnstileToken })
+      });
+      if (!res.ok) throw new Error('發送失敗');
+      errorMessage.textContent = 'Code 已發送到您的 email，請檢查信箱並輸入';
+      unlockCode.style.display = 'inline-block';
+      confirmButton.style.display = 'inline-block';
+    } catch (err) {
+      errorMessage.textContent = '⚠️ 發送 code 失敗，請重試';
+    }
+  };
+
+  // 解鎖函數 (驗證 code)
+  window.unlockWithEmailAndCode = async () => {
+    const email = unlockEmail.value.trim();
+    const inputCode = unlockCode.value.trim();
+    if (!email || !inputCode) {
+      errorMessage.textContent = '請輸入 email 和 code';
       return;
     }
     try {
       const res = await fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, email }) // 只發 email，讓後端從 KV 取 token 驗證
+        body: JSON.stringify({ path, email, code: inputCode })
       });
       if (!res.ok) {
         const errData = await res.json();
-        errorMessage.textContent = errData.error || '⚠️ 未找到付款記錄';
-        // 失敗後自動顯示付款框
-        unlockSection.style.display = 'none';
-        emailSection.style.display = 'block';
+        errorMessage.textContent = errData.error || '⚠️ code 錯誤或過期';
         return;
       }
       const html = await res.text();
@@ -265,15 +294,11 @@ document.addEventListener('DOMContentLoaded', () => {
       unlockSection.style.display = 'none';
       errorMessage.textContent = '解鎖成功！歡迎回來';
     } catch (err) {
-      console.error('解鎖錯誤:', err);
       errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
-      // 失敗後顯示付款框
-      unlockSection.style.display = 'none';
-      emailSection.style.display = 'block';
     }
   };
 
-  // 手動顯示付款框函數
+  // 顯示付款框
   window.showPaymentSection = () => {
     unlockSection.style.display = 'none';
     emailSection.style.display = 'block';
