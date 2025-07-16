@@ -120,11 +120,7 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
-
-<!-- Turnstile CAPTCHA SDK -->
+<!-- Turnstile CAPTCHA SDK (只載一次) -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <!-- 安全內容區塊 -->
@@ -133,19 +129,21 @@
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 email 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAABkOKSbtXgq5kRUl" data-theme="light"></div> <!-- 替換 YOUR_TURNSTILE_SITE_KEY -->
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABkOKSbtXgq5kRUl" data-theme="light"></div>
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
     <h3>已購買？輸入 email 解鎖</h3>
     <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <button onclick="sendCode()" style="margin-left:10px; padding:5px 10px;">發送 code</button>
-    <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:10px; padding:5px 10px;">購買新內容</button>
+    <br> <!-- 換行避免覆蓋 -->
+    <button onclick="sendCode()" style="margin:10px; padding:5px 10px;">發送 code</button>
+    <button onclick="showPaymentSection()" style="margin:10px; padding:5px 10px;">購買新內容</button>
     <div style="margin-top:10px;">
       <input type="text" id="unlock-code" placeholder="輸入 6 位 code" required style="width:200px; padding:5px; display:none;">
-      <button onclick="unlockWithEmailAndCode()" style="margin-left:10px; padding:5px 10px; display:none;">確認解鎖</button>
+      <br> <!-- 換行 -->
+      <button onclick="unlockWithEmailAndCode()" style="margin:10px; padding:5px 10px; display:none;">確認解鎖</button>
     </div>
-    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div> <!-- CAPTCHA -->
+    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div>
   </div>
 </div>
 
@@ -153,7 +151,7 @@
 <script
   src="{{ printf "https://www.paypal.com/sdk/js?client-id=%s&currency=USD&components=buttons" (getenv "HUGO_PAYPAL_CLIENT_ID") }}"
   data-sdk-integration-source="button-factory"
-  async
+  async defer
 ></script>
 
 <script>
@@ -186,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 100);
 
-function renderPayPalButtons() {
+  function renderPayPalButtons() {
     paypal.Buttons({
       createOrder: (data, actions) => {
         const email = userEmail.value.trim();
@@ -259,17 +257,26 @@ function renderPayPalButtons() {
     }
     const turnstileElement = document.querySelector('#unlock-section .cf-turnstile input[name="cf-turnstile-response"]');
     const turnstileToken = turnstileElement ? turnstileElement.value : '';
+    if (!turnstileToken) {
+      errorMessage.textContent = 'CAPTCHA 未載入，請重試';
+      return;
+    }
     try {
       const res = await fetch('/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, path, turnstileToken })
       });
-      if (!res.ok) throw new Error('發送失敗');
+      if (!res.ok) {
+        const errData = await res.json();
+        errorMessage.textContent = errData.error || '發送失敗';
+        return;
+      }
       errorMessage.textContent = 'Code 已發送到您的 email，請檢查信箱並輸入';
       unlockCode.style.display = 'inline-block';
       confirmButton.style.display = 'inline-block';
     } catch (err) {
+      console.error('發送錯誤:', err);
       errorMessage.textContent = '⚠️ 發送 code 失敗，請重試';
     }
   };
