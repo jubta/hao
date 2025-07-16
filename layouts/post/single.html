@@ -124,10 +124,10 @@
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
+<!-- Firebase SDK (添加 defer 延遲載入) -->
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js"></script>
 
 <!-- PayPal SDK -->
 <script
@@ -148,131 +148,156 @@
 </div>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCggbtYRExOD9Hp1-Gdn_avpAM-3AksTG4",
-  authDomain: "hugo-login-2be80.firebaseapp.com",
-  projectId: "hugo-login-2be80",
-  storageBucket: "hugo-login-2be80.firebasestorage.app",
-  messagingSenderId: "137087794302",
-  appId: "1:137087794302:web:d1a3852ba616835bc06c2f",
-  measurementId: "G-XP4MMGBYFJ"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-const path = window.location.pathname;
-const errorMessage = document.getElementById('error-message');
-const loginSection = document.getElementById('login-section');
-const paypalContainer = document.getElementById('paypal-button-container');
-const loginError = document.getElementById('login-error');
-
-// 登入按鈕
-document.getElementById('google-login-btn').onclick = function() {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(e => {
-    loginError.textContent = '登入失敗: ' + e.message;
-  });
-};
-
-// 監聽登入狀態
-auth.onAuthStateChanged(async user => {
-  if (!user) {
-    loginSection.style.display = 'block';
-    paypalContainer.style.display = 'none';
+document.addEventListener('DOMContentLoaded', () => {
+  // 檢查 Firebase 是否載入
+  if (typeof firebase === 'undefined') {
+    console.error('Firebase SDK 載入失敗，請檢查網路或CDN');
+    document.getElementById('error-message').textContent = '❌ Firebase 載入失敗，請重試或聯絡站長';
+    // 備援：使用原 localStorage 邏輯
+    initPayPalFlow(); // 你的原函數，如果有
     return;
   }
-  loginSection.style.display = 'none';
-  // 檢查 Firestore 是否已購買
-  const q = await db.collection('purchases')
-    .where('userId', '==', user.uid)
-    .where('path', '==', path)
-    .get();
-  if (!q.empty) {
-    // 已購買，直接解鎖
-    unlockContent();
-  } else {
-    // 未購買，顯示PayPal
-    showPayPal();
+
+  // 初始化 Firebase
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+    projectId: "YOUR_FIREBASE_PROJECT_ID",
+    storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+    appId: "YOUR_FIREBASE_APP_ID",
+    measurementId: "YOUR_FIREBASE_MEASUREMENT_ID" // 可選
+  };
+
+  try {
+    firebase.initializeApp(firebaseConfig);
+  } catch (e) {
+    console.error('Firebase 初始化失敗:', e);
+    document.getElementById('error-message').textContent = '❌ Firebase 初始化失敗，請檢查配置';
+    return;
   }
-});
 
-// 顯示PayPal按鈕
-function showPayPal() {
-  paypalContainer.style.display = 'block';
-  // 等待PayPal SDK載入
-  const checkPayPal = setInterval(() => {
-    if (window.paypal) {
-      clearInterval(checkPayPal);
-      renderPayPal();
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const path = window.location.pathname;
+  const errorMessage = document.getElementById('error-message');
+  const loginSection = document.getElementById('login-section');
+  const paypalContainer = document.getElementById('paypal-button-container');
+  const loginError = document.getElementById('login-error');
+
+  // 登入按鈕
+  document.getElementById('google-login-btn').onclick = function() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(e => {
+      loginError.textContent = '登入失敗: ' + e.message;
+    });
+  };
+
+  // 監聽登入狀態
+  auth.onAuthStateChanged(async user => {
+    if (!user) {
+      loginSection.style.display = 'block';
+      paypalContainer.style.display = 'none';
+      return;
     }
-  }, 100);
-}
-
-// PayPal付款流程
-function renderPayPal() {
-  paypal.Buttons({
-    createOrder: (data, actions) => {
-      return actions.order.create({
-        application_context: {
-          shipping_preference: 'NO_SHIPPING',
-          user_action: 'PAY_NOW'
-        },
-        purchase_units: [{
-          amount: { value: '1.50', currency_code: 'USD' }
-        }]
-      });
-    },
-    onApprove: async (data, actions) => {
-      try {
-        await actions.order.capture();
-        // 1. 先驗證PayPal訂單
-        const res = await fetch('/verify-paypal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path, orderID: data.orderID })
-        });
-        if (!res.ok) {
-          errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
-          return;
-        }
-        // 2. Firestore記錄購買
-        const user = auth.currentUser;
-        await db.collection('purchases').add({
-          userId: user.uid,
-          path: path,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        // 3. 解鎖內容
+    loginSection.style.display = 'none';
+    // 檢查 Firestore 是否已購買
+    try {
+      const q = await db.collection('purchases')
+        .where('userId', '==', user.uid)
+        .where('path', '==', path)
+        .get();
+      if (!q.empty) {
+        // 已購買，直接解鎖
         unlockContent();
-      } catch (err) {
-        errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+      } else {
+        // 未購買，顯示PayPal
+        showPayPal();
+      }
+    } catch (e) {
+      console.error('Firestore 查詢失敗:', e);
+      errorMessage.textContent = '❌ 購買記錄查詢失敗，請重試';
+    }
+  });
+
+  // 顯示PayPal按鈕
+  function showPayPal() {
+    paypalContainer.style.display = 'block';
+    // 等待PayPal SDK載入
+    const checkPayPal = setInterval(() => {
+      if (window.paypal) {
+        clearInterval(checkPayPal);
+        renderPayPal();
+      }
+    }, 100);
+  }
+
+  // PayPal付款流程（無變）
+  function renderPayPal() {
+    paypal.Buttons({
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          application_context: {
+            shipping_preference: 'NO_SHIPPING',
+            user_action: 'PAY_NOW'
+          },
+          purchase_units: [{
+            amount: { value: '1.50', currency_code: 'USD' }
+          }]
+        });
+      },
+      onApprove: async (data, actions) => {
+        try {
+          await actions.order.capture();
+          // 1. 先驗證PayPal訂單
+          const res = await fetch('/verify-paypal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, orderID: data.orderID })
+          });
+          if (!res.ok) {
+            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
+            return;
+          }
+          // 2. Firestore記錄購買
+          const user = auth.currentUser;
+          await db.collection('purchases').add({
+            userId: user.uid,
+            path: path,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          // 3. 解鎖內容
+          unlockContent();
+        } catch (err) {
+          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+          console.error(err);
+        }
+      },
+      onError: err => {
+        errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
         console.error(err);
       }
-    },
-    onError: err => {
-      errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
-      console.error(err);
-    }
-  }).render('#paypal-button-container');
-}
+    }).render('#paypal-button-container');
+  }
 
-// 解鎖內容
-function unlockContent() {
-  fetch('/verify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ path, token: "firebase" })
-  })
-  .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
-  .then(html => {
-    document.getElementById('secure-content-placeholder').innerHTML = html;
-  })
-  .catch(err => {
-    errorMessage.textContent = '⚠️ 內容解鎖失敗，請聯絡站長';
-    console.error('驗證錯誤:', err);
-  });
-}
+  // 解鎖內容（無變）
+  function unlockContent() {
+    fetch('/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path, token: "firebase" })
+    })
+    .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
+    .then(html => {
+      document.getElementById('secure-content-placeholder').innerHTML = html;
+    })
+    .catch(err => {
+      errorMessage.textContent = '⚠️ 內容解鎖失敗，請聯絡站長';
+      console.error('驗證錯誤:', err);
+    });
+  }
+});
 </script>
 
 {{ else if .Params.password }}
