@@ -120,14 +120,23 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+<!-- Eruda 手机调试 -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
-  <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
+  <div id="email-section" style="text-align:center;margin:2rem;">
+    <h3>輸入 email 購買或解鎖內容</h3>
+    <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
+  </div>
+  <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
+    <h3>已購買？輸入 email 解鎖</h3>
+    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <button onclick="unlockWithEmail()">解鎖</button>
+  </div>
 </div>
 
 <!-- PayPal SDK -->
@@ -139,49 +148,40 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 等待 PayPal SDK 載入
+  const path = window.location.pathname;
+  const errorMessage = document.getElementById('error-message');
+  const emailSection = document.getElementById('email-section');
+  const unlockSection = document.getElementById('unlock-section');
+  const userEmail = document.getElementById('user-email');
+  const unlockEmail = document.getElementById('unlock-email');
+
+  // 檢查是否已購買 (用 localStorage 兼容舊記錄)
+  const jwtKey = 'jwt:' + path;
+  const savedToken = localStorage.getItem(jwtKey);
+  if (savedToken) {
+    verifyToken(savedToken);
+    return;
+  }
+
+  // 顯示 email 輸入 + PayPal
+  emailSection.style.display = 'block';
+
+  // 等待 PayPal SDK
   const checkPayPal = setInterval(() => {
     if (window.paypal) {
       clearInterval(checkPayPal);
-      initPayPalFlow();
+      renderPayPalButtons();
     }
   }, 100);
 
-  function initPayPalFlow() {
-    const path = window.location.pathname;
-    const jwtKey = 'jwt:' + path;
-    const savedToken = localStorage.getItem(jwtKey);
-    const errorMessage = document.getElementById('error-message');
-
-    // 已付款，驗證 token
-    if (savedToken) {
-      fetch('/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, token: savedToken })
-      })
-      .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
-      .then(html => {
-        document.getElementById('secure-content-placeholder').innerHTML = html;
-      })
-      .catch(err => {
-        localStorage.removeItem(jwtKey);
-        errorMessage.textContent = '⚠️ 自動解鎖失敗，請重新整理頁面';
-        console.error('驗證錯誤:', err);
-      });
-      return;
-    }
-
-    // 檢查 PayPal SDK 是否可用
-    if (!window.paypal) {
-      errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
-      console.error('PayPal SDK 未載入');
-      return;
-    }
-
-    // 渲染 PayPal 按鈕
+  function renderPayPalButtons() {
     paypal.Buttons({
       createOrder: (data, actions) => {
+        const email = userEmail.value.trim();
+        if (!email) {
+          errorMessage.textContent = '請輸入 email';
+          throw new Error('缺少 email');
+        }
         return actions.order.create({
           application_context: {
             shipping_preference: 'NO_SHIPPING',
@@ -195,10 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
       onApprove: async (data, actions) => {
         try {
           await actions.order.capture();
+          const email = userEmail.value.trim();
           const res = await fetch('/verify-paypal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, orderID: data.orderID })
+            body: JSON.stringify({ path, orderID: data.orderID, email })
           });
 
           if (!res.ok) {
@@ -207,12 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           const { token } = await res.json();
-          localStorage.setItem(jwtKey, token);
+          localStorage.setItem(jwtKey, token); // 兼容
 
           const r2 = await fetch('/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, token })
+            body: JSON.stringify({ path, token, email })
           });
 
           if (!r2.ok) {
@@ -222,6 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const html = await r2.text();
           document.getElementById('secure-content-placeholder').innerHTML = html;
+          emailSection.style.display = 'none';
+          errorMessage.textContent = '付款成功！記錄已綁定到 ' + email;
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
           errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
@@ -232,6 +235,46 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
       }
     }).render('#paypal-button-container');
+  }
+
+  // 解鎖函數 (輸入 email 檢查)
+  window.unlockWithEmail = async () => {
+    const email = unlockEmail.value.trim();
+    if (!email) {
+      errorMessage.textContent = '請輸入 email';
+      return;
+    }
+    try {
+      const res = await fetch('/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, email }) // 發 email 檢查
+      });
+      if (!res.ok) throw new Error('驗證失敗');
+      const html = await res.text();
+      document.getElementById('secure-content-placeholder').innerHTML = html;
+      unlockSection.style.display = 'none';
+      errorMessage.textContent = '解鎖成功！';
+    } catch (err) {
+      errorMessage.textContent = '⚠️ 未找到付款記錄，請檢查 email 或重新購買';
+    }
+  };
+
+  // 驗證 token 函數 (原邏輯)
+  async function verifyToken(token) {
+    try {
+      const r = await fetch('/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, token })
+      });
+      if (!r.ok) throw new Error('驗證失敗');
+      const html = await r.text();
+      document.getElementById('secure-content-placeholder').innerHTML = html;
+    } catch (err) {
+      errorMessage.textContent = '⚠️ 自動解鎖失敗，請輸入 email 解鎖';
+      unlockSection.style.display = 'block';
+    }
   }
 });
 </script>

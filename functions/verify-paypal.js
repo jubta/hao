@@ -1,11 +1,11 @@
 // functions/verify-paypal.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, orderID } = await request.json();
-    if (!path || !orderID) {
-      return new Response(JSON.stringify({ error: '缺少 path 或 orderID' }), { status: 400 });
+    const { path, orderID, email } = await request.json();
+    if (!path || !orderID || !email) {
+      return new Response(JSON.stringify({ error: '缺少 path, orderID 或 email' }), { status: 400 });
     }
-    console.log('[verify-paypal] path=', path, 'orderID=', orderID);
+    console.log('[verify-paypal] path=', path, 'orderID=', orderID, 'email=', email);
 
     // 1) 驗證 PayPal 訂單
     const auth = btoa(`${env.PAYPAL_CLIENT_ID}:${env.PAYPAL_CLIENT_SECRET}`);
@@ -78,6 +78,10 @@ export async function onRequestPost({ request, env }) {
 
     const token = `${data}.${sigB64}`;
     console.log('[verify-paypal] issued JWT');
+    
+    // 3) 存到 KV (email + path)
+    const key = `payment:${email}:${path}`;
+    await env.PAYMENT_RECORDS.put(key, token, { expirationTtl: 0 }); // 永久，或設 TTL
 
     return new Response(JSON.stringify({ token }), {
       status: 200,

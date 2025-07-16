@@ -1,12 +1,28 @@
 // functions/verify.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, token } = await request.json();
-    if (!path || !token) {
-      return new Response(JSON.stringify({ error: '缺少 path 或 token' }), { status: 401 });
+    const { path, token, email } = await request.json();
+    if (!path) {
+      return new Response(JSON.stringify({ error: '缺少 path' }), { status: 401 });
     }
 
-    const parts = token.split('.');
+    let finalToken = token;
+
+    // 新增: 如果有 email，從 KV 取 token
+    if (email) {
+      const key = `payment:${email}:${path}`;
+      finalToken = await env.PAYMENT_RECORDS.get(key);
+      if (!finalToken) {
+        return new Response(JSON.stringify({ error: '未找到付款記錄，請檢查 email 或重新購買' }), { status: 401 });
+      }
+    }
+
+    if (!finalToken) {
+      return new Response(JSON.stringify({ error: '缺少 token 或 email' }), { status: 401 });
+    }
+
+    // 原 JWT 驗證邏輯
+    const parts = finalToken.split('.');
     if (parts.length !== 3) {
       return new Response(JSON.stringify({ error: 'token 格式錯誤' }), { status: 401 });
     }
