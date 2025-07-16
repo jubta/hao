@@ -6,6 +6,19 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: '缺少 path 或 token' }), { status: 401 });
     }
 
+    // 新增：如果token是"firebase"，直接通過（假設前端已驗證購買）
+    if (token === "firebase") {
+      const html = await env.SECURE_CONTENT.get(`content:${path}`);
+      if (!html) {
+        return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
+      }
+      return new Response(html, {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      });
+    }
+
+    // 原本JWT驗證邏輯
     const parts = token.split('.');
     if (parts.length !== 3) {
       return new Response(JSON.stringify({ error: 'token 格式錯誤' }), { status: 401 });

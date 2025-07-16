@@ -120,15 +120,14 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda 手机调试：部署测试完毕记得删除下面两行 -->
+<!-- Eruda 手机调试 -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
 
-<!-- 安全內容區塊 -->
-<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
-  <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
-  <div id="paypal-button-container" style="text-align:center;margin:40px auto;"></div>
-</div>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
 
 <!-- PayPal SDK -->
 <script
@@ -137,103 +136,143 @@
   async
 ></script>
 
+<!-- 內容區塊 -->
+<div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
+  <div id="login-section" style="text-align:center;margin:2rem;display:none;">
+    <h3>請登入以購買或解鎖內容</h3>
+    <button id="google-login-btn">Google 登入</button>
+    <div id="login-error" style="color:red;"></div>
+  </div>
+  <div id="paypal-button-container" style="text-align:center;margin:40px auto;display:none;"></div>
+  <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // 等待 PayPal SDK 載入
+const firebaseConfig = {
+  apiKey: "AIzaSyCggbtYRExOD9Hp1-Gdn_avpAM-3AksTG4",
+  authDomain: "hugo-login-2be80.firebaseapp.com",
+  projectId: "hugo-login-2be80",
+  storageBucket: "hugo-login-2be80.firebasestorage.app",
+  messagingSenderId: "137087794302",
+  appId: "1:137087794302:web:d1a3852ba616835bc06c2f",
+  measurementId: "G-XP4MMGBYFJ"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const path = window.location.pathname;
+const errorMessage = document.getElementById('error-message');
+const loginSection = document.getElementById('login-section');
+const paypalContainer = document.getElementById('paypal-button-container');
+const loginError = document.getElementById('login-error');
+
+// 登入按鈕
+document.getElementById('google-login-btn').onclick = function() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(e => {
+    loginError.textContent = '登入失敗: ' + e.message;
+  });
+};
+
+// 監聽登入狀態
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    loginSection.style.display = 'block';
+    paypalContainer.style.display = 'none';
+    return;
+  }
+  loginSection.style.display = 'none';
+  // 檢查 Firestore 是否已購買
+  const q = await db.collection('purchases')
+    .where('userId', '==', user.uid)
+    .where('path', '==', path)
+    .get();
+  if (!q.empty) {
+    // 已購買，直接解鎖
+    unlockContent();
+  } else {
+    // 未購買，顯示PayPal
+    showPayPal();
+  }
+});
+
+// 顯示PayPal按鈕
+function showPayPal() {
+  paypalContainer.style.display = 'block';
+  // 等待PayPal SDK載入
   const checkPayPal = setInterval(() => {
     if (window.paypal) {
       clearInterval(checkPayPal);
-      initPayPalFlow();
+      renderPayPal();
     }
   }, 100);
+}
 
-  function initPayPalFlow() {
-    const path = window.location.pathname;
-    const jwtKey = 'jwt:' + path;
-    const savedToken = localStorage.getItem(jwtKey);
-    const errorMessage = document.getElementById('error-message');
-
-    // 已付款，驗證 token
-    if (savedToken) {
-      fetch('/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, token: savedToken })
-      })
-      .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
-      .then(html => {
-        document.getElementById('secure-content-placeholder').innerHTML = html;
-      })
-      .catch(err => {
-        localStorage.removeItem(jwtKey);
-        errorMessage.textContent = '⚠️ 自動解鎖失敗，請重新整理頁面';
-        console.error('驗證錯誤:', err);
+// PayPal付款流程
+function renderPayPal() {
+  paypal.Buttons({
+    createOrder: (data, actions) => {
+      return actions.order.create({
+        application_context: {
+          shipping_preference: 'NO_SHIPPING',
+          user_action: 'PAY_NOW'
+        },
+        purchase_units: [{
+          amount: { value: '1.50', currency_code: 'USD' }
+        }]
       });
-      return;
-    }
-
-    // 檢查 PayPal SDK 是否可用
-    if (!window.paypal) {
-      errorMessage.textContent = '❌ PayPal SDK 載入失敗，請稍後重試';
-      console.error('PayPal SDK 未載入');
-      return;
-    }
-
-    // 渲染 PayPal 按鈕
-    paypal.Buttons({
-      createOrder: (data, actions) => {
-        return actions.order.create({
-          application_context: {
-            shipping_preference: 'NO_SHIPPING',
-            user_action: 'PAY_NOW'
-          },
-          purchase_units: [{
-            amount: { value: '1.50', currency_code: 'USD' }
-          }]
+    },
+    onApprove: async (data, actions) => {
+      try {
+        await actions.order.capture();
+        // 1. 先驗證PayPal訂單
+        const res = await fetch('/verify-paypal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path, orderID: data.orderID })
         });
-      },
-      onApprove: async (data, actions) => {
-        try {
-          await actions.order.capture();
-          const res = await fetch('/verify-paypal', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, orderID: data.orderID })
-          });
-
-          if (!res.ok) {
-            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
-            throw new Error('驗證 PayPal 失敗');
-          }
-
-          const { token } = await res.json();
-          localStorage.setItem(jwtKey, token);
-
-          const r2 = await fetch('/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, token })
-          });
-
-          if (!r2.ok) {
-            errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
-            throw new Error('內容解鎖失敗');
-          }
-
-          const html = await r2.text();
-          document.getElementById('secure-content-placeholder').innerHTML = html;
-        } catch (err) {
-          console.error('PayPal 處理錯誤:', err);
-          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+        if (!res.ok) {
+          errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
+          return;
         }
-      },
-      onError: err => {
-        console.error('PayPal 按鈕錯誤:', err);
-        errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+        // 2. Firestore記錄購買
+        const user = auth.currentUser;
+        await db.collection('purchases').add({
+          userId: user.uid,
+          path: path,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        // 3. 解鎖內容
+        unlockContent();
+      } catch (err) {
+        errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+        console.error(err);
       }
-    }).render('#paypal-button-container');
-  }
-});
+    },
+    onError: err => {
+      errorMessage.textContent = '❌ PayPal 按鈕載入錯誤，請重試';
+      console.error(err);
+    }
+  }).render('#paypal-button-container');
+}
+
+// 解鎖內容
+function unlockContent() {
+  fetch('/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path, token: "firebase" })
+  })
+  .then(r => r.ok ? r.text() : Promise.reject(new Error('驗證失敗')))
+  .then(html => {
+    document.getElementById('secure-content-placeholder').innerHTML = html;
+  })
+  .catch(err => {
+    errorMessage.textContent = '⚠️ 內容解鎖失敗，請聯絡站長';
+    console.error('驗證錯誤:', err);
+  });
+}
 </script>
 
 {{ else if .Params.password }}
