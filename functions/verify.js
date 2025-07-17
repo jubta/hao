@@ -26,34 +26,31 @@ export async function onRequestPost({ request, env }) {
         const otpKey = `otp:${email}:${path}`;
         await env.PAYMENT_RECORDS.put(otpKey, otpCode, { expirationTtl: 600 }); // 10分鐘過期
 
-        // 發送 email 使用 Mailchannels
+        // 發送 email 使用 Resend
         try {
-          const mailchannelsResponse = await fetch('https://api.mailchannels.net/tx/v1/send', {
+          const resendResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${env.RESEND_API_KEY}`,  // 使用環境變數
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              personalizations: [{
-                to: [{ email: email, name: '' }],
-              }],
-              from: { email: 'no-reply@haee.dpdns.org', name: 'Hao' }, // 替換成你的 Custom Address
+              from: 'no-reply@haee.dpdns.org',  // 你的 Custom Address
+              to: [email],  // 用戶 email
               subject: '您的內容解鎖驗證碼',
-              content: [{
-                type: 'text/plain',
-                value: `您的驗證碼是: ${otpCode}\n有效期10分鐘。\n如果不是您操作，請忽略。`,
-              }],
-            }),
+              text: `您的驗證碼是: ${otpCode}\n有效期10分鐘。\n如果不是您操作，請忽略。`,  // 純文字
+              // html: '<p>您的驗證碼是: <strong>${otpCode}</strong></p>'  // 如果想用 HTML，取消註釋
+            })
           });
 
-          if (!mailchannelsResponse.ok) {
-            const errorText = await mailchannelsResponse.text();
-            console.error('Mailchannels error:', errorText);
-            return new Response(JSON.stringify({ error: '無法發送驗證碼: ' + errorText }), { status: 500 });
+          if (!resendResponse.ok) {
+            const errorData = await resendResponse.json();
+            console.error('Resend error:', errorData);
+            return new Response(JSON.stringify({ error: '無法發送驗證碼: ' + (errorData.message || 'Resend API 錯誤') }), { status: 500 });
           }
-          console.log('Email sent successfully via Mailchannels');
+          console.log('Email sent successfully via Resend');
         } catch (error) {
-          console.error('Mailchannels sending failed:', error);
+          console.error('Resend sending failed:', error);
           return new Response(JSON.stringify({ error: '伺服器錯誤，無法發送 email: ' + error.message }), { status: 500 });
         }
 
