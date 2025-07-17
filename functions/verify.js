@@ -8,22 +8,25 @@ export async function onRequestPost({ request, env }) {
 
     let finalToken = token;
 
-    // 新增: 如果有 email，從 KV 取 token
-    if (email) {
+    // 如果有 token，直接用它 (e.g., 付款後或 localStorage)
+    if (finalToken) {
+      // 跳過 OTP，進入 token 驗證
+    } else if (email) {
+      // 無 token，但有 email: 從 KV 取 token
       const key = `payment:${email}:${path}`;
       finalToken = await env.PAYMENT_RECORDS.get(key);
       if (!finalToken) {
         return new Response(JSON.stringify({ error: '未找到付款記錄，請檢查 email 或重新購買' }), { status: 401 });
       }
 
-      // 新增: OTP 邏輯
+      // OTP 邏輯 (只有無 token 的解鎖才需要)
       if (!otp) {
-        // 生成OTP
+        // 生成 OTP
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6位隨機數
         const otpKey = `otp:${email}:${path}`;
         await env.PAYMENT_RECORDS.put(otpKey, otpCode, { expirationTtl: 600 }); // 10分鐘過期
 
-        // 發送email使用Mailchannels
+        // 發送 email 使用 Mailchannels
         try {
           const mailchannelsResponse = await fetch('https://api.mailchannels.net/tx/v1/send', {
             method: 'POST',
@@ -34,7 +37,7 @@ export async function onRequestPost({ request, env }) {
               personalizations: [{
                 to: [{ email: email, name: '' }],
               }],
-              from: { email: 'no-reply@haee.dpdns.org', name: 'Hao' }, // 替換成你的Custom Address
+              from: { email: 'no-reply@haee.dpdns.org', name: 'Hao' }, // 替換成你的 Custom Address
               subject: '您的內容解鎖驗證碼',
               content: [{
                 type: 'text/plain',
@@ -46,24 +49,24 @@ export async function onRequestPost({ request, env }) {
           if (!mailchannelsResponse.ok) {
             const errorText = await mailchannelsResponse.text();
             console.error('Mailchannels error:', errorText);
-            return new Response(JSON.stringify({ error: '無法發送驗證碼，請檢查email或稍後重試' }), { status: 500 });
+            return new Response(JSON.stringify({ error: '無法發送驗證碼: ' + errorText }), { status: 500 });
           }
           console.log('Email sent successfully via Mailchannels');
         } catch (error) {
           console.error('Mailchannels sending failed:', error);
-          return new Response(JSON.stringify({ error: '伺服器錯誤，無法發送email' }), { status: 500 });
+          return new Response(JSON.stringify({ error: '伺服器錯誤，無法發送 email: ' + error.message }), { status: 500 });
         }
 
-        return new Response(JSON.stringify({ message: 'OTP 已發送到您的email，請輸入驗證碼' }), { status: 200 });
+        return new Response(JSON.stringify({ message: 'OTP 已發送到您的 email，請輸入驗證碼' }), { status: 200 });
       }
 
-      // 如果有otp，驗證它
+      // 如果有 otp，驗證它
       const otpKey = `otp:${email}:${path}`;
       const storedOtp = await env.PAYMENT_RECORDS.get(otpKey);
       if (storedOtp !== otp) {
         return new Response(JSON.stringify({ error: '無效的驗證碼' }), { status: 401 });
       }
-      // 驗證通過，刪除OTP
+      // 驗證通過，刪除 OTP
       await env.PAYMENT_RECORDS.delete(otpKey);
     }
 
@@ -129,6 +132,6 @@ export async function onRequestPost({ request, env }) {
     });
   } catch (err) {
     console.error('[verify] error:', err);
-    return new Response(JSON.stringify({ error: '伺服器錯誤，請稍後重試' }), { status: 500 });
+    return new Response(JSON.stringify({ error: '伺服器錯誤，請稍後重試: ' + err.message }), { status: 500 });
   }
 }

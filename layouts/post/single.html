@@ -136,7 +136,7 @@
     <h3>已購買？輸入 email 解鎖</h3>
     <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
     <button onclick="unlockWithEmail()" style="margin-left:10px; padding:5px 10px;">解鎖</button>
-    <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button> <!-- 添加 margin-top:20px 往下移 -->
+    <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
     <!-- 新增: OTP輸入區塊 (初始隱藏) -->
     <div id="otp-section" style="display:none; margin-top:20px;">
       <input type="text" id="otp-input" placeholder="輸入6位驗證碼" required style="width:200px; padding:5px;">
@@ -211,32 +211,23 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           if (!res.ok) {
-            errorMessage.textContent = '❌ 付款驗證失敗，請聯絡站長';
+            const errData = await res.json();
+            errorMessage.textContent = '❌ 付款驗證失敗: ' + (errData.error || '未知錯誤');
             throw new Error('驗證 PayPal 失敗');
           }
 
           const { token } = await res.json();
           localStorage.setItem(jwtKey, token); // 兼容
 
-          const r2 = await fetch('/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, token, email })
-          });
+          // 修復: 付款後直接用token解鎖 (無需再呼叫/verify，避免OTP)
+          await verifyToken(token);
 
-          if (!r2.ok) {
-            errorMessage.textContent = '❌ 內容解鎖失敗，請聯絡站長';
-            throw new Error('內容解鎖失敗');
-          }
-
-          const html = await r2.text();
-          document.getElementById('secure-content-placeholder').innerHTML = html;
           emailSection.style.display = 'none';
           unlockSection.style.display = 'none';
           errorMessage.textContent = '付款成功！記錄已綁定到 ' + email;
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
-          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試';
+          errorMessage.textContent = '❌ 付款處理失敗，請稍後重試: ' + err.message;
         }
       },
       onError: err => {
@@ -324,11 +315,14 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path, token })
       });
-      if (!r.ok) throw new Error('驗證失敗');
+      if (!r.ok) {
+        const errData = await r.json();
+        throw new Error(errData.error || '驗證失敗');
+      }
       const html = await r.text();
       document.getElementById('secure-content-placeholder').innerHTML = html;
     } catch (err) {
-      errorMessage.textContent = '⚠️ 自動解鎖失敗，請輸入 email 解鎖';
+      errorMessage.textContent = '⚠️ 自動解鎖失敗，請輸入 email 解鎖: ' + err.message;
       unlockSection.style.display = 'block';
     }
   }
