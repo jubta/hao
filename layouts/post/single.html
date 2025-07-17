@@ -120,6 +120,10 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
+<!-- Eruda -->
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+
 <!-- Turnstile CAPTCHA SDK (只載一次) -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
@@ -130,7 +134,7 @@
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 email 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div>
+    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light" data-callback="onTurnstileSuccess"></div>
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
@@ -269,28 +273,31 @@ function renderPayPalButtons() {
       errorMessage.textContent = '請輸入 email';
       return;
     }
-    if (!turnstileToken) {
-      errorMessage.textContent = 'CAPTCHA 未載入，請重新載入頁面或等待';
-      return;
-    }
-    try {
-      const res = await fetch('/send-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, path, turnstileToken })
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        errorMessage.textContent = errData.error || '發送失敗';
+    // 等待 Turnstile 2 秒
+    setTimeout(async () => {
+      if (!turnstileToken) {
+        errorMessage.textContent = 'CAPTCHA 未載入，請重新載入頁面或等待';
         return;
       }
-      errorMessage.textContent = 'Code 已發送到您的 email，請檢查信箱並輸入';
-      unlockCode.style.display = 'inline-block';
-      confirmButton.style.display = 'inline-block';
-    } catch (err) {
-      console.error('發送錯誤:', err);
-      errorMessage.textContent = '⚠️ 發送 code 失敗，請重試';
-    }
+      try {
+        const res = await fetch('/send-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, path, turnstileToken })
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          errorMessage.textContent = errData.error || '發送失敗';
+          return;
+        }
+        errorMessage.textContent = 'Code 已發送到您的 email，請檢查信箱並輸入';
+        unlockCode.style.display = 'block'; // 強制顯示
+        confirmButton.style.display = 'block'; // 強制顯示
+      } catch (err) {
+        console.error('發送錯誤:', err);
+        errorMessage.textContent = '⚠️ 發送 code 失敗，請重試';
+      }
+    }, 2000); // 等待 2 秒確保 token 生成
   };
 
   // 解鎖函數 (驗證 code)
