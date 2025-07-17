@@ -1,7 +1,7 @@
 export async function onRequestPost({ request, env }) {
   try {
     const { email, path, turnstileToken } = await request.json();
-    console.log('[send-code] 收到請求: email=', email, 'path=', path, 'turnstileToken=', turnstileToken ? '有' : '無');
+    console.log('[send-code] 收到請求: email=', email, 'path=', path, 'turnstileToken=', turnstileToken || '無');
 
     if (!email || !path) {
       console.log('[send-code] 缺少 email 或 path');
@@ -21,35 +21,32 @@ export async function onRequestPost({ request, env }) {
     });
     const verifyData = await verifyRes.json();
     if (!verifyData.success) {
-      console.log('[send-code] CAPTCHA 驗證失敗');
+      console.log('[send-code] CAPTCHA 驗證失敗: ', verifyData);
       return new Response(JSON.stringify({ error: 'CAPTCHA 驗證失敗' }), { status: 400 });
     }
     console.log('[send-code] CAPTCHA 驗證成功');
 
-    // Rate limit
+    // Rate limit (原邏輯)
     const rateKey = `rate:${email}:codes`;
     let count = await env.PAYMENT_RECORDS.get(rateKey) || 0;
     count = parseInt(count);
     if (count >= 3) {
-      console.log('[send-code] Rate limit 超過');
       return new Response(JSON.stringify({ error: '請求過多，請 1 小時後再試' }), { status: 429 });
     }
     await env.PAYMENT_RECORDS.put(rateKey, count + 1, { expirationTtl: 3600 });
-    console.log('[send-code] Rate limit 更新');
 
-    // 生成 code
+    // 生成 code (原邏輯)
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeKey = `code:${email}:${path}`;
     await env.PAYMENT_RECORDS.put(codeKey, code, { expirationTtl: 600 });
-    console.log('[send-code] Code 生成並存 KV');
 
-    // 發 email 用 Mailchannels (永久免費)
+    // 發 email 用 Mailchannels (原邏輯)
     const mailchannelsRes = await fetch('https://api.mailchannels.net/tx/v1/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         personalizations: [{ to: [{ email, name: 'User' }] }],
-        from: { email: 'no-reply@haee.dpdns.org', name: 'haoshare Blog' }, // 替換
+        from: { email: 'no-reply@yourdomain.com', name: 'Your Blog' },
         subject: '您的解鎖碼',
         content: [{ type: 'text/plain', value: `您的解鎖碼是: ${code} (10 分鐘有效)` }]
       })
@@ -57,14 +54,13 @@ export async function onRequestPost({ request, env }) {
 
     if (!mailchannelsRes.ok) {
       const errText = await mailchannelsRes.text();
-      console.error('[send-code] Mailchannels 錯誤:', errText);
+      console.error('Mailchannels 錯誤:', errText);
       return new Response(JSON.stringify({ error: '發送 code 失敗' }), { status: 500 });
     }
-    console.log('[send-code] Email 發送成功');
 
     return new Response(JSON.stringify({ message: 'Code 已發送到您的 email' }), { status: 200 });
   } catch (err) {
-    console.error('[send-code] 整體錯誤:', err);
+    console.error('send-code 整體錯誤:', err);
     return new Response(JSON.stringify({ error: '伺服器錯誤' }), { status: 500 });
   }
 }

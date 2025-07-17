@@ -120,34 +120,32 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
-<!-- Eruda -->
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
-
 <!-- Turnstile CAPTCHA SDK (只載一次) -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
+  <div id="loading-message" style="text-align:center;margin:2rem;">載入中，請稍候...</div>
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 email 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAABkOKSbtXgq5kRUl" data-theme="light"></div>
+    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div>
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
     <h3>已購買？輸入 email 解鎖</h3>
     <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <br> <!-- 換行避免覆蓋 -->
+    <br>
     <button onclick="sendCode()" style="margin:10px; padding:5px 10px;">發送 code</button>
+    <br>
     <button onclick="showPaymentSection()" style="margin:10px; padding:5px 10px;">購買新內容</button>
     <div style="margin-top:10px;">
       <input type="text" id="unlock-code" placeholder="輸入 6 位 code" required style="width:200px; padding:5px; display:none;">
-      <br> <!-- 換行 -->
+      <br>
       <button onclick="unlockWithEmailAndCode()" style="margin:10px; padding:5px 10px; display:none;">確認解鎖</button>
     </div>
-    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div>
+    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light" data-callback="onTurnstileSuccess"></div>
   </div>
 </div>
 
@@ -159,26 +157,38 @@
 ></script>
 
 <script>
+let turnstileToken = ''; // 全局 token
+
+function onTurnstileSuccess(token) {
+  turnstileToken = token;
+  console.log('Turnstile 成功: token=', token);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loading-message').style.display = 'block';
+
   const path = window.location.pathname;
   const errorMessage = document.getElementById('error-message');
+  const loadingMessage = document.getElementById('loading-message');
   const emailSection = document.getElementById('email-section');
   const unlockSection = document.getElementById('unlock-section');
   const userEmail = document.getElementById('user-email');
   const unlockEmail = document.getElementById('unlock-email');
   const unlockCode = document.getElementById('unlock-code');
-  const confirmButton = unlockCode.nextElementSibling; // 確認解鎖按鈕
+  const confirmButton = unlockCode.nextElementSibling;
 
   // 檢查 localStorage
   const jwtKey = 'jwt:' + path;
   const savedToken = localStorage.getItem(jwtKey);
   if (savedToken) {
     verifyToken(savedToken);
+    loadingMessage.style.display = 'none';
     return;
   }
 
   // 顯示 unlock-section
   unlockSection.style.display = 'block';
+  loadingMessage.style.display = 'none';
 
   // 等待 PayPal SDK
   const checkPayPal = setInterval(() => {
@@ -188,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 100);
 
-  function renderPayPalButtons() {
+function renderPayPalButtons() {
     paypal.Buttons({
       createOrder: (data, actions) => {
         const email = userEmail.value.trim();
@@ -259,10 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
       errorMessage.textContent = '請輸入 email';
       return;
     }
-    const turnstileElement = document.querySelector('#unlock-section .cf-turnstile input[name="cf-turnstile-response"]');
-    const turnstileToken = turnstileElement ? turnstileElement.value : '';
     if (!turnstileToken) {
-      errorMessage.textContent = 'CAPTCHA 未載入，請重試';
+      errorMessage.textContent = 'CAPTCHA 未載入，請重新載入頁面或等待';
       return;
     }
     try {
