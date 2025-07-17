@@ -121,8 +121,8 @@
 
 {{ if .Params.secure }}
 <!-- Eruda 调试 -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
 
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
@@ -133,11 +133,16 @@
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
-  <h3>已購買？輸入 email 解鎖</h3>
-  <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-  <button onclick="unlockWithEmail()" style="margin-left:10px; padding:5px 10px;">解鎖</button>
-  <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button> <!-- 添加 margin-top:20px 往下移 -->
-</div>
+    <h3>已購買？輸入 email 解鎖</h3>
+    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <button onclick="unlockWithEmail()" style="margin-left:10px; padding:5px 10px;">解鎖</button>
+    <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button> <!-- 添加 margin-top:20px 往下移 -->
+    <!-- 新增: OTP輸入區塊 (初始隱藏) -->
+    <div id="otp-section" style="display:none; margin-top:20px;">
+      <input type="text" id="otp-input" placeholder="輸入6位驗證碼" required style="width:200px; padding:5px;">
+      <button onclick="submitOtp()" style="margin-left:10px; padding:5px 10px;">提交驗證碼</button>
+    </div>
+  </div>
 </div>
 
 <!-- PayPal SDK -->
@@ -153,8 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorMessage = document.getElementById('error-message');
   const emailSection = document.getElementById('email-section');
   const unlockSection = document.getElementById('unlock-section');
+  const otpSection = document.getElementById('otp-section');
   const userEmail = document.getElementById('user-email');
   const unlockEmail = document.getElementById('unlock-email');
+  const otpInput = document.getElementById('otp-input');
 
   // 檢查是否已購買 (用 localStorage 兼容舊記錄)
   const jwtKey = 'jwt:' + path;
@@ -239,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }).render('#paypal-button-container');
   }
 
-  // 解鎖函數 (輸入 email 檢查 KV)
+  // 解鎖函數 (輸入 email 檢查 KV，並發送OTP)
   window.unlockWithEmail = async () => {
     const email = unlockEmail.value.trim();
     if (!email) {
@@ -250,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, email }) // 只發 email，讓後端從 KV 取 token 驗證
+        body: JSON.stringify({ path, email }) // 第一步: 只發 email，讓後端發OTP
       });
       if (!res.ok) {
         const errData = await res.json();
@@ -260,16 +267,46 @@ document.addEventListener('DOMContentLoaded', () => {
         emailSection.style.display = 'block';
         return;
       }
-      const html = await res.text();
-      document.getElementById('secure-content-placeholder').innerHTML = html;
-      unlockSection.style.display = 'none';
-      errorMessage.textContent = '解鎖成功！歡迎回來';
+      const data = await res.json();
+      errorMessage.textContent = data.message || 'OTP 已發送，請檢查email';
+      // 顯示OTP輸入區塊
+      otpSection.style.display = 'block';
     } catch (err) {
       console.error('解鎖錯誤:', err);
       errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
       // 失敗後顯示付款框
       unlockSection.style.display = 'none';
       emailSection.style.display = 'block';
+    }
+  };
+
+  // 新增: 提交OTP驗證
+  window.submitOtp = async () => {
+    const email = unlockEmail.value.trim();
+    const otp = otpInput.value.trim();
+    if (!email || !otp) {
+      errorMessage.textContent = '請輸入 email 和驗證碼';
+      return;
+    }
+    try {
+      const res = await fetch('/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, email, otp }) // 第二步: 發 email + otp 驗證
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        errorMessage.textContent = errData.error || '⚠️ 驗證碼錯誤';
+        return;
+      }
+      const html = await res.text();
+      document.getElementById('secure-content-placeholder').innerHTML = html;
+      unlockSection.style.display = 'none';
+      otpSection.style.display = 'none';
+      errorMessage.textContent = '解鎖成功！歡迎回來';
+    } catch (err) {
+      console.error('OTP驗證錯誤:', err);
+      errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
     }
   };
 
