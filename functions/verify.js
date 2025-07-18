@@ -14,9 +14,12 @@ export async function onRequestPost({ request, env }) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
       const outcome = await verifyRes.json();
+      console.log('Turnstile outcome:', outcome); // Debug log
       if (!outcome.success) {
         return new Response(JSON.stringify({ error: 'Turnstile 驗證失敗，請重試' }), { status: 401 });
       }
+    } else {
+      console.log('No Turnstile token, skipping verification'); // Debug log
     }
 
     let finalToken = token;
@@ -101,18 +104,24 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: 'token 已過期' }), { status: 401 });
     }
 
-    // 新增: KV 優化 - 用 Cache API 快取內容 (減讀次數)
+    // 新增: KV 優化 - 用 Cache API 快取內容 (修復Invalid URL，用完整URL key)
+    console.log('Fetching content for path:', path); // Debug log
     const cache = caches.default;
-    let html = await cache.match(`content-cache:${path}`);
-    if (!html) {
+    const cacheKey = new URL(`https://cache.example.com/content-cache${path}`, 'https://haee.dpdns.org'); // 修復: 用完整URL key
+    let htmlResponse = await cache.match(cacheKey);
+    let html;
+    if (htmlResponse) {
+      html = await htmlResponse.text();
+      console.log('Content loaded from cache'); // Debug log
+    } else {
       html = await env.SECURE_CONTENT.get(`content:${path}`);
       if (html) {
-        await cache.put(`content-cache:${path}`, new Response(html, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取1小時
+        await cache.put(cacheKey, new Response(html, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取1小時
+        console.log('Content loaded from KV and cached'); // Debug log
       } else {
+        console.error('Content not found in KV'); // Debug log
         return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
       }
-    } else {
-      html = await html.text(); // 從快取取
     }
 
     return new Response(html, {
@@ -120,7 +129,7 @@ export async function onRequestPost({ request, env }) {
       headers: { 'Content-Type': 'text/html' }
     });
   } catch (err) {
-    console.error('[verify] error:', err);
+    console.error('[verify] error:', err.message, err.stack); // 加強log
     return new Response(JSON.stringify({ error: '伺服器錯誤，請稍後重試: ' + err.message }), { status: 500 });
   }
 }
