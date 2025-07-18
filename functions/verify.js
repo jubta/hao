@@ -1,74 +1,43 @@
 // functions/verify.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, token, email, otp } = await request.json();
+    const { path, token, email, googleToken } = await request.json();
     if (!path) {
       return new Response(JSON.stringify({ error: '缺少 path' }), { status: 401 });
     }
 
     let finalToken = token;
 
-    // 如果有 token，直接用它 (e.g., 付款後或 localStorage)
-    if (finalToken) {
-      // 跳過 OTP，進入 token 驗證
-    } else if (email) {
-      // 無 token，但有 email: 從 KV 取 token
+    // 如果有 googleToken，驗證它並檢查 email 匹配
+    if (googleToken) {
+      // 驗證 Google token
+      const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${googleToken}`);
+      if (!googleRes.ok) {
+        return new Response(JSON.stringify({ error: 'Google token 無效' }), { status: 401 });
+      }
+      const googleData = await googleRes.json();
+      if (googleData.email !== email) {
+        return new Response(JSON.stringify({ error: 'Google 帳號 email 不匹配輸入的 email' }), { status: 401 });
+      }
+      // 驗證通過，從 KV 取 token
       const key = `payment:${email}:${path}`;
       finalToken = await env.PAYMENT_RECORDS.get(key);
       if (!finalToken) {
-        return new Response(JSON.stringify({ error: '未找到付款記錄，請檢查 email 或重新購買' }), { status: 401 });
+        return new Response(JSON.stringify({ error: '未找到付款記錄' }), { status: 401 });
       }
-
-      // OTP 邏輯 (只有無 token 的解鎖才需要)
-      if (!otp) {
-        // 生成 OTP
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6位隨機數
-        const otpKey = `otp:${email}:${path}`;
-        await env.PAYMENT_RECORDS.put(otpKey, otpCode, { expirationTtl: 600 }); // 10分鐘過期
-
-        // 發送 email 使用 Resend
-        try {
-          const resendResponse = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${env.RESEND_API_KEY}`,  // 使用環境變數
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              from: 'no-reply@haee.dpdns.org',  // 你的 Custom Address
-              to: [email],  // 用戶 email
-              subject: '您的內容解鎖驗證碼',
-              text: `您的驗證碼是: ${otpCode}\n有效期10分鐘。\n如果不是您操作，請忽略。`,  // 純文字
-              // html: '<p>您的驗證碼是: <strong>${otpCode}</strong></p>'  // 如果想用 HTML，取消註釋
-            })
-          });
-
-          if (!resendResponse.ok) {
-            const errorData = await resendResponse.json();
-            console.error('Resend error:', errorData);
-            return new Response(JSON.stringify({ error: '無法發送驗證碼: ' + (errorData.message || 'Resend API 錯誤') }), { status: 500 });
-          }
-          console.log('Email sent successfully via Resend');
-        } catch (error) {
-          console.error('Resend sending failed:', error);
-          return new Response(JSON.stringify({ error: '伺服器錯誤，無法發送 email: ' + error.message }), { status: 500 });
-        }
-
-        return new Response(JSON.stringify({ message: 'OTP 已發送到您的 email，請輸入驗證碼' }), { status: 200 });
+    } else if (email) {
+      // 無 googleToken，只檢查是否有記錄 (用於前端檢查)
+      const key = `payment:${email}:${path}`;
+      const existingToken = await env.PAYMENT_RECORDS.get(key);
+      if (existingToken) {
+        return new Response(JSON.stringify({ hasRecord: true }), { status: 200 });
+      } else {
+        return new Response(JSON.stringify({ error: '未找到付款記錄' }), { status: 401 });
       }
-
-      // 如果有 otp，驗證它
-      const otpKey = `otp:${email}:${path}`;
-      const storedOtp = await env.PAYMENT_RECORDS.get(otpKey);
-      if (storedOtp !== otp) {
-        return new Response(JSON.stringify({ error: '無效的驗證碼' }), { status: 401 });
-      }
-      // 驗證通過，刪除 OTP
-      await env.PAYMENT_RECORDS.delete(otpKey);
     }
 
     if (!finalToken) {
-      return new Response(JSON.stringify({ error: '缺少 token 或 email' }), { status: 401 });
+      return new Response(JSON.stringify({ error: '缺少 token 或驗證' }), { status: 401 });
     }
 
     // 原 JWT 驗證邏輯

@@ -124,23 +124,26 @@
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>eruda.init();</script>
 
+<!-- Google OAuth SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 email 購買內容</h3>
-    <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <input type="email" id="user-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
     <h3>已購買？輸入 email 解鎖</h3>
-    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <button onclick="unlockWithEmail()" style="margin-left:10px; padding:5px 10px;">解鎖</button>
+    <input type="email" id="unlock-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
+    <button onclick="checkEmailForUnlock()" style="margin-left:10px; padding:5px 10px;">檢查</button>
     <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
-    <!-- 新增: OTP輸入區塊 (初始隱藏) -->
-    <div id="otp-section" style="display:none; margin-top:20px;">
-      <input type="text" id="otp-input" placeholder="輸入6位驗證碼" required style="width:200px; padding:5px;">
-      <button onclick="submitOtp()" style="margin-left:10px; padding:5px 10px;">提交驗證碼</button>
+    <!-- 新增: Google 登入區塊 (初始隱藏) -->
+    <div id="google-login-section" style="display:none; margin-top:20px;">
+      <p>請用 Google 登入驗證 email 擁有權</p>
+      <div id="google-signin-button"></div>
     </div>
   </div>
 </div>
@@ -158,10 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorMessage = document.getElementById('error-message');
   const emailSection = document.getElementById('email-section');
   const unlockSection = document.getElementById('unlock-section');
-  const otpSection = document.getElementById('otp-section');
+  const googleLoginSection = document.getElementById('google-login-section');
   const userEmail = document.getElementById('user-email');
   const unlockEmail = document.getElementById('unlock-email');
-  const otpInput = document.getElementById('otp-input');
 
   // 檢查是否已購買 (用 localStorage 兼容舊記錄)
   const jwtKey = 'jwt:' + path;
@@ -219,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const { token } = await res.json();
           localStorage.setItem(jwtKey, token); // 兼容
 
-          // 修復: 付款後直接用token解鎖 (無需再呼叫/verify，避免OTP)
+          // 修復: 付款後直接用token解鎖
           await verifyToken(token);
 
           emailSection.style.display = 'none';
@@ -237,8 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }).render('#paypal-button-container');
   }
 
-  // 解鎖函數 (輸入 email 檢查 KV，並發送OTP)
-  window.unlockWithEmail = async () => {
+  // 新增: 檢查 email 是否有購買記錄，然後顯示 Google 登入
+  window.checkEmailForUnlock = async () => {
     const email = unlockEmail.value.trim();
     if (!email) {
       errorMessage.textContent = '請輸入 email';
@@ -248,58 +250,63 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, email }) // 第一步: 只發 email，讓後端發OTP
+        body: JSON.stringify({ path, email }) // 檢查是否有記錄
       });
       if (!res.ok) {
         const errData = await res.json();
         errorMessage.textContent = errData.error || '⚠️ 未找到付款記錄';
-        // 失敗後自動顯示付款框
         unlockSection.style.display = 'none';
         emailSection.style.display = 'block';
         return;
       }
       const data = await res.json();
-      errorMessage.textContent = data.message || 'OTP 已發送，請檢查email';
-      // 顯示OTP輸入區塊
-      otpSection.style.display = 'block';
+      if (data.hasRecord) {
+        errorMessage.textContent = '找到記錄，請用 Google 登入驗證';
+        googleLoginSection.style.display = 'block';
+        renderGoogleButton(email); // 顯示 Google 登入按鈕
+      } else {
+        errorMessage.textContent = '⚠️ 未找到付款記錄';
+      }
     } catch (err) {
-      console.error('解鎖錯誤:', err);
+      console.error('檢查錯誤:', err);
       errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
-      // 失敗後顯示付款框
       unlockSection.style.display = 'none';
       emailSection.style.display = 'block';
     }
   };
 
-  // 新增: 提交OTP驗證
-  window.submitOtp = async () => {
-    const email = unlockEmail.value.trim();
-    const otp = otpInput.value.trim();
-    if (!email || !otp) {
-      errorMessage.textContent = '請輸入 email 和驗證碼';
-      return;
-    }
-    try {
-      const res = await fetch('/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, email, otp }) // 第二步: 發 email + otp 驗證
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        errorMessage.textContent = errData.error || '⚠️ 驗證碼錯誤';
-        return;
+  // 新增: 渲染 Google 登入按鈕
+  function renderGoogleButton(expectedEmail) {
+    google.accounts.id.initialize({
+      client_id: '{{ getenv "GOOGLE_CLIENT_ID" }}', // 在Hugo中替換成你的環境變數
+      callback: async (response) => {
+        try {
+          const res = await fetch('/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, email: expectedEmail, googleToken: response.credential })
+          });
+          if (!res.ok) {
+            const errData = await res.json();
+            errorMessage.textContent = errData.error || '⚠️ Google 驗證失敗';
+            return;
+          }
+          const html = await res.text();
+          document.getElementById('secure-content-placeholder').innerHTML = html;
+          unlockSection.style.display = 'none';
+          googleLoginSection.style.display = 'none';
+          errorMessage.textContent = '解鎖成功！歡迎回來';
+        } catch (err) {
+          console.error('Google 驗證錯誤:', err);
+          errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
+        }
       }
-      const html = await res.text();
-      document.getElementById('secure-content-placeholder').innerHTML = html;
-      unlockSection.style.display = 'none';
-      otpSection.style.display = 'none';
-      errorMessage.textContent = '解鎖成功！歡迎回來';
-    } catch (err) {
-      console.error('OTP驗證錯誤:', err);
-      errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
-    }
-  };
+    });
+    google.accounts.id.renderButton(
+      document.getElementById('google-signin-button'),
+      { theme: 'outline', size: 'large' } // 自訂按鈕樣式
+    );
+  }
 
   // 手動顯示付款框函數
   window.showPaymentSection = () => {
