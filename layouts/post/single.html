@@ -127,16 +127,12 @@
 <!-- Google OAuth SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-<!-- Turnstile SDK (在此載入，避免重複) -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 email 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
-    <div class="cf-turnstile" data-sitekey="{{ getenv "TURNSTILE_SITE_KEY" }}" data-callback="onTurnstileSuccessPayment"></div> <!-- Turnstile for payment -->
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
@@ -147,7 +143,6 @@
     <!-- 新增: Google 登入區塊 (初始隱藏) -->
     <div id="google-login-section" style="display:none; margin-top:20px;">
       <p>請用 Google 登入驗證 email 擁有權</p>
-      <div class="cf-turnstile" data-sitekey="{{ getenv "TURNSTILE_SITE_KEY" }}" data-callback="onTurnstileSuccessUnlock"></div> <!-- Turnstile for unlock -->
       <div id="google-signin-button"></div>
     </div>
   </div>
@@ -189,23 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 100);
 
-  // 新增: 安全取Turnstile token函數 (輪詢檢查SDK存在，無ready()防3857錯)
-  function getTurnstileToken(selector, callback) {
-    let attempts = 0;
-    const interval = setInterval(() => {
-      if (typeof cfturnstile !== 'undefined') {
-        const token = cfturnstile.getResponse(document.querySelector(selector));
-        console.log('Turnstile token obtained:', token); // Debug log
-        callback(token || null);
-        clearInterval(interval);
-      } else if (attempts++ > 30) { // 等3秒
-        console.warn('cfturnstile not loaded after 3s, skipping');
-        callback(null); // 跳過不擋
-        clearInterval(interval);
-      }
-    }, 100); // 每0.1秒檢查
-  }
-
   function renderPayPalButtons() {
     paypal.Buttons({
       createOrder: (data, actions) => {
@@ -229,31 +207,27 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           await actions.order.capture();
           const email = userEmail.value.trim();
-          getTurnstileToken('#email-section .cf-turnstile', async (turnstileToken) => {
-            console.log('Sending to /verify-paypal with token:', turnstileToken); // Debug log
-            const res = await fetch('/verify-paypal', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ path, orderID: data.orderID, email, turnstileToken })
-            });
-
-            console.log(' /verify-paypal response status:', res.status); // Debug log
-            if (!res.ok) {
-              const errData = await res.json();
-              errorMessage.textContent = '❌ 付款驗證失敗: ' + (errData.error || '未知錯誤');
-              return; // 改return不拋，防卡
-            }
-
-            const { token } = await res.json();
-            localStorage.setItem(jwtKey, token); // 兼容
-
-            // 付款後直接用token解鎖
-            await verifyToken(token);
-
-            emailSection.style.display = 'none';
-            unlockSection.style.display = 'none';
-            errorMessage.textContent = '付款成功！記錄已綁定到 ' + email;
+          const res = await fetch('/verify-paypal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, orderID: data.orderID, email })
           });
+
+          if (!res.ok) {
+            const errData = await res.json();
+            errorMessage.textContent = '❌ 付款驗證失敗: ' + (errData.error || '未知錯誤');
+            throw new Error('驗證 PayPal 失敗');
+          }
+
+          const { token } = await res.json();
+          localStorage.setItem(jwtKey, token); // 兼容
+
+          // 付款後直接用token解鎖
+          await verifyToken(token);
+
+          emailSection.style.display = 'none';
+          unlockSection.style.display = 'none';
+          errorMessage.textContent = '付款成功！記錄已綁定到 ' + email;
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
           errorMessage.textContent = '❌ 付款處理失敗，請稍後重試: ' + err.message;
@@ -267,78 +241,70 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 新增: 檢查 email 是否有購買記錄，然後顯示 Google 登入
-  window.checkEmailForUnlock = () => {
+  window.checkEmailForUnlock = async () => {
     const email = unlockEmail.value.trim();
     if (!email) {
       errorMessage.textContent = '請輸入 email';
       return;
     }
     errorMessage.textContent = '正在檢查記錄，請稍候...'; // 加loading提示
-    getTurnstileToken('#google-login-section .cf-turnstile', async (turnstileToken) => {
-      try {
-        console.log('Sending to /verify with token:', turnstileToken); // Debug log
-        const res = await fetch('/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path, email, turnstileToken }) // 加turnstileToken
-        });
-        console.log(' /verify response status:', res.status); // Debug log
-        if (!res.ok) {
-          const errData = await res.json();
-          errorMessage.textContent = errData.error || '⚠️ 未找到付款記錄';
-          unlockSection.style.display = 'none';
-          emailSection.style.display = 'block';
-          return;
-        }
-        const data = await res.json();
-        if (data.hasRecord) {
-          errorMessage.textContent = '找到記錄，請用 Google 登入驗證';
-          googleLoginSection.style.display = 'block';
-          renderGoogleButton(email); // 顯示 Google 登入按鈕
-        } else {
-          errorMessage.textContent = '⚠️ 未找到付款記錄';
-        }
-      } catch (err) {
-        console.error('檢查錯誤:', err);
-        errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
+    try {
+      const res = await fetch('/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, email })
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        errorMessage.textContent = errData.error || '⚠️ 未找到付款記錄';
         unlockSection.style.display = 'none';
         emailSection.style.display = 'block';
+        return;
       }
-    });
+      const data = await res.json();
+      if (data.hasRecord) {
+        errorMessage.textContent = '找到記錄，請用 Google 登入驗證';
+        googleLoginSection.style.display = 'block';
+        renderGoogleButton(email); // 顯示 Google 登入按鈕
+      } else {
+        errorMessage.textContent = '⚠️ 未找到付款記錄';
+      }
+    } catch (err) {
+      console.error('檢查錯誤:', err);
+      errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
+      unlockSection.style.display = 'none';
+      emailSection.style.display = 'block';
+    }
   };
 
   // 新增: 渲染 Google 登入按鈕
   function renderGoogleButton(expectedEmail) {
     google.accounts.id.initialize({
       client_id: '{{ getenv "GOOGLE_CLIENT_ID" }}', // 你的Client ID
-      callback: (response) => {
+      callback: async (response) => {
         console.log('Google response:', response); // Debug log
         errorMessage.textContent = '正在驗證登入，請稍候...'; // 加loading提示
-        getTurnstileToken('#google-login-section .cf-turnstile', async (turnstileToken) => {
-          try {
-            console.log('Sending to /verify with googleToken and turnstileToken:', turnstileToken); // Debug log
-            const res = await fetch('/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ path, email: expectedEmail, googleToken: response.credential, turnstileToken })
-            });
-            console.log(' /verify response status:', res.status); // Debug log
-            if (!res.ok) {
-              const errData = await res.json();
-              console.error('Verify error:', errData);
-              errorMessage.textContent = errData.error || '⚠️ Google 驗證失敗';
-              return;
-            }
-            const html = await res.text();
-            document.getElementById('secure-content-placeholder').innerHTML = html;
-            unlockSection.style.display = 'none';
-            googleLoginSection.style.display = 'none';
-            errorMessage.textContent = '解鎖成功！歡迎回來';
-          } catch (err) {
-            console.error('Google 驗證錯誤:', err);
-            errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試: ' + err.message;
+        try {
+          const res = await fetch('/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path, email: expectedEmail, googleToken: response.credential })
+          });
+          if (!res.ok) {
+            const errData = await res.json();
+            console.error('Verify error:', errData);
+            errorMessage.textContent = errData.error || '⚠️ Google 驗證失敗';
+            return;
           }
-        });
+          const html = await res.text();
+          document.getElementById('secure-content-placeholder').innerHTML = html;
+          unlockSection.style.display = 'none';
+          googleLoginSection.style.display = 'none';
+          errorMessage.textContent = '解鎖成功！歡迎回來';
+        } catch (err) {
+          console.error('Google 驗證錯誤:', err);
+          errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試: ' + err.message;
+        }
       }
     });
     google.accounts.id.renderButton(

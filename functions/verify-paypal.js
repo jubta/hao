@@ -1,25 +1,24 @@
 // functions/verify-paypal.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, orderID, email, turnstileToken } = await request.json();
+    const { path, orderID, email } = await request.json();
     if (!path || !orderID || !email) {
       console.log('[verify-paypal] 缺少參數');
       return new Response(JSON.stringify({ error: '缺少 path, orderID 或 email' }), { status: 400 });
     }
     console.log('[verify-paypal] 收到請求: path=', path, 'orderID=', orderID, 'email=', email);
 
-    // 新增: Turnstile 驗證 (防機器人)
-    if (turnstileToken) {
-      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-        method: 'POST',
-        body: `secret=${env.TURNSTILE_SECRET_KEY}&response=${turnstileToken}`,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      });
-      const outcome = await verifyRes.json();
-      if (!outcome.success) {
-        return new Response(JSON.stringify({ error: 'Turnstile 驗證失敗，請重試' }), { status: 401 });
-      }
+    // 新增: rate limit 防刷 (每小時限10次/ path + IP)
+    const ip = request.headers.get('cf-connecting-ip') || 'unknown'; // 取用戶IP
+    const rateKey = `rate:${ip}:${path}`;
+    const rate = await env.PAYMENT_RECORDS.get(rateKey, { type: 'json' }) || { count: 0, timestamp: Date.now() };
+    if (Date.now() - rate.timestamp < 3600000 && rate.count >= 10) { // 1小時 >=10次，擋
+      console.log('Rate limit exceeded for IP:', ip, 'path:', path); // Log
+      return new Response(JSON.stringify({ error: '請求太頻繁，請稍後重試（1小時後）' }), { status: 429 });
     }
+    rate.count++;
+    rate.timestamp = Date.now();
+    await env.PAYMENT_RECORDS.put(rateKey, JSON.stringify(rate), { expirationTtl: 3600 }); // 1小時過期
 
     // 1) 驗證 PayPal 訂單
     console.log('[verify-paypal] 開始驗證 PayPal token');
