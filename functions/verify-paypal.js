@@ -8,28 +8,32 @@ export async function onRequestPost({ request, env }) {
     }
     console.log('[verify-paypal] 收到請求: path=', path, 'orderID=', orderID, 'email=', email);
 
-    // 新增: 全局IP防刷 (每小時限50次/ IP全站)
+    // 全局IP防刷 (每小時限50次/ IP全站, 優化寫/列表)
     const ip = request.headers.get('cf-connecting-ip') || 'unknown';
     const globalRateKey = `global-rate:${ip}`;
-    const globalRate = await env.PAYMENT_RECORDS.get(globalRateKey, { type: 'json' }) || { count: 0, timestamp: Date.now() };
+    const { value: globalRateValue, metadata } = await env.PAYMENT_RECORDS.getWithMetadata(globalRateKey);
+    const globalRate = globalRateValue ? JSON.parse(globalRateValue) : { count: 0, timestamp: Date.now() };
     if (Date.now() - globalRate.timestamp < 3600000 && globalRate.count >= 50) {
       console.log('Global rate limit exceeded for IP:', ip);
       return new Response(JSON.stringify({ error: '全局請求太頻繁，請稍後重試（1小時後）' }), { status: 429 });
     }
     globalRate.count++;
-    globalRate.timestamp = Date.now();
-    await env.PAYMENT_RECORDS.put(globalRateKey, JSON.stringify(globalRate), { expirationTtl: 3600 });
+    if (globalRate.count > 1) { // 優化: count>1才寫，減寫次數
+      await env.PAYMENT_RECORDS.put(globalRateKey, JSON.stringify(globalRate), { expirationTtl: 3600 });
+    }
 
-    // 新增: path限速 (每小時限10次/ path + IP)
+    // path限速 (每小時限10次/ path + IP, 優化寫/列表)
     const pathRateKey = `path-rate:${ip}:${path}`;
-    const pathRate = await env.PAYMENT_RECORDS.get(pathRateKey, { type: 'json' }) || { count: 0, timestamp: Date.now() };
+    const { value: pathRateValue, metadata: pathMetadata } = await env.PAYMENT_RECORDS.getWithMetadata(pathRateKey);
+    const pathRate = pathRateValue ? JSON.parse(pathRateValue) : { count: 0, timestamp: Date.now() };
     if (Date.now() - pathRate.timestamp < 3600000 && pathRate.count >= 10) {
       console.log('Path rate limit exceeded for IP:', ip, 'path:', path);
       return new Response(JSON.stringify({ error: '此文章請求太頻繁，請稍後重試（1小時後）' }), { status: 429 });
     }
     pathRate.count++;
-    pathRate.timestamp = Date.now();
-    await env.PAYMENT_RECORDS.put(pathRateKey, JSON.stringify(pathRate), { expirationTtl: 3600 });
+    if (pathRate.count > 1) {
+      await env.PAYMENT_RECORDS.put(pathRateKey, JSON.stringify(pathRate), { expirationTtl: 3600 });
+    }
 
     // 1) 驗證 PayPal 訂單
     console.log('[verify-paypal] 開始驗證 PayPal token');
