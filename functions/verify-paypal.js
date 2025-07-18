@@ -8,17 +8,28 @@ export async function onRequestPost({ request, env }) {
     }
     console.log('[verify-paypal] 收到請求: path=', path, 'orderID=', orderID, 'email=', email);
 
-    // 新增: rate limit 防刷 (每小時限10次/ path + IP)
-    const ip = request.headers.get('cf-connecting-ip') || 'unknown'; // 取用戶IP
-    const rateKey = `rate:${ip}:${path}`;
-    const rate = await env.PAYMENT_RECORDS.get(rateKey, { type: 'json' }) || { count: 0, timestamp: Date.now() };
-    if (Date.now() - rate.timestamp < 3600000 && rate.count >= 10) { // 1小時 >=10次，擋
-      console.log('Rate limit exceeded for IP:', ip, 'path:', path); // Log
-      return new Response(JSON.stringify({ error: '請求太頻繁，請稍後重試（1小時後）' }), { status: 429 });
+    // 新增: 全局IP防刷 (每小時限50次/ IP全站)
+    const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+    const globalRateKey = `global-rate:${ip}`;
+    const globalRate = await env.PAYMENT_RECORDS.get(globalRateKey, { type: 'json' }) || { count: 0, timestamp: Date.now() };
+    if (Date.now() - globalRate.timestamp < 3600000 && globalRate.count >= 50) {
+      console.log('Global rate limit exceeded for IP:', ip);
+      return new Response(JSON.stringify({ error: '全局請求太頻繁，請稍後重試（1小時後）' }), { status: 429 });
     }
-    rate.count++;
-    rate.timestamp = Date.now();
-    await env.PAYMENT_RECORDS.put(rateKey, JSON.stringify(rate), { expirationTtl: 3600 }); // 1小時過期
+    globalRate.count++;
+    globalRate.timestamp = Date.now();
+    await env.PAYMENT_RECORDS.put(globalRateKey, JSON.stringify(globalRate), { expirationTtl: 3600 });
+
+    // 新增: path限速 (每小時限10次/ path + IP)
+    const pathRateKey = `path-rate:${ip}:${path}`;
+    const pathRate = await env.PAYMENT_RECORDS.get(pathRateKey, { type: 'json' }) || { count: 0, timestamp: Date.now() };
+    if (Date.now() - pathRate.timestamp < 3600000 && pathRate.count >= 10) {
+      console.log('Path rate limit exceeded for IP:', ip, 'path:', path);
+      return new Response(JSON.stringify({ error: '此文章請求太頻繁，請稍後重試（1小時後）' }), { status: 429 });
+    }
+    pathRate.count++;
+    pathRate.timestamp = Date.now();
+    await env.PAYMENT_RECORDS.put(pathRateKey, JSON.stringify(pathRate), { expirationTtl: 3600 });
 
     // 1) 驗證 PayPal 訂單
     console.log('[verify-paypal] 開始驗證 PayPal token');
@@ -105,11 +116,12 @@ export async function onRequestPost({ request, env }) {
     const token = `${data}.${sigB64}`;
     console.log('[verify-paypal] JWT 生成成功');
 
-    // 3) 存到 KV (email + path 綁定 token，永久)
+    // 3) 存到 KV (email + path 綁定 token，永久 + 壓縮)
     try {
       const kvKey = `payment:${email}:${path}`;
-      await env.PAYMENT_RECORDS.put(kvKey, token); // 永久 (無 expirationTtl)
-      console.log('[verify-paypal] KV 寫入成功: key=', kvKey);
+      const compressedToken = btoa(token); // 簡單base64壓縮 (減大小)
+      await env.PAYMENT_RECORDS.put(kvKey, compressedToken); // 永久
+      console.log('[verify-paypal] KV 寫入成功 (壓縮): key=', kvKey);
     } catch (kvErr) {
       console.error('[verify-paypal] KV 寫入失敗:', kvErr);
       // 不阻擋返回，但 log 錯誤
