@@ -9,7 +9,7 @@ export async function onRequestPost({ request, env }) {
     // 全局IP防刷 (每小時限50次/ IP全站, 優化寫/列表)
     const ip = request.headers.get('cf-connecting-ip') || 'unknown';
     const globalRateKey = `global-rate:${ip}`;
-    const { value: globalRateValue, metadata } = await env.PAYMENT_RECORDS.getWithMetadata(globalRateKey); // 減列表，用metadata
+    const { value: globalRateValue, metadata } = await env.PAYMENT_RECORDS.getWithMetadata(globalRateKey);
     const globalRate = globalRateValue ? JSON.parse(globalRateValue) : { count: 0, timestamp: Date.now() };
     if (Date.now() - globalRate.timestamp < 3600000 && globalRate.count >= 50) {
       console.log('Global rate limit exceeded for IP:', ip);
@@ -61,25 +61,24 @@ export async function onRequestPost({ request, env }) {
       if (googleData.email !== email) {
         return new Response(JSON.stringify({ error: 'Google 帳號 email 不匹配輸入的 email' }), { status: 401 });
       }
-      // 驗證通過，從 KV 取 token (加快取 + 解壓)
+      // 驗證通過，從 KV 取 token (加快取)
       const key = `payment:${email}:${path}`;
       const cache = caches.default;
       const tokenCacheKey = new URL(`https://cache.example.com/token-cache${key}`, 'https://haee.dpdns.org');
       let cachedToken = await cache.match(tokenCacheKey);
       if (cachedToken) {
-        finalToken = atob(await cachedToken.text()); // 解壓
-        console.log('Token loaded from cache (decompressed) for key:', key);
+        finalToken = await cachedToken.text(); // 無壓縮，直接取
+        console.log('Token loaded from cache for key:', key);
       } else {
-        const compressedToken = await env.PAYMENT_RECORDS.get(key);
-        if (compressedToken) {
-          finalToken = atob(compressedToken); // 解壓
-          await cache.put(tokenCacheKey, new Response(compressedToken, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取壓縮版
-          console.log('Token loaded from KV (decompressed) and cached for key:', key);
+        finalToken = await env.PAYMENT_RECORDS.get(key);
+        if (finalToken) {
+          await cache.put(tokenCacheKey, new Response(finalToken, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取原始
+          console.log('Token loaded from KV and cached for key:', key);
         } else {
           return new Response(JSON.stringify({ error: '未找到付款記錄' }), { status: 401 });
         }
       }
-      console.log('Final token after decompress:', finalToken.substring(0, 50) + '...'); // Debug log (確認格式)
+      console.log('Final token:', finalToken.substring(0, 50) + '...'); // Debug log (確認格式)
     } else if (email) {
       // 無 googleToken，只檢查是否有記錄 (用於前端檢查)
       const key = `payment:${email}:${path}`;
@@ -148,14 +147,13 @@ export async function onRequestPost({ request, env }) {
     let htmlResponse = await cache.match(cacheKey);
     let html;
     if (htmlResponse) {
-      html = atob(await htmlResponse.text()); // 解壓文章
-      console.log('Content loaded from cache (decompressed)'); // Debug log
+      html = await htmlResponse.text(); // 無壓縮，直接取
+      console.log('Content loaded from cache'); // Debug log
     } else {
-      const compressedHtml = await env.SECURE_CONTENT.get(`content:${path}`);
-      if (compressedHtml) {
-        html = atob(compressedHtml); // 解壓
-        await cache.put(cacheKey, new Response(compressedHtml, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取壓縮版
-        console.log('Content loaded from KV (decompressed) and cached'); // Debug log
+      html = await env.SECURE_CONTENT.get(`content:${path}`);
+      if (html) {
+        await cache.put(cacheKey, new Response(html, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取原始
+        console.log('Content loaded from KV and cached'); // Debug log
       } else {
         console.error('Content not found in KV'); // Debug log
         return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });

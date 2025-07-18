@@ -120,12 +120,11 @@ export async function onRequestPost({ request, env }) {
     const token = `${data}.${sigB64}`;
     console.log('[verify-paypal] JWT 生成成功');
 
-    // 3) 存到 KV (email + path 綁定 token，永久 + 壓縮)
+    // 3) 存到 KV (email + path 綁定 token，永久, 移除壓縮)
     try {
       const kvKey = `payment:${email}:${path}`;
-      const compressedToken = btoa(token); // 簡單base64壓縮 (減大小)
-      await env.PAYMENT_RECORDS.put(kvKey, compressedToken); // 永久
-      console.log('[verify-paypal] KV 寫入成功 (壓縮): key=', kvKey);
+      await env.PAYMENT_RECORDS.put(kvKey, token); // 存原始token
+      console.log('[verify-paypal] KV 寫入成功: key=', kvKey);
     } catch (kvErr) {
       console.error('[verify-paypal] KV 寫入失敗:', kvErr);
       // 不阻擋返回，但 log 錯誤
