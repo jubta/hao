@@ -127,21 +127,21 @@
 <!-- Google OAuth SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-<!-- Turnstile SDK -->
+<!-- Turnstile SDK (在此載入，避免重複) -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>輸入 gmail 購買內容</h3>
-    <input type="email" id="user-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
+    <h3>輸入 email 購買內容</h3>
+    <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
     <div class="cf-turnstile" data-sitekey="{{ getenv "TURNSTILE_SITE_KEY" }}" data-callback="onTurnstileSuccessPayment"></div> <!-- Turnstile for payment -->
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>已購買？輸入 gmail 解鎖</h3>
-    <input type="email" id="unlock-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
+    <h3>已購買？輸入 email 解鎖</h3>
+    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
     <button onclick="checkEmailForUnlock()" style="margin-left:10px; padding:5px 10px;">檢查</button>
     <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
     <!-- 新增: Google 登入區塊 (初始隱藏) -->
@@ -189,6 +189,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 100);
 
+  // 新增: 安全取Turnstile token函數 (防undefined，延遲檢查)
+  async function getTurnstileToken(selector) {
+    return new Promise((resolve) => {
+      let attempts = 0;
+      const interval = setInterval(() => {
+        if (typeof cfturnstile !== 'undefined') {
+          const token = cfturnstile.getResponse(document.querySelector(selector));
+          resolve(token || null); // 如果token空，返回null不擋
+          clearInterval(interval);
+        } else if (attempts++ > 20) { // 最多等2秒
+          console.warn('cfturnstile not loaded, skipping');
+          resolve(null);
+          clearInterval(interval);
+        }
+      }, 100); // 每0.1秒檢查
+    });
+  }
+
   function renderPayPalButtons() {
     paypal.Buttons({
       createOrder: (data, actions) => {
@@ -211,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           await actions.order.capture();
           const email = userEmail.value.trim();
-          const turnstileToken = cfturnstile.getResponse(document.querySelector('#email-section .cf-turnstile')); // 取Turnstile token
+          const turnstileToken = await getTurnstileToken('#email-section .cf-turnstile'); // 安全取token
           const res = await fetch('/verify-paypal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -253,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      const turnstileToken = cfturnstile.getResponse(document.querySelector('#google-login-section .cf-turnstile')); // 取Turnstile token
+      const turnstileToken = await getTurnstileToken('#google-login-section .cf-turnstile'); // 安全取token
       const res = await fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -289,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
       callback: async (response) => {
         console.log('Google response:', response); // Debug log
         try {
-          const turnstileToken = cfturnstile.getResponse(document.querySelector('#google-login-section .cf-turnstile')); // 取Turnstile token
+          const turnstileToken = await getTurnstileToken('#google-login-section .cf-turnstile'); // 安全取token
           const res = await fetch('/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
