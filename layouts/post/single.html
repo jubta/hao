@@ -189,18 +189,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 100);
 
-  // 新增: 安全取Turnstile token函數 (用ready回調，等SDK ready)
+  // 新增: 安全取Turnstile token函數 (輪詢檢查SDK存在，無ready()防3857錯)
   function getTurnstileToken(selector, callback) {
-    if (typeof turnstile !== 'undefined') {
-      turnstile.ready(() => {
-        const token = turnstile.getResponse(document.querySelector(selector));
-        console.log('Turnstile ready, token obtained:', token); // Debug log
+    let attempts = 0;
+    const interval = setInterval(() => {
+      if (typeof cfturnstile !== 'undefined') {
+        const token = cfturnstile.getResponse(document.querySelector(selector));
+        console.log('Turnstile token obtained:', token); // Debug log
         callback(token || null);
-      });
-    } else {
-      console.warn('turnstile not defined, skipping');
-      callback(null);
-    }
+        clearInterval(interval);
+      } else if (attempts++ > 30) { // 等3秒
+        console.warn('cfturnstile not loaded after 3s, skipping');
+        callback(null); // 跳過不擋
+        clearInterval(interval);
+      }
+    }, 100); // 每0.1秒檢查
   }
 
   function renderPayPalButtons() {
@@ -238,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) {
               const errData = await res.json();
               errorMessage.textContent = '❌ 付款驗證失敗: ' + (errData.error || '未知錯誤');
-              throw new Error('驗證 PayPal 失敗');
+              return; // 改return不拋，防卡
             }
 
             const { token } = await res.json();
@@ -264,15 +267,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 新增: 檢查 email 是否有購買記錄，然後顯示 Google 登入
-  window.checkEmailForUnlock = async () => {
+  window.checkEmailForUnlock = () => {
     const email = unlockEmail.value.trim();
     if (!email) {
       errorMessage.textContent = '請輸入 email';
       return;
     }
     errorMessage.textContent = '正在檢查記錄，請稍候...'; // 加loading提示
-    try {
-      getTurnstileToken('#google-login-section .cf-turnstile', async (turnstileToken) => {
+    getTurnstileToken('#google-login-section .cf-turnstile', async (turnstileToken) => {
+      try {
         console.log('Sending to /verify with token:', turnstileToken); // Debug log
         const res = await fetch('/verify', {
           method: 'POST',
@@ -295,24 +298,24 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           errorMessage.textContent = '⚠️ 未找到付款記錄';
         }
-      });
-    } catch (err) {
-      console.error('檢查錯誤:', err);
-      errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
-      unlockSection.style.display = 'none';
-      emailSection.style.display = 'block';
-    }
+      } catch (err) {
+        console.error('檢查錯誤:', err);
+        errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
+        unlockSection.style.display = 'none';
+        emailSection.style.display = 'block';
+      }
+    });
   };
 
   // 新增: 渲染 Google 登入按鈕
   function renderGoogleButton(expectedEmail) {
     google.accounts.id.initialize({
       client_id: '{{ getenv "GOOGLE_CLIENT_ID" }}', // 你的Client ID
-      callback: async (response) => {
+      callback: (response) => {
         console.log('Google response:', response); // Debug log
         errorMessage.textContent = '正在驗證登入，請稍候...'; // 加loading提示
-        try {
-          getTurnstileToken('#google-login-section .cf-turnstile', async (turnstileToken) => {
+        getTurnstileToken('#google-login-section .cf-turnstile', async (turnstileToken) => {
+          try {
             console.log('Sending to /verify with googleToken and turnstileToken:', turnstileToken); // Debug log
             const res = await fetch('/verify', {
               method: 'POST',
@@ -331,11 +334,11 @@ document.addEventListener('DOMContentLoaded', () => {
             unlockSection.style.display = 'none';
             googleLoginSection.style.display = 'none';
             errorMessage.textContent = '解鎖成功！歡迎回來';
-          });
-        } catch (err) {
-          console.error('Google 驗證錯誤:', err);
-          errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試: ' + err.message;
-        }
+          } catch (err) {
+            console.error('Google 驗證錯誤:', err);
+            errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試: ' + err.message;
+          }
+        });
       }
     });
     google.accounts.id.renderButton(
