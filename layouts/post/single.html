@@ -127,22 +127,27 @@
 <!-- Google OAuth SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
+<!-- Turnstile SDK -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <!-- 安全內容區塊 -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>輸入 email 購買內容</h3>
+    <h3>輸入 gmail 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
+    <div class="cf-turnstile" data-sitekey="{{ getenv "TURNSTILE_SITE_KEY" }}" data-callback="onTurnstileSuccessPayment"></div> <!-- Turnstile for payment -->
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>已購買？輸入 email 解鎖</h3>
+    <h3>已購買？輸入 gmail 解鎖</h3>
     <input type="email" id="unlock-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
     <button onclick="checkEmailForUnlock()" style="margin-left:10px; padding:5px 10px;">檢查</button>
     <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
     <!-- 新增: Google 登入區塊 (初始隱藏) -->
     <div id="google-login-section" style="display:none; margin-top:20px;">
       <p>請用 Google 登入驗證 email 擁有權</p>
+      <div class="cf-turnstile" data-sitekey="{{ getenv "TURNSTILE_SITE_KEY" }}" data-callback="onTurnstileSuccessUnlock"></div> <!-- Turnstile for unlock -->
       <div id="google-signin-button"></div>
     </div>
   </div>
@@ -206,10 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           await actions.order.capture();
           const email = userEmail.value.trim();
+          const turnstileToken = cfturnstile.getResponse(document.querySelector('#email-section .cf-turnstile')); // 取Turnstile token
           const res = await fetch('/verify-paypal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, orderID: data.orderID, email })
+            body: JSON.stringify({ path, orderID: data.orderID, email, turnstileToken })
           });
 
           if (!res.ok) {
@@ -247,10 +253,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
+      const turnstileToken = cfturnstile.getResponse(document.querySelector('#google-login-section .cf-turnstile')); // 取Turnstile token
       const res = await fetch('/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path, email }) // 檢查是否有記錄
+        body: JSON.stringify({ path, email, turnstileToken }) // 加turnstileToken
       });
       if (!res.ok) {
         const errData = await res.json();
@@ -278,16 +285,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // 新增: 渲染 Google 登入按鈕
   function renderGoogleButton(expectedEmail) {
     google.accounts.id.initialize({
-      client_id: '{{ getenv "GOOGLE_CLIENT_ID" }}', // 在Hugo中替換成你的環境變數
+      client_id: '{{ getenv "GOOGLE_CLIENT_ID" }}', // 你的Client ID
       callback: async (response) => {
+        console.log('Google response:', response); // Debug log
         try {
+          const turnstileToken = cfturnstile.getResponse(document.querySelector('#google-login-section .cf-turnstile')); // 取Turnstile token
           const res = await fetch('/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, email: expectedEmail, googleToken: response.credential })
+            body: JSON.stringify({ path, email: expectedEmail, googleToken: response.credential, turnstileToken })
           });
           if (!res.ok) {
             const errData = await res.json();
+            console.error('Verify error:', errData);
             errorMessage.textContent = errData.error || '⚠️ Google 驗證失敗';
             return;
           }
@@ -298,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
           errorMessage.textContent = '解鎖成功！歡迎回來';
         } catch (err) {
           console.error('Google 驗證錯誤:', err);
-          errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
+          errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試: ' + err.message;
         }
       }
     });
@@ -306,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('google-signin-button'),
       { theme: 'outline', size: 'large' } // 自訂按鈕樣式
     );
+    google.accounts.id.prompt(); // 自動提示登入
   }
 
   // 手動顯示付款框函數

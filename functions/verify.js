@@ -1,9 +1,22 @@
 // functions/verify.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, token, email, googleToken } = await request.json();
+    const { path, token, email, googleToken, turnstileToken } = await request.json();
     if (!path) {
       return new Response(JSON.stringify({ error: '缺少 path' }), { status: 401 });
+    }
+
+    // 新增: Turnstile 驗證 (防機器人)
+    if (turnstileToken) {
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        body: `secret=${env.TURNSTILE_SECRET_KEY}&response=${turnstileToken}`,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      });
+      const outcome = await verifyRes.json();
+      if (!outcome.success) {
+        return new Response(JSON.stringify({ error: 'Turnstile 驗證失敗，請重試' }), { status: 401 });
+      }
     }
 
     let finalToken = token;
@@ -13,7 +26,9 @@ export async function onRequestPost({ request, env }) {
       // 驗證 Google token
       const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${googleToken}`);
       if (!googleRes.ok) {
-        return new Response(JSON.stringify({ error: 'Google token 無效' }), { status: 401 });
+        const errText = await googleRes.text();
+        console.error('Google tokeninfo error:', errText);
+        return new Response(JSON.stringify({ error: 'Google token 無效: ' + errText }), { status: 401 });
       }
       const googleData = await googleRes.json();
       if (googleData.email !== email) {
@@ -86,10 +101,18 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: 'token 已過期' }), { status: 401 });
     }
 
-    // 從 KV 讀取內容
-    const html = await env.SECURE_CONTENT.get(`content:${path}`);
+    // 新增: KV 優化 - 用 Cache API 快取內容 (減讀次數)
+    const cache = caches.default;
+    let html = await cache.match(`content-cache:${path}`);
     if (!html) {
-      return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
+      html = await env.SECURE_CONTENT.get(`content:${path}`);
+      if (html) {
+        await cache.put(`content-cache:${path}`, new Response(html, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取1小時
+      } else {
+        return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
+      }
+    } else {
+      html = await html.text(); // 從快取取
     }
 
     return new Response(html, {

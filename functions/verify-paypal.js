@@ -1,12 +1,25 @@
 // functions/verify-paypal.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, orderID, email } = await request.json();
+    const { path, orderID, email, turnstileToken } = await request.json();
     if (!path || !orderID || !email) {
       console.log('[verify-paypal] 缺少參數');
       return new Response(JSON.stringify({ error: '缺少 path, orderID 或 email' }), { status: 400 });
     }
     console.log('[verify-paypal] 收到請求: path=', path, 'orderID=', orderID, 'email=', email);
+
+    // 新增: Turnstile 驗證 (防機器人)
+    if (turnstileToken) {
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        body: `secret=${env.TURNSTILE_SECRET_KEY}&response=${turnstileToken}`,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      });
+      const outcome = await verifyRes.json();
+      if (!outcome.success) {
+        return new Response(JSON.stringify({ error: 'Turnstile 驗證失敗，請重試' }), { status: 401 });
+      }
+    }
 
     // 1) 驗證 PayPal 訂單
     console.log('[verify-paypal] 開始驗證 PayPal token');
