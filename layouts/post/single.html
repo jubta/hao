@@ -144,15 +144,24 @@
     100% { transform: rotate(360deg); }
   }
 
-  /* 新增: Google登入按鈕居中 CSS (手機/電腦適應) */
+  /* 加強: Google登入按鈕居中 CSS (手機/電腦適應, 用flex + !important覆蓋) */
+  #google-login-section {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    flex-direction: column;
+  }
   #google-signin-button {
-    width: auto;
-    margin: 0 auto; /* 水平居中 */
-    text-align: center; /* 內容居中 */
+    width: auto !important; /* 覆蓋Google寬度 */
+    margin: 10px auto !important; /* 居中間距 */
+    text-align: center !important;
+  }
+  #google-signin-button > div { /* 覆蓋內部div */
+    margin: 0 auto !important;
   }
   @media (max-width: 600px) { /* 手機小螢幕滿寬居中 */
     #google-signin-button {
-      width: 100%;
+      width: 90% !important; /* 滿寬但留邊距 */
     }
   }
 </style>
@@ -162,13 +171,13 @@
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
   <div id="loading-spinner"></div> <!-- 新增: spinner div (初始隱藏) -->
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>輸入 email 購買內容</h3>
-    <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <h3>輸入 Gmail 購買內容</h3>
+    <input type="email" id="user-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>已購買？輸入 email 解鎖</h3>
-    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <h3>已購買？輸入 Gmail 解鎖</h3>
+    <input type="email" id="unlock-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
     <button onclick="checkEmailForUnlock()" style="margin-left:10px; padding:5px 10px;">檢查</button>
     <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
     <!-- 新增: Google 登入區塊 (初始隱藏) -->
