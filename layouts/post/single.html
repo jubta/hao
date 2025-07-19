@@ -143,27 +143,6 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-
-  /* 加強: Google登入按鈕居中 CSS (手機/電腦適應, 用flex + !important覆蓋) */
-  #google-login-section {
-    display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
-    flex-direction: column;
-  }
-  #google-signin-button {
-    width: auto !important; /* 覆蓋Google寬度 */
-    margin: 10px auto !important; /* 居中間距 */
-    text-align: center !important;
-  }
-  #google-signin-button > div { /* 覆蓋內部div */
-    margin: 0 auto !important;
-  }
-  @media (max-width: 600px) { /* 手機小螢幕滿寬居中 */
-    #google-signin-button {
-      width: 90% !important; /* 滿寬但留邊距 */
-    }
-  }
 </style>
 
 <!-- 安全內容區塊 (加spinner div) -->
