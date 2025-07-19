@@ -6,7 +6,7 @@ tags: ["影片", "軟件"]
 date: "2022-08-21"
 secure: true  # 我們用 'secure' 這個詞，代表後端安全
 image:
-  src: "/img/wnQ-OKdeR.jpg"
+  src: "https://btso.dpdns.org/img/wnQ-OKdeR.WEBP"
   alt: "2023"
   thumbnail:
     size: "160px"

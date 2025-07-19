@@ -127,17 +127,36 @@
 <!-- Google OAuth SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-<!-- 安全內容區塊 -->
+<!-- 新增: loading spinner CSS (內嵌，輕量) -->
+<style>
+  #loading-spinner {
+    display: none;
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+<!-- 安全內容區塊 (加spinner div) -->
 <div id="secure-content-placeholder" data-path="{{ .RelPermalink }}">
   <p id="error-message" style="color:red;text-align:center;margin-top:1rem;"></p>
+  <div id="loading-spinner"></div> <!-- 新增: spinner div (初始隱藏) -->
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>輸入 email 購買內容</h3>
-    <input type="email" id="user-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <h3>輸入 Gmail 購買內容</h3>
+    <input type="email" id="user-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
-    <h3>已購買？輸入 email 解鎖</h3>
-    <input type="email" id="unlock-email" placeholder="your@email.com" required style="width:200px; padding:5px;">
+    <h3>已購買？輸入 Gmail 解鎖</h3>
+    <input type="email" id="unlock-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
     <button onclick="checkEmailForUnlock()" style="margin-left:10px; padding:5px 10px;">檢查</button>
     <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
     <!-- 新增: Google 登入區塊 (初始隱藏) -->
@@ -164,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const googleLoginSection = document.getElementById('google-login-section');
   const userEmail = document.getElementById('user-email');
   const unlockEmail = document.getElementById('unlock-email');
+  const loadingSpinner = document.getElementById('loading-spinner'); // 新增: spinner元素
 
   // 檢查是否已購買 (用 localStorage 兼容舊記錄)
   const jwtKey = 'jwt:' + path;
@@ -203,7 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       },
       onApprove: async (data, actions) => {
-        errorMessage.textContent = '正在處理付款，請稍候...'; // 加loading提示
+        loadingSpinner.style.display = 'block'; // 顯示spinner
+        errorMessage.textContent = '正在處理付款，請稍候...';
         try {
           await actions.order.capture();
           const email = userEmail.value.trim();
@@ -231,6 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
           console.error('PayPal 處理錯誤:', err);
           errorMessage.textContent = '❌ 付款處理失敗，請稍後重試: ' + err.message;
+        } finally {
+          loadingSpinner.style.display = 'none'; // 總是隱藏spinner
         }
       },
       onError: err => {
@@ -247,7 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
       errorMessage.textContent = '請輸入 email';
       return;
     }
-    errorMessage.textContent = '正在檢查記錄，請稍候...'; // 加loading提示
+    loadingSpinner.style.display = 'block'; // 顯示spinner
+    errorMessage.textContent = '正在檢查記錄，請稍候...';
     try {
       const res = await fetch('/verify', {
         method: 'POST',
@@ -274,6 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
       errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試';
       unlockSection.style.display = 'none';
       emailSection.style.display = 'block';
+    } finally {
+      loadingSpinner.style.display = 'none'; // 總是隱藏spinner
     }
   };
 
@@ -283,7 +309,8 @@ document.addEventListener('DOMContentLoaded', () => {
       client_id: '{{ getenv "GOOGLE_CLIENT_ID" }}', // 你的Client ID
       callback: async (response) => {
         console.log('Google response:', response); // Debug log
-        errorMessage.textContent = '正在驗證登入，請稍候...'; // 加loading提示
+        loadingSpinner.style.display = 'block'; // 顯示spinner
+        errorMessage.textContent = '正在驗證登入，請稍候...';
         try {
           const res = await fetch('/verify', {
             method: 'POST',
@@ -304,6 +331,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
           console.error('Google 驗證錯誤:', err);
           errorMessage.textContent = '⚠️ 網路錯誤，請稍後重試: ' + err.message;
+        } finally {
+          loadingSpinner.style.display = 'none'; // 總是隱藏spinner
         }
       }
     });
