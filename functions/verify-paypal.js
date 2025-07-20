@@ -1,12 +1,12 @@
 // functions/verify-paypal.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, orderID, email } = await request.json();
-    if (!path || !orderID || !email) {
+    const { path, orderID, email, price, currency } = await request.json();
+    if (!path || !orderID || !email || !price || !currency) {
       console.log('[verify-paypal] 缺少參數');
-      return new Response(JSON.stringify({ error: '缺少 path, orderID 或 email' }), { status: 400 });
+      return new Response(JSON.stringify({ error: '缺少參數' }), { status: 400 });
     }
-    console.log('[verify-paypal] 收到請求: path=', path, 'orderID=', orderID, 'email=', email);
+    console.log('[verify-paypal] 收到請求: path=', path, 'orderID=', orderID, 'email=', email, 'price=', price, 'currency=', currency);
 
     // 全局IP防刷 (每小時限50次/ IP全站, 優化寫/列表)
     const ip = request.headers.get('cf-connecting-ip') || 'unknown';
@@ -38,7 +38,7 @@ export async function onRequestPost({ request, env }) {
     // 1) 驗證 PayPal 訂單
     console.log('[verify-paypal] 開始驗證 PayPal token');
     const auth = btoa(`${env.PAYPAL_CLIENT_ID}:${env.PAYPAL_CLIENT_SECRET}`);
-    const tokenRes = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+    const tokenRes = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${auth}`,
@@ -56,7 +56,7 @@ export async function onRequestPost({ request, env }) {
     console.log('[verify-paypal] PayPal token 取得成功');
 
     console.log('[verify-paypal] 開始查詢訂單');
-    const orderRes = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderID}`, {
+    const orderRes = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
       headers: { 'Authorization': `Bearer ${access_token}` }
     });
 
@@ -76,10 +76,10 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: '尚未完成付款', order }), { status: 400 });
     }
 
-    // 檢查金額與幣別
+    // 檢查金額與幣別 (加自訂驗證)
     const pu = order.purchase_units?.[0]?.amount;
-    if (pu.value !== '1.50' || pu.currency_code !== 'USD') {
-      console.log('[verify-paypal] 金額或幣別不符');
+    if (pu.value !== price.toString() || pu.currency_code !== currency) {
+      console.log('[verify-paypal] 金額或幣別不符 (預期:', price, currency, '實際:', pu.value, pu.currency_code);
       return new Response(JSON.stringify({ error: '金額或幣別不符' }), { status: 400 });
     }
     console.log('[verify-paypal] 訂單驗證通過');
@@ -120,10 +120,10 @@ export async function onRequestPost({ request, env }) {
     const token = `${data}.${sigB64}`;
     console.log('[verify-paypal] JWT 生成成功');
 
-    // 3) 存到 KV (email + path 綁定 token，永久, 移除壓縮)
+    // 3) 存到 KV (email + path 綁定 token，永久)
     try {
       const kvKey = `payment:${email}:${path}`;
-      await env.PAYMENT_RECORDS.put(kvKey, token); // 存原始token
+      await env.PAYMENT_RECORDS.put(kvKey, token); // 永久
       console.log('[verify-paypal] KV 寫入成功: key=', kvKey);
     } catch (kvErr) {
       console.error('[verify-paypal] KV 寫入失敗:', kvErr);

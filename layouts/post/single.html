@@ -120,6 +120,9 @@
 {{/* --- 開始：混合式加密系統 --- */}}
 
 {{ if .Params.secure }}
+<!-- Eruda 调试 -->
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
 
 <!-- Google OAuth SDK -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -182,6 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const unlockEmail = document.getElementById('unlock-email');
   const loadingSpinner = document.getElementById('loading-spinner'); // 新增: spinner元素
 
+  // 新增: 從Hugo Params取價格/貨幣 (每文章自訂)
+  const price = {{ .Params.price | default "1.50" }}; // 預設1.50
+  const currency = '{{ .Params.currency | default "USD" }}'; // 預設USD
+
   // 檢查是否已購買 (用 localStorage 兼容舊記錄)
   const jwtKey = 'jwt:' + path;
   const savedToken = localStorage.getItem(jwtKey);
@@ -215,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             user_action: 'PAY_NOW'
           },
           purchase_units: [{
-            amount: { value: '1.50', currency_code: 'USD' }
+            amount: { value: price.toString(), currency_code: currency } // 用自訂價格/貨幣
           }]
         });
       },
@@ -228,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const res = await fetch('/verify-paypal', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, orderID: data.orderID, email })
+            body: JSON.stringify({ path, orderID: data.orderID, email, price, currency }) // 傳價格/貨幣給後端驗證
           });
 
           if (!res.ok) {

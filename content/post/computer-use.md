@@ -4,7 +4,9 @@ author: "鈞鈞"
 description: "實用軟件"
 tags: ["影片", "軟件"]
 date: "2022-08-21"
-secure: true  # 我們用 'secure' 這個詞，代表後端安全
+secure: true  # 我們用 'secure'代表後端安全
+price: 2.00  # 自訂價格
+currency: USD  # 自訂貨幣 (e.g., USD, EUR, TWD)
 image:
   src: "/img/img0767.WEBP"
   alt: "2023"
