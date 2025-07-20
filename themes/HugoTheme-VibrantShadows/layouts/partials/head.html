@@ -7,8 +7,19 @@
   {{- .Title | default site.Title }} {{- default " | " site.Params.meta.titleSeparator -}} {{ if not .IsHome }}{{ site.Title }}{{ else }}{{ site.Params.meta.tagline }}{{ end -}}
   </title>
   
-  <!-- Googe Analytics, Cookie Consent should work only on production website -->
+  <!-- Google tag (gtag.js)google分析嵌入 -->
   {{ if eq hugo.Environment "production" -}}
+        
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-WWWN94J9L9"></script>
+       <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WWWN94J9L9');
+       </script>
+       
+    {{/* 原有 Google Analytics 代碼
     {{ if site.GoogleAnalytics }}
       <!-- Google Analytics shall work only on production website -->
       {{ if and (eq site.Params.cookieConsent.switch "on") (eq site.Params.cookieConsent.type "opt-in") }}
@@ -25,6 +36,7 @@
         };
         </script>
       {{ end }}
+      */}}
       
       {{ if or (ne site.Params.userExperience.googleAnalytics.script 1) (ne site.Params.userExperience.googleAnalytics.script 2) }}
         {{ if hasPrefix site.GoogleAnalytics "UA-" }}
