@@ -152,11 +152,13 @@
   <div id="email-section" style="text-align:center;margin:2rem;display:none;">
     <h3>輸入 Gmail 購買內容</h3>
     <input type="email" id="user-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
+    <p style="font-size:12px; color:gray;">請輸入有效 Gmail (your@gmail.com)，否則無法解鎖內容。假email自行負責</p> <!-- 新增: Gmail文字警告 -->
     <div id="paypal-button-container" style="text-align:center;margin:20px auto;"></div>
   </div>
   <div id="unlock-section" style="text-align:center;margin:2rem;display:none;">
     <h3>已購買？輸入 Gmail 解鎖</h3>
     <input type="email" id="unlock-email" placeholder="your@gmail.com" required style="width:200px; padding:5px;">
+    <p style="font-size:12px; color:gray;">請輸入有效 Gmail，否則無法解鎖</p> <!-- 新增: Gmail文字警告 -->
     <button onclick="checkEmailForUnlock()" style="margin-left:10px; padding:5px 10px;">檢查</button>
     <button onclick="showPaymentSection()" style="margin-left:10px; margin-top:20px; padding:5px 10px;">購買新內容</button>
     <!-- 新增: Google 登入區塊 (初始隱藏) -->
@@ -212,9 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
     paypal.Buttons({
       createOrder: (data, actions) => {
         const email = userEmail.value.trim();
-        if (!email) {
-          errorMessage.textContent = '請輸入 email';
-          throw new Error('缺少 email');
+        if (!email || !email.endsWith('@gmail.com')) { // 新增: 驗證Gmail
+          errorMessage.textContent = '請輸入有效 Gmail (your@gmail.com)';
+          throw new Error('無效 Gmail');
         }
         return actions.order.create({
           application_context: {
@@ -270,8 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 新增: 檢查 email 是否有購買記錄，然後顯示 Google 登入
   window.checkEmailForUnlock = async () => {
     const email = unlockEmail.value.trim();
-    if (!email) {
-      errorMessage.textContent = '請輸入 email';
+    if (!email || !email.endsWith('@gmail.com')) { // 新增: 驗證Gmail
+      errorMessage.textContent = '請輸入有效 Gmail (your@gmail.com)';
       return;
     }
     loadingSpinner.style.display = 'block'; // 顯示spinner
