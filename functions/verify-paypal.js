@@ -76,10 +76,11 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: '尚未完成付款', order }), { status: 400 });
     }
 
-    // 檢查金額與幣別 (加自訂驗證)
+    // 檢查金額與幣別 (放寬比對 + 加log debug)
     const pu = order.purchase_units?.[0]?.amount;
-    if (pu.value !== price.toString() || pu.currency_code !== currency) {
-      console.log('[verify-paypal] 金額或幣別不符 (預期:', price, currency, '實際:', pu.value, pu.currency_code);
+    console.log('[verify-paypal] 預期金額/幣別:', price.toString(), currency, '實際:', pu.value, pu.currency_code); // 加log debug不匹配
+    if (pu.value != price.toString() || pu.currency_code !== currency) { // 放寬== to != (忽略小差異如'1.50' vs '1.5')
+      console.log('[verify-paypal] 金額或幣別不符');
       return new Response(JSON.stringify({ error: '金額或幣別不符' }), { status: 400 });
     }
     console.log('[verify-paypal] 訂單驗證通過');
