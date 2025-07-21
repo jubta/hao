@@ -6,7 +6,7 @@ tags: ["iOS Fix", "Feather", "Unable to Install", "Sideload IPA", "DNS Install M
 keywords: ["fix unable to install iOS IPA", "sideload ipa iPhone fix", "Feather install failed", "ipa installation not working", "dns install method", "airplane mode ipa", "how to fix IPA not installing", "feather sideload troubleshooting"]
 date: "2025-07-04"
 image:
-  src: "/img/img0567.WEBP"
+  src: "https://yong.is-an.ai/file/AgACAgUAAyEGAASrCUQtAAMQaH5Oiume39-hYK3B_jT7gdLXexcAAqbDMRtb5PBXKu4g7yUvPn0BAAMCAAN4AAM2BA.jpg"
   alt: "2025"
   thumbnail:
     size: "170px"
@@ -39,10 +39,10 @@ Download and install a trusted DNS configuration profile such as:
 Once installed, you’ll find it under **Settings > VPN & Device Management**.
 
 <div class="image-center">
-  <a href="/img/img0572.WEBP"
+  <a href="https://yong.is-an.ai/file/AgACAgUAAyEGAASrCUQtAAMTaH5Pdk4AAT8BLOfgkHC1nForK-mLAAKpwzEbW-TwV0adFOVjyqa-AQADAgADeQADNgQ.jpg"
      data-lightbox="image-1"
      data-title="250624">
-    <img src="/img/img0572.WEBP"
+    <img src="https://yong.is-an.ai/file/AgACAgUAAyEGAASrCUQtAAMTaH5Pdk4AAT8BLOfgkHC1nForK-mLAAKpwzEbW-TwV0adFOVjyqa-AQADAgADeQADNgQ.jpg"
          width="80%"
          alt="250624">
   </a>
