@@ -7,7 +7,7 @@ keywords: ["Neko", "WebRTC", "Self-Driving", "Waymo", "虛擬瀏覽器", "自託
 date: "2025-07-09"
 summary:
 image:
-  src: "https://btso.dpdns.org/file/AgACAgUAAyEGAASrCUQtAAMKaH5JwK_RtHmjuxSdSqZA8-SiYvoAApvDMRtb5PBXCtCC5BSqQ88BAAMCAAN5AAM2BA.jpg"
+  src: "https://btso.dpdns.org/neko2.JPG"
   alt: "2025"
   thumbnail:
     size: "170px"
@@ -23,10 +23,10 @@ Support thks : https://www.paypal.me/haotech....
 Neko 是一個基於 WebRTC 技術的自託管虛擬瀏覽器，它運行在 Docker 環境中，旨在提供一個安全、私密且多功能的虛擬環境，用於瀏覽網頁、執行應用程式和實現多人協作
 
 <div class="image-center">
-  <a href="https://btso.dpdns.org/file/AgACAgUAAyEGAASrCUQtAAMJaH5IFiH6rDZQQkYKWmKa2qaBksQAAo3DMRtb5PBX8qgW1SWaubgBAAMCAAN5AAM2BA.gif" 
+  <a href="https://btso.dpdns.org/neko.gif" 
      data-lightbox="image-1" 
      data-title="Gif 動圖">
-    <img src="https://btso.dpdns.org/file/AgACAgUAAyEGAASrCUQtAAMJaH5IFiH6rDZQQkYKWmKa2qaBksQAAo3DMRtb5PBX8qgW1SWaubgBAAMCAAN5AAM2BA.gif" 
+    <img src="https://btso.dpdns.org/neko.gif" 
          width="80%" 
          alt="Gif 動圖">
   </a>

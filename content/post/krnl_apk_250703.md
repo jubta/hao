@@ -6,7 +6,7 @@ tags: ["文章", "Roblox" ]
 keywords: ["Krnl Executor", "v2.679", "Android Roblox"]
 date: "2025-07-03"
 image:
-  src: "https://btso.dpdns.org/file/AgACAgUAAyEGAASrCUQtAAMSaH5PD8o3Sp4nBhItCcAiy0BwQP0AAqjDMRtb5PBXvpQ9aAABlmyOAQADAgADeQADNgQ.jpg"
+  src: "https://btso.dpdns.org/img0545.JPG"
   alt: "2025"
   thumbnail:
     size: "170px"

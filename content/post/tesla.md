@@ -7,7 +7,7 @@ keywords: ["Tesla Robotaxi", "Tesla self-driving taxi", "Robotaxi Austin", "Tesl
 date: "2025-07-08"
 summary:
 image:
-  src: "https://btso.dpdns.org/file/AgACAgUAAyEGAASrCUQtAAMMaH5LtAiZ64r525LAX3VeEz51wfkAAp7DMRtb5PBXMug-8OcduWYBAAMCAAN5AAM2BA.jpg"
+  src: "https://btso.dpdns.org/tesla.JPG"
   alt: "2025"
   thumbnail:
     size: "170px"
