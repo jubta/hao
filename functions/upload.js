@@ -28,6 +28,6 @@ export async function onRequestPost({ request, env }) {
     return new Response(JSON.stringify({ success: true, message: '上傳成功，已 gzip 壓縮' }), { status: 200 });
   } catch (err) {
     console.error('[upload] 錯誤:', err.message, err.stack);
-    return new Response(JSON.stringify({ error: '上傳失敗: ' + err.message }), `status: 500 });
+    return new Response(JSON.stringify({ error: '上傳失敗: ' + err.message }), { status: 500 });
   }
 }
