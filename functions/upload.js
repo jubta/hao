@@ -1,9 +1,14 @@
 // functions/upload.js
 export async function onRequestPost({ request, env }) {
   try {
-    const { path, content, password } = await request.json(); // body: {path: "/post/computer-use/", content: "<p>HTML內容</p>", password: "abc123" (選填)}
+    const { path, content, password, secret } = await request.json(); // body: {path, content, password (選填), secret}
     if (!path || !content) {
       return new Response(JSON.stringify({ error: '缺少 path 或 content' }), { status: 400 });
+    }
+
+    // 驗證秘密密鑰
+    if (!secret || secret !== env.UPLOAD_SECRET) {
+      return new Response(JSON.stringify({ error: '未授權的請求' }), { status: 401 });
     }
 
     // 壓縮內容 (gzip)
@@ -23,6 +28,6 @@ export async function onRequestPost({ request, env }) {
     return new Response(JSON.stringify({ success: true, message: '上傳成功，已 gzip 壓縮' }), { status: 200 });
   } catch (err) {
     console.error('[upload] 錯誤:', err.message, err.stack);
-    return new Response(JSON.stringify({ error: '上傳失敗: ' + err.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: '上傳失敗: ' + err.message }), `status: 500 });
   }
 }
