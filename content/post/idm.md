@@ -140,7 +140,7 @@ IDM is the fastest and most reliable download manager for Windows. It supports m
 **[Link](https://www.patreon.com/hao8?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink)**
 
 ##### **<font style="background:  "> Esign Method Updated :</font>** 
-**[LINK](https://sinkfree.pages.dev/idm)**
+**[LINK](https://rekonise.com/idm-642-build41-multilingual-c9a19)**
 
 ##### **<font style="background:  "> Idm :</font>** 
 **[LINK](https://linkvertise.com/1361320/lMKe0nJjaBau?o=sharing)**
