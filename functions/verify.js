@@ -140,24 +140,31 @@ export async function onRequestPost({ request, env }) {
       return new Response(JSON.stringify({ error: 'token 已過期' }), { status: 401 });
     }
 
-    // 新增: KV 優化 - 用 Cache API 快取內容 (修復Invalid URL，用完整URL key)
+    // 修改: 從 KV 讀 gzip 壓縮內容並解壓 (用 Cache API 快取解壓後 HTML)
     console.log('Fetching content for path:', path); // Debug log
     const cache = caches.default;
     const cacheKey = new URL(`https://cache.example.com/content-cache${path}`, 'https://haee.dpdns.org'); // 修復: 用完整URL key
     let htmlResponse = await cache.match(cacheKey);
     let html;
     if (htmlResponse) {
-      html = await htmlResponse.text(); // 無壓縮，直接取
+      html = await htmlResponse.text(); // 從快取取解壓後 HTML
       console.log('Content loaded from cache'); // Debug log
     } else {
-      html = await env.SECURE_CONTENT.get(`content:${path}`);
-      if (html) {
-        await cache.put(cacheKey, new Response(html, { headers: { 'Cache-Control': 'max-age=3600' } })); // 快取原始
-        console.log('Content loaded from KV and cached'); // Debug log
-      } else {
+      // 從 KV 取 binary (gzip)
+      const compressed = await env.SECURE_CONTENT.get(`content:${path}`, { type: 'arrayBuffer' }); // 讀 binary
+      if (!compressed) {
         console.error('Content not found in KV'); // Debug log
         return new Response(JSON.stringify({ error: '文章未找到' }), { status: 404 });
       }
+
+      // 解壓 gzip
+      const decompressedStream = new Response(compressed).body.pipeThrough(new DecompressionStream('gzip'));
+      const decompressedResponse = new Response(decompressedStream);
+      html = await decompressedResponse.text();
+
+      // 快取解壓後的 HTML (1小時)
+      await cache.put(cacheKey, new Response(html, { headers: { 'Cache-Control': 'max-age=3600' } }));
+      console.log('Content loaded from KV, decompressed, and cached'); // Debug log
     }
 
     return new Response(html, {

@@ -38,7 +38,7 @@ export async function onRequestPost({ request, env }) {
     // 1) 驗證 PayPal 訂單
     console.log('[verify-paypal] 開始驗證 PayPal token');
     const auth = btoa(`${env.PAYPAL_CLIENT_ID}:${env.PAYPAL_CLIENT_SECRET}`);
-    const tokenRes = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
+    const tokenRes = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${auth}`,
@@ -56,7 +56,7 @@ export async function onRequestPost({ request, env }) {
     console.log('[verify-paypal] PayPal token 取得成功');
 
     console.log('[verify-paypal] 開始查詢訂單');
-    const orderRes = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderID}`, {
+    const orderRes = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderID}`, {
       headers: { 'Authorization': `Bearer ${access_token}` }
     });
 
