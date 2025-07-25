@@ -4,7 +4,7 @@ author: "HAO"
 description: "学会剪映的3大音频处理秘籍，让普通配音瞬间升级专业级。附SVIP解锁版福利！"
 tags: ["剪映", "音频编辑", "配音技巧", "视频制作", "Vlog"]
 keywords: ["剪映降噪", "音频均衡器", "压缩器教程", "专业配音", "CapCut SVIP"]
-date: 2025-07-25T11:00:00+08:00
+date: 2025-07-25T10:30:00+08:00
 secure: true  # 我用 'secure'代表後端安全
 price: 3.00  # 自訂價格
 currency: USD  # 自訂貨幣 (e.g., USD, EUR, TWD)
