@@ -1,20 +1,35 @@
-// notice 短代码
+/* notice 短代码 (優化修復版) */
 .notice {
-    position:relative;
-    padding: 1em 1em 1em 2.5em;
+    display: flex;            /* 1. 使用 Flexbox 佈局，從根本上解決重疊問題 */
+    align-items: flex-start;  /* 2. 讓左側標題和右側內容頂部對齊 */
+    padding: 1em;             /* 3. 使用統一的內邊距，更簡潔 */
     margin-bottom: 1em;
     border-radius: 4px;
+    /* 左側邊框 (border-left) 會在下面的類型中分別定義 */
+
+    /* 確保內部的 p 標籤樣式正確 */
+    p {
+        margin: 0; /* 移除 p 標籤預設的 margin，避免對齊問題 */
+    }
+
     p:last-child {
         margin-bottom: 0;
     }
+
     .notice-title {
-        position: absolute;
-        left: 0.8em;
+        /* 4. 移除舊的絕對定位 */
+        /* position: absolute; */
+        margin-right: 0.8em;   /* 5. 增加右邊距，將標題與內容隔開 */
+        flex-shrink: 0;        /* 6. 防止標題文字過長時被壓縮 */
+        line-height: 1.5;      /* 7. 調整行高，讓標題和內容的文字看起來更對齊 */
+
         .notice-icon {
             width: 1.2em;
             height: 1.2em;
         }
     }
+
+    /* 類型樣式保持不變，它們負責顏色和左側邊框 */
     &.notice-warning {
         background: hsla(0, 65%, 65%, 0.15);
         border-left: 5px solid hsl(0, 65%, 65%);
