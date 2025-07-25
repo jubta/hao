@@ -1,62 +1,71 @@
-/* notice 短代码 (優化修復版) */
+/* notice 短代码 (最終優化版：標題置頂、內容在下) */
 .notice {
-    display: flex;            /* 1. 使用 Flexbox 佈局，從根本上解決重疊問題 */
-    align-items: flex-start;  /* 2. 讓左側標題和右側內容頂部對齊 */
-    padding: 1em;             /* 3. 使用統一的內邊距，更簡潔 */
-    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column; /* 關鍵：將主軸改為垂直方向，讓子元素上下排列 */
+    padding: 1em 1em 1em 1.5em; /* 調整內邊距，給左側邊框留出視覺空間 */
+    margin-bottom: 1.5em;
     border-radius: 4px;
-    /* 左側邊框 (border-left) 會在下面的類型中分別定義 */
-
-    /* 確保內部的 p 標籤樣式正確 */
-    p {
-        margin: 0; /* 移除 p 標籤預設的 margin，避免對齊問題 */
-    }
+    position: relative; /* 為了讓 border-left 相對定位 */
 
     p:last-child {
         margin-bottom: 0;
     }
 
+    /* 移除 p 標籤預設的上邊距，避免與標題距離過遠 */
+    p {
+        margin-top: 0;
+    }
+
     .notice-title {
-        /* 4. 移除舊的絕對定位 */
-        /* position: absolute; */
-        margin-right: 0.8em;   /* 5. 增加右邊距，將標題與內容隔開 */
-        flex-shrink: 0;        /* 6. 防止標題文字過長時被壓縮 */
-        line-height: 1.5;      /* 7. 調整行高，讓標題和內容的文字看起來更對齊 */
+        font-weight: bold; /* 讓標題粗體，更突出 */
+        margin-bottom: 0.5em; /* 在標題和內容之間增加一點間距 */
+        line-height: 1.5; /* 確保行高舒適 */
 
         .notice-icon {
             width: 1.2em;
             height: 1.2em;
+            margin-right: 0.3em; /* 給 icon 和文字留點空隙 */
+            vertical-align: middle; /* 讓 icon 和文字垂直對齊 */
         }
     }
 
-    /* 類型樣式保持不變，它們負責顏色和左側邊框 */
+    /* 統一處理所有類型的樣式 */
+    &.notice-warning,
+    &.notice-info,
+    &.notice-note,
+    &.notice-tip {
+        /* 將左側邊框從容器上分離出來，用偽元素實現，避免影響 padding */
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            border-radius: 4px 0 0 4px; /* 讓邊框的圓角和容器一致 */
+        }
+    }
+
+    /* 各種類型的顏色定義 */
     &.notice-warning {
         background: hsla(0, 65%, 65%, 0.15);
-        border-left: 5px solid hsl(0, 65%, 65%);
-        .notice-title {
-            color: hsl(0, 65%, 65%);
-        }
+        &::before { background-color: hsl(0, 65%, 65%); }
+        .notice-title { color: hsl(0, 65%, 55%); }
     }
     &.notice-info {
         background: hsla(30, 80%, 70%, 0.15);
-        border-left: 5px solid hsl(30, 80%, 70%);
-        .notice-title {
-            color: hsl(30, 80%, 70%);
-        }
+        &::before { background-color: hsl(30, 80%, 70%); }
+        .notice-title { color: hsl(30, 80%, 60%); }
     }
     &.notice-note {
         background: hsla(200, 65%, 65%, 0.15);
-        border-left: 5px solid hsl(200, 65%, 65%);
-        .notice-title {
-            color: hsl(200, 65%, 65%);
-        }
+        &::before { background-color: hsl(200, 65%, 65%); }
+        .notice-title { color: hsl(200, 65%, 55%); }
     }
     &.notice-tip {
         background: hsla(140, 65%, 65%, 0.15);
-        border-left: 5px solid hsl(140, 65%, 65%);
-        .notice-title {
-            color: hsl(140, 65%, 65%);
-        }
+        &::before { background-color: hsl(140, 65%, 65%); }
+        .notice-title { color: hsl(140, 65%, 55%); }
     }
 }
 
