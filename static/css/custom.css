@@ -1,39 +1,59 @@
-// 文章文字底層顏色樣式
+/* notice 短代码 */
 .notice {
-  padding: 1rem;
-  margin: 1rem 0;
-  border-left: 5px solid; /* 厚度、樣式和占位符用於顏色 */
-  border-radius: 6px;
+    position: relative;
+    padding: 1em 1em 1em 2.5em;
+    margin-bottom: 1em;
+    border-radius: 4px;
 }
 
-.notice-title {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  display: block;
+.notice p:last-child {
+    margin-bottom: 0;
 }
 
-.notice-warning {
-  background-color: hsla(0, 65%, 65%, 0.15);
-  border-left-color: hsl(0, 65%, 65%); /* 正確的顏色分配 */
-  color: #990000;
+.notice .notice-title {
+    position: absolute;
+    left: 0.8em;
 }
 
-.notice-info {
-  background-color: hsla(30, 80%, 70%, 0.15);
-  border-left-color: hsl(30, 80%, 70%); /* 正確的顏色分配 */
-  color: #003366;
+.notice .notice-title .notice-icon {
+    width: 1.2em;
+    height: 1.2em;
 }
 
-.notice-note {
-  background-color: hsla(200, 65%, 65%, 0.15);
-  border-left-color: hsl(200, 65%, 65%); /* 正確的顏色分配 */
-  color: #333333;
+.notice.notice-warning {
+    background: hsla(0, 65%, 65%, 0.15);
+    border-left: 5px solid hsl(0, 65%, 65%);
 }
 
-.notice-tip {
-  background-color: hsla(140, 65%, 65%, 0.15);
-  border-left-color: hsl(140, 65%, 65%); /* 正確的顏色分配 */
-  color: #225522;
+.notice.notice-warning .notice-title {
+    color: hsl(0, 65%, 65%);
+}
+
+.notice.notice-info {
+    background: hsla(30, 80%, 70%, 0.15);
+    border-left: 5px solid hsl(30, 80%, 70%);
+}
+
+.notice.notice-info .notice-title {
+    color: hsl(30, 80%, 70%);
+}
+
+.notice.notice-note {
+    background: hsla(200, 65%, 65%, 0.15);
+    border-left: 5px solid hsl(200, 65%, 65%);
+}
+
+.notice.notice-note .notice-title {
+    color: hsl(200, 65%, 65%);
+}
+
+.notice.notice-tip {
+    background: hsla(140, 65%, 65%, 0.15);
+    border-left: 5px solid hsl(140, 65%, 65%);
+}
+
+.notice.notice-tip .notice-title {
+    color: hsl(140, 65%, 65%);
 }
 
 
