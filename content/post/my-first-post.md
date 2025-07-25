@@ -90,3 +90,11 @@ Be sure to swap out `${package.json.version}` with the actual
 </div>
 
 <!-- <left> 隱藏的內容 </left> -->   
+
+//放入照片
+<div style="margin-bottom: 24px;">
+  <a href="/img/img9222.WEBP" data-lightbox="image-1" data-title="展示圖片">
+      <img src="/img/img9222.WEBP" width="80%" alt="展示官網">
+  </a>
+</div>
+
