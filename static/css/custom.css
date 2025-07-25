@@ -1,8 +1,8 @@
-//文章文字底層顏色樣式
+// 文章文字底層顏色樣式
 .notice {
   padding: 1rem;
   margin: 1rem 0;
-  border-left: 5px solid;
+  border-left: 5px solid; /* 厚度、樣式和占位符用於顏色 */
   border-radius: 6px;
 }
 
@@ -14,25 +14,25 @@
 
 .notice-warning {
   background-color: hsla(0, 65%, 65%, 0.15);
-  border-color: 5px solid hsl(0, 65%, 65%);
+  border-left-color: hsl(0, 65%, 65%); /* 正確的顏色分配 */
   color: #990000;
 }
 
 .notice-info {
   background-color: hsla(30, 80%, 70%, 0.15);
-  border-color: 5px solid hsl(30, 80%, 70%);
+  border-left-color: hsl(30, 80%, 70%); /* 正確的顏色分配 */
   color: #003366;
 }
 
 .notice-note {
   background-color: hsla(200, 65%, 65%, 0.15);
-  border-color: 5px solid hsl(200, 65%, 65%);
+  border-left-color: hsl(200, 65%, 65%); /* 正確的顏色分配 */
   color: #333333;
 }
 
 .notice-tip {
   background-color: hsla(140, 65%, 65%, 0.15);
-  border-color: 5px solid hsl(140, 65%, 65%);
+  border-left-color: hsl(140, 65%, 65%); /* 正確的顏色分配 */
   color: #225522;
 }
 
