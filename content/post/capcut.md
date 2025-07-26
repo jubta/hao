@@ -4,7 +4,7 @@ author: "HAO"
 description: "学会剪映的3大音频处理秘籍，让普通配音瞬间升级专业级。附SVIP解锁版福利！"
 tags: ["剪映", "音频编辑", "配音技巧", "视频制作", "Vlog"]
 keywords: ["剪映降噪", "音频均衡器", "压缩器教程", "专业配音", "CapCut SVIP"]
-date: 2022-08-22T10:00:00+08:00
+date: 2025-07-25T10:00:00+08:00
 secure: true  # 我用 'secure'代表後端安全
 price: 3.00  # 自訂價格
 currency: USD  # 自訂貨幣 (e.g., USD, EUR, TWD)
@@ -222,29 +222,6 @@ If you encounter issues in practice, feel free to discuss in the comments or DM 
 {{< /notice >}}
 
 Download the zip file I provide, extract it, run the .exe file as administrator, no installation needed to start directly, and you can use all VIP features (e.g., common speech-to-text).
-
-{{< centeredYoutube D25tMc5bmGE >}}
-
-<br>
-
-<div class="app-card">
-  <div class="app-info">
-    <img class="app-icon" src="/img/IMG_9581.WEBP" alt="Esign Icon">
-    <div class="app-details">
-      <strong>ESign 🟢</strong><br>
-      Wuling Power
-    </div>
-  </div>
-  <div class="app-download">
-    {{< installapp url="https://raw.githubusercontent.com/jiun8631/sideload/refs/heads/main/Esign-CentralPower.plist" >}}
-  </div>
-</div>
-
-<br>
-
-```bash
-docker pull ramonvc/freegpt-webui
-```
 
 **Links**
 
