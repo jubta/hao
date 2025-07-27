@@ -25,5 +25,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hugo-public
-          path: public/posts/  # 只上傳posts目錄（調整為你的文章目錄）
-          retention-days: 7
+          path: public/post/  # 只上傳posts目錄（調整為你的文章目錄）
+          retention-days: 5
