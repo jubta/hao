@@ -1,0 +1,29 @@
+name: Build Hugo Site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.119.0'  # 指定你的本地版本，避免不兼容
+
+      - name: Build site
+        run: hugo --minify
+
+      - name: Upload public as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hugo-public
+          path: public/posts/  # 只上傳posts目錄（調整為你的文章目錄）
+          retention-days: 7
