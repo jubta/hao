@@ -5,7 +5,6 @@ description: "探索精簡版 VMware Workstation 17.6.2 的功能與特色，學
 tags: ["虛擬機", "VMware", "Mac OS X", "作業系統", "虛擬化"]
 keywords: ["VMware Workstation 精簡版", "虛擬機軟體", "Mac OS X 虛擬機", "VMware 教學", "桌面虛擬化"]
 date: 2025-07-30T22:00:00+08:00
-secure: true  # 我們用 'secure'代表後端安全
 price: 1.00  # 自訂價格
 currency: USD  # 自訂貨幣 (e.g., USD, EUR, TWD)
 image:
