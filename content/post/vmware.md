@@ -1,9 +1,9 @@
 ---
 title: "輕鬆在桌機上運行多系統：VMware Workstation 精簡版17.6.2介紹與安裝指南"
 author: "HAO"
-description = "探索精簡版 VMware Workstation 17.6.2 的功能與特色，學習如何在 Windows 上安裝並運行 macOS 系統，打造靈活的多系統開發與測試環境。"
-tags = ["虛擬機", "VMware", "Mac OS X", "作業系統", "虛擬化"]
-keywords = ["VMware Workstation 精簡版", "虛擬機軟體", "Mac OS X 虛擬機", "VMware 教學", "桌面虛擬化"]
+description: "探索精簡版 VMware Workstation 17.6.2 的功能與特色，學習如何在 Windows 上安裝並運行 macOS 系統，打造靈活的多系統開發與測試環境。"
+tags: ["虛擬機", "VMware", "Mac OS X", "作業系統", "虛擬化"]
+keywords: ["VMware Workstation 精簡版", "虛擬機軟體", "Mac OS X 虛擬機", "VMware 教學", "桌面虛擬化"]
 date: 2025-07-30T22:00:00+08:00
 secure: true  # 我們用 'secure'代表後端安全
 price: 1.00  # 自訂價格
